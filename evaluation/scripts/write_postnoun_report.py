@@ -5,8 +5,9 @@ from pathlib import Path
 
 from tests.evaluate_heldout import pipeline_fingerprint
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
+ROOT = Path(__file__).resolve().parents[2]
+HERE = ROOT/'evaluation'/'results'
+REPORTS = ROOT/'evaluation'/'reports'
 read = lambda name: json.loads((HERE/name).read_text(encoding='utf-8'))
 before = [read(name) for name in ['heldout_retest_v3.json','fresh_v2_retest_v3.json','fresh_results_v3.json']]
 current = [read(name) for name in ['heldout_retest_v4.json','fresh_v2_retest_v4.json','fresh_v3_retest_v4.json']]
@@ -86,19 +87,19 @@ for title, report in [('Fourth-set failures',fresh),('Second-set remaining failu
 lines += ['## Reproduce', '', 'From the project root:', '', '```powershell',
     '.\\.venv\\Scripts\\python.exe -m pytest -q tests',
     '.\\.venv\\Scripts\\python.exe -m tests.evaluate',
-    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest_v4.json']
+    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest_v4.json']
 for i,report in [(2,current[1]),(3,current[2]),(4,fresh)]:
-    output = f'evaluation/fresh_v{i}_retest_v4.json' if i < 4 else 'evaluation/fresh_results_v4.json'
+    output = f'evaluation/fresh_v{i}_retest_v4.json' if i < 4 else 'evaluation/results/fresh_results_v4.json'
     lines.append(f'.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v{i}.json --dataset-sha256 {report["dataset_sha256"]} '+('--allow-parser-change ' if i < 4 else '')+f'--output {output}')
-lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.write_postnoun_report', '```', '',
+lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.scripts.write_postnoun_report', '```', '',
     'From `frontend/`, with the local servers running: `npm test`, `npm run test:e2e`, `npm run build`.', '',
-    'Labels: `tests/fresh_commands_v4.json`. Complete predictions/notices: `evaluation/fresh_results_v4.json`. Three retests: `evaluation/heldout_retest_v4.json`, `evaluation/fresh_v2_retest_v4.json`, `evaluation/fresh_v3_retest_v4.json`. Regression source: `tests/test_postnoun_fixes.py` and `frontend/tests/browser/smoke.spec.js`.', '',
+    'Labels: `tests/fresh_commands_v4.json`. Complete predictions/notices: `evaluation/results/fresh_results_v4.json`. Three retests: `evaluation/results/heldout_retest_v4.json`, `evaluation/results/fresh_v2_retest_v4.json`, `evaluation/results/fresh_v3_retest_v4.json`. Regression source: `tests/test_postnoun_fixes.py` and `frontend/tests/browser/smoke.spec.js`.', '',
     f"Parser SHA256: `{fresh['parser_sha256_before']}`.",
     f"Backend pipeline SHA256: `{pipeline}`.",
     f"Fourth dataset SHA256: `{fresh['dataset_sha256']}`.", '',
     'The frozen dataset records per-file source hashes and the uniqueness-check input hashes. All four evaluations verified the same unchanged backend pipeline before and after prediction. The new dataset builder refuses overwriting labels; fresh evaluation refuses a changed pipeline. Once this sample informs future rule changes, use a separate result file marked as a development retest and a newly frozen sample for another fresh-command claim.', '',
 ]
 assert sum(not c['exact_match'] and not c['warnings'] for c in fresh['cases']) == 4
-out = HERE/'postnoun_fixes_report.md'
+out = REPORTS/'postnoun_fixes_report.md'
 out.write_text('\n'.join(lines),encoding='utf-8')
 print(out)

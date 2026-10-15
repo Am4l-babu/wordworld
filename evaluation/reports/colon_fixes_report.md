@@ -1091,19 +1091,19 @@ From the root (use new output names to preserve historical evidence):
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
 .\.venv\Scripts\python.exe -m tests.evaluate
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/heldout_commands.json --dataset-sha256 d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224 --allow-parser-change --output evaluation/heldout_retest_v7.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/fresh_v2_retest_v7.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/fresh_v3_retest_v7.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --allow-parser-change --output evaluation/fresh_v4_retest_v7.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v5.json --dataset-sha256 e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e --allow-parser-change --output evaluation/fresh_v5_retest_v7.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v6.json --dataset-sha256 b4c823eafa84322f3c164fcaa0080bf5ed4f94f61d374c8dcd2145c74fed3703 --allow-parser-change --output evaluation/fresh_v6_retest_v7.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v7.json --dataset-sha256 b1c66ed63c5747d59c87b9baaf37f923307cf9d1d42868e7bfeb1ef3fef4b85e --output evaluation/fresh_results_v7.json
-.\.venv\Scripts\python.exe -X utf8 -m evaluation.write_colon_report
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/heldout_commands.json --dataset-sha256 d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224 --allow-parser-change --output evaluation/results/heldout_retest_v7.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/results/fresh_v2_retest_v7.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/results/fresh_v3_retest_v7.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --allow-parser-change --output evaluation/results/fresh_v4_retest_v7.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v5.json --dataset-sha256 e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e --allow-parser-change --output evaluation/results/fresh_v5_retest_v7.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v6.json --dataset-sha256 b4c823eafa84322f3c164fcaa0080bf5ed4f94f61d374c8dcd2145c74fed3703 --allow-parser-change --output evaluation/results/fresh_v6_retest_v7.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v7.json --dataset-sha256 b1c66ed63c5747d59c87b9baaf37f923307cf9d1d42868e7bfeb1ef3fef4b85e --output evaluation/results/fresh_results_v7.json
+.\.venv\Scripts\python.exe -X utf8 -m evaluation.scripts.write_colon_report
 ```
 
 From `frontend/`: `npm test`, `npm run test:e2e` (servers running), `npm run build`.
 
-Frozen labels: `tests/fresh_commands_v7.json`. Predictions/notices: `evaluation/fresh_results_v7.json`. New regressions: `tests/test_colon_fixes.py`.
+Frozen labels: `tests/fresh_commands_v7.json`. Predictions/notices: `evaluation/results/fresh_results_v7.json`. New regressions: `tests/test_colon_fixes.py`.
 
 Parser SHA256: `4f0be484acd37ca613d92d8547a1dcc5d86d7de5dccc5fb09f9565fdee686fa5`.
 Backend pipeline SHA256: `ada5d384fb6d8a17421095a0481d41b2fc3f143d4670b67d5fa82dfc6f8758aa`.

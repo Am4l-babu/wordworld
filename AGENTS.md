@@ -5,12 +5,15 @@ WordWorld is a student-friendly **NLP course project**. Keep the demo visual, re
 ## Structure
 
 - `backend/parser.py`: deterministic natural-language-to-action grammar with optional spaCy tagging
+- `backend/lexicon.py`, `backend/phrases.py`: vocabulary/regex constants and noun-phrase readers used by the parser
 - `backend/main.py`: FastAPI `/api/parse` and `/api/health`
 - `frontend/src/Scene.jsx`: custom SVG sprites and interactive scene canvas
 - `frontend/src/world.js`: scene objects, spatial placement, actions
-- `frontend/src/App.jsx`: React interface, local history, command journal, panels
-- `frontend/src/styles.css`: visual design and responsive layout
-- `tests/`: NLP tests and evaluation
+- `frontend/src/App.jsx`: scene state, undo history, command submission, shortcuts
+- `frontend/src/components/`: topbar, journal, composer, explorer, dialogs, dependency arcs
+- `frontend/src/share.js`, `view.js`, `theme.js`, `grammar.js`: share links, zoom/pan camera, theme, dependency glossary
+- `frontend/src/styles.css`: visual design, responsive layout and light/dark color tokens (`--bg-*`, `--fg-*`, `--line-*`)
+- `tests/`: NLP tests and evaluation; `evaluation/`: frozen reports, results and report scripts (see its README)
 
 ## Coding goals
 
@@ -29,6 +32,8 @@ Tests: `python -m pytest -q tests && python -m tests.evaluate`
 
 ## Highest-priority next tasks
 
-1. Add a front-end integration/smoke test with Playwright after installing packages.
-2. Make parser spans and dependencies available as a rich inline explanation.
-3. Support sentences like "put a bridge between two houses" with explicit two-target extraction.
+Done: Playwright desktop/mobile suite, inline dependency-arc explanation, two-target `between` extraction.
+
+1. Broader grammar gaps from the latest report: thirds, percentages, alternate "each" wording and cross-clause collections.
+2. Cross-request references ("make it blue" after a previous command) without global server state.
+3. Touch pinch-to-zoom on the scene (buttons, Ctrl+wheel and drag-to-pan exist today).

@@ -10,7 +10,7 @@ All four targeted eighth-set errors now pass: N49 (dawn and stop the storm), N42
 - Adjacent half groups require an explicit even whole-number total and a comma/colon partition. `half pink and half white` divides that total into integer groups. Supports `half of them`, shared colors, part clauses, placement, inferred rest and request-local references. Odd, missing, inconsistent or additive half totals abstain. Arithmetic precedes the existing 16-per-action cap.
 - A comma followed by `all` plus a supported location remains attached to the preceding same-noun counted collection. Every group receives the placement, with no extra landmark creation. Missing landmarks, negated constraints and conflicting placements retain refusal behavior. Shared tails across different source noun types remain unsupported.
 - Adjacent part clauses accept will/shall be painted/colored/coloured with supported passive adverbs. Negation, unmapped parts and ambiguous colors abstain. Future perfect remains outside this grammar.
-- Mobile: the single command editor moves above the island on phones and narrow landscape screens; drafts and scenes survive breakpoint changes. Create has a visible label, Enter inserts a newline on phones, textarea text is 16px, primary touch controls are at least 44 by 44 pixels, help remains available, and the help dialog scrolls within short screens. An explicit canvas width fixes tablet overflow. See [mobile QA](../docs/MOBILE_QA.md) for screenshots and limits.
+- Mobile: the single command editor moves above the island on phones and narrow landscape screens; drafts and scenes survive breakpoint changes. Create has a visible label, Enter inserts a newline on phones, textarea text is 16px, primary touch controls are at least 44 by 44 pixels, help remains available, and the help dialog scrolls within short screens. An explicit canvas width fixes tablet overflow. See [mobile QA](../../docs/MOBILE_QA.md) for screenshots and limits.
 
 ## Verification
 
@@ -1306,21 +1306,21 @@ Use new output names for future retests to preserve historical evidence. From th
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
 .\.venv\Scripts\python.exe -m tests.evaluate
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/heldout_commands.json --dataset-sha256 d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224 --allow-parser-change --output evaluation/heldout_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/fresh_v2_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/fresh_v3_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --allow-parser-change --output evaluation/fresh_v4_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v5.json --dataset-sha256 e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e --allow-parser-change --output evaluation/fresh_v5_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v6.json --dataset-sha256 b4c823eafa84322f3c164fcaa0080bf5ed4f94f61d374c8dcd2145c74fed3703 --allow-parser-change --output evaluation/fresh_v6_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v7.json --dataset-sha256 b1c66ed63c5747d59c87b9baaf37f923307cf9d1d42868e7bfeb1ef3fef4b85e --allow-parser-change --output evaluation/fresh_v7_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v8.json --dataset-sha256 44e7288480226cbe1597aa5d925fd41b518b43bec82b260104ffe266c4be1dc5 --allow-parser-change --output evaluation/fresh_v8_retest_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v9.json --dataset-sha256 393d87061735968e5d33452530c341e1ff8ffbe9aa88418932d6f4440b44d475 --output evaluation/fresh_results_v9.json
-.\.venv\Scripts\python.exe -X utf8 -m evaluation.write_shared_report
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/heldout_commands.json --dataset-sha256 d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224 --allow-parser-change --output evaluation/results/heldout_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/results/fresh_v2_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/results/fresh_v3_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --allow-parser-change --output evaluation/results/fresh_v4_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v5.json --dataset-sha256 e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e --allow-parser-change --output evaluation/results/fresh_v5_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v6.json --dataset-sha256 b4c823eafa84322f3c164fcaa0080bf5ed4f94f61d374c8dcd2145c74fed3703 --allow-parser-change --output evaluation/results/fresh_v6_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v7.json --dataset-sha256 b1c66ed63c5747d59c87b9baaf37f923307cf9d1d42868e7bfeb1ef3fef4b85e --allow-parser-change --output evaluation/results/fresh_v7_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v8.json --dataset-sha256 44e7288480226cbe1597aa5d925fd41b518b43bec82b260104ffe266c4be1dc5 --allow-parser-change --output evaluation/results/fresh_v8_retest_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v9.json --dataset-sha256 393d87061735968e5d33452530c341e1ff8ffbe9aa88418932d6f4440b44d475 --output evaluation/results/fresh_results_v9.json
+.\.venv\Scripts\python.exe -X utf8 -m evaluation.scripts.write_shared_report
 ```
 
 From `frontend/`: `npm test`, `npm run build`, `npm run test:e2e` with both servers running. Set `WORDWORLD_BASE_URL` to test production.
 
-Gold: `tests/fresh_commands_v9.json`. Predictions/notices: `evaluation/fresh_results_v9.json`. Regressions: `tests/test_shared_fixes.py`, `frontend/tests/browser/mobile.spec.js`, `frontend/tests/browser/smoke.spec.js`.
+Gold: `tests/fresh_commands_v9.json`. Predictions/notices: `evaluation/results/fresh_results_v9.json`. Regressions: `tests/test_shared_fixes.py`, `frontend/tests/browser/mobile.spec.js`, `frontend/tests/browser/smoke.spec.js`.
 
 Parser SHA256: `7261486fe45b390f216d5e74cbbb98c31cc79dbb3a8698ee4c002a5e9401fbdf`.
 Backend pipeline SHA256: `7480829f7f7b7372c5b94e3a8ae72fe83594d7e0c12b412fc3a79aa6a7d77f0f`.

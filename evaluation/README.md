@@ -1,0 +1,26 @@
+# Evaluation records
+
+Frozen diagnostic evaluations of the WordWorld grounding parser. Nothing in this folder is used by the app at runtime.
+
+**Latest report:** [reports/quarter_fixes_report.md](reports/quarter_fixes_report.md)
+
+| Folder | Contents |
+|---|---|
+| [`reports/`](reports/) | One Markdown report per development round, oldest first: heldout → priority → reference → postnoun → ellipsis → partition → colon → distributive → shared → quarter |
+| [`results/`](results/) | Recorded predictions as JSON. `fresh_results_vN.json` is the first, untuned run on the Nth frozen 50-command sample; `*_retest_vN.json` re-scores an earlier sample against the parser of round N |
+| [`scripts/`](scripts/) | The `write_*_report.py` script that rendered each report from those JSON files |
+
+The gold labels live in [`tests/`](../tests/): `heldout_commands.json` and `fresh_commands_v2.json` … `fresh_commands_v10.json`, each built by its `create_*_set*.py` script before the parser saw it.
+
+## Reproducing a report
+
+Each report script checks that the recorded results were produced by the exact backend source it was written for, through a fingerprint of `backend/*.py`. Run a script at the commit that produced its report; on later commits the fingerprint check fails by design, so stale numbers cannot be presented as current.
+
+To evaluate the current parser, use a new versioned output file so earlier results are never overwritten:
+
+```powershell
+.\.venv\Scripts\python.exe -m tests.evaluate
+.\.venv\Scripts\python.exe -c "from pathlib import Path; from tests.evaluate_heldout import evaluate; evaluate(output_path=Path('evaluation/results/heldout_retest_next.json'), allow_parser_change=True)"
+```
+
+These are implementation-aware, hand-authored diagnostic samples, not independent accuracy estimates. See each report for its method and limits.

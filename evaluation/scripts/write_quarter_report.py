@@ -4,8 +4,9 @@ import json
 from pathlib import Path
 from tests.evaluate_heldout import pipeline_fingerprint
 
-ROOT=Path(__file__).resolve().parents[1]
-HERE=ROOT/'evaluation'
+ROOT=Path(__file__).resolve().parents[2]
+HERE=ROOT/'evaluation'/'results'
+REPORTS=ROOT/'evaluation'/'reports'
 read=lambda name:json.loads((HERE/name).read_text(encoding='utf-8'))
 before=[read('heldout_retest_v9.json')]+[read(f'fresh_v{i}_retest_v9.json') for i in range(2,9)]+[read('fresh_results_v9.json')]
 current=[read('heldout_retest_v10.json')]+[read(f'fresh_v{i}_retest_v10.json') for i in range(2,10)]
@@ -92,15 +93,15 @@ lines += ['## Reproduce','','Use new output names for future retests to preserve
  '.\\.venv\\Scripts\\python.exe -m tests.evaluate']
 for i,r in enumerate(current+[fresh],1):
     dataset='tests/heldout_commands.json' if i==1 else f'tests/fresh_commands_v{i}.json'
-    output='evaluation/heldout_retest_v10.json' if i==1 else f'evaluation/fresh_v{i}_retest_v10.json' if i<10 else 'evaluation/fresh_results_v10.json'
+    output='evaluation/results/heldout_retest_v10.json' if i==1 else f'evaluation/fresh_v{i}_retest_v10.json' if i<10 else 'evaluation/results/fresh_results_v10.json'
     lines.append(f'.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset {dataset} --dataset-sha256 {r["dataset_sha256"]} '+('--allow-parser-change ' if i<10 else '')+f'--output {output}')
-lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.write_quarter_report','```','',
+lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.scripts.write_quarter_report','```','',
  'From `frontend/`: `npm test`, `npm run build`, `npm run test:e2e` with both servers running. Set `WORDWORLD_BASE_URL` for production checks.','',
- 'Gold: `tests/fresh_commands_v10.json`. First predictions: `evaluation/fresh_results_v10.json`. Regressions: `tests/test_quarter_fixes.py`, `tests/test_evaluation_empty_metrics.py`, `frontend/tests/browser/smoke.spec.js`.','',
+ 'Gold: `tests/fresh_commands_v10.json`. First predictions: `evaluation/results/fresh_results_v10.json`. Regressions: `tests/test_quarter_fixes.py`, `tests/test_evaluation_empty_metrics.py`, `frontend/tests/browser/smoke.spec.js`.','',
  f"Parser SHA256: `{fresh['parser_sha256_before']}`.",
  f"Backend pipeline SHA256: `{pipeline}`.",
  f"Tenth dataset SHA256: `{fresh['dataset_sha256']}`.",'',
  'All ten evaluations verified the same backend fingerprint before and after prediction. Original labels/results were preserved.','']
-out=HERE/'quarter_fixes_report.md'
+out=REPORTS/'quarter_fixes_report.md'
 out.write_text('\n'.join(lines),encoding='utf-8')
 print(out)

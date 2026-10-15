@@ -765,17 +765,17 @@ From the project root:
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
 .\.venv\Scripts\python.exe -m tests.evaluate
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest_v5.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/fresh_v2_retest_v5.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/fresh_v3_retest_v5.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --allow-parser-change --output evaluation/fresh_v4_retest_v5.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v5.json --dataset-sha256 e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e --output evaluation/fresh_results_v5.json
-.\.venv\Scripts\python.exe -X utf8 -m evaluation.write_ellipsis_report
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest_v5.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/results/fresh_v2_retest_v5.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/results/fresh_v3_retest_v5.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --allow-parser-change --output evaluation/results/fresh_v4_retest_v5.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v5.json --dataset-sha256 e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e --output evaluation/results/fresh_results_v5.json
+.\.venv\Scripts\python.exe -X utf8 -m evaluation.scripts.write_ellipsis_report
 ```
 
 From `frontend/`, with FastAPI and Vite running: `npm test`, `npm run test:e2e`, `npm run build`.
 
-Frozen labels: `tests/fresh_commands_v5.json`. Predictions/notices/metrics: `evaluation/fresh_results_v5.json`. Regressions: `tests/test_ellipsis_fixes.py`, `frontend/tests/browser/smoke.spec.js`.
+Frozen labels: `tests/fresh_commands_v5.json`. Predictions/notices/metrics: `evaluation/results/fresh_results_v5.json`. Regressions: `tests/test_ellipsis_fixes.py`, `frontend/tests/browser/smoke.spec.js`.
 
 Parser SHA256: `23fd7136e3f65ebf637aadbdfadb89188e8b4d5c8216125dcd65445dd25ab731`.
 Backend pipeline SHA256: `a2eb230316fdf1befedbe7f1c090d9497361d281d57d3214b362b603dea6595a`.

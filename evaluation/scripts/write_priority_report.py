@@ -3,8 +3,9 @@ import hashlib
 import json
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
+ROOT = Path(__file__).resolve().parents[2]
+HERE = ROOT/'evaluation'/'results'
+REPORTS = ROOT/'evaluation'/'reports'
 baseline = json.loads((HERE/'heldout_results.json').read_text(encoding='utf-8'))
 retest = json.loads((HERE/'heldout_retest.json').read_text(encoding='utf-8'))
 fresh = json.loads((HERE/'fresh_results_v2.json').read_text(encoding='utf-8'))
@@ -78,21 +79,21 @@ for case in fresh['cases']:
 lines += [
     '## Reproduce', '', 'From the project root:', '', '```powershell',
     '.\\.venv\\Scripts\\python.exe -m pytest -q tests',
-    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest.json',
-    f".\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 {fresh['dataset_sha256']} --output evaluation/fresh_results_v2.json",
-    '.\\.venv\\Scripts\\python.exe -X utf8 evaluation/write_priority_report.py', '```', '',
+    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest.json',
+    f".\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 {fresh['dataset_sha256']} --output evaluation/results/fresh_results_v2.json",
+    '.\\.venv\\Scripts\\python.exe -X utf8 evaluation/scripts/write_priority_report.py', '```', '',
     'From `frontend/`, with API and Vite running: `npm test`, `npm run test:e2e`, and `npm run build`.', '',
     '- Original frozen labels: `tests/heldout_commands.json` (unchanged).',
-    '- Original predictions: `evaluation/heldout_results.json` (unchanged).',
-    '- First-set retest: `evaluation/heldout_retest.json`.',
+    '- Original predictions: `evaluation/results/heldout_results.json` (unchanged).',
+    '- First-set retest: `evaluation/results/heldout_retest.json`.',
     '- New frozen labels and development-input hashes: `tests/fresh_commands_v2.json`.',
-    '- New predictions/notices: `evaluation/fresh_results_v2.json`.',
+    '- New predictions/notices: `evaluation/results/fresh_results_v2.json`.',
     '- Regression coverage: `tests/test_accuracy_fixes.py` and `frontend/tests/browser/smoke.spec.js`.', '',
     f"Final parser SHA256: `{fresh['parser_sha256_before']}`.",
     f"Second-set SHA256: `{fresh['dataset_sha256']}`.", '',
     'The parser hash is identical between the first-set retest and the second-set run, and before/after the fresh evaluation. The evaluator refuses modified labels and protects the original result file. If second-round failures guide future development, this set becomes a regression/comparison set; another new sample is needed for a future fresh-command claim.', '',
 ]
 assert sum(not case['exact_match'] and not case['warnings'] for case in fresh['cases']) == 4
-out=HERE/'priority_fixes_report.md'
+out=REPORTS/'priority_fixes_report.md'
 out.write_text('\n'.join(lines), encoding='utf-8')
 print(out)

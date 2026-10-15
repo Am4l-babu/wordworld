@@ -3,8 +3,9 @@ import hashlib
 import json
 from pathlib import Path
 
-DIRECTORY = Path(__file__).resolve().parent
-ROOT = DIRECTORY.parent
+ROOT = Path(__file__).resolve().parents[2]
+DIRECTORY = ROOT / "evaluation" / "results"
+REPORTS = ROOT / "evaluation" / "reports"
 results = json.loads((DIRECTORY / "heldout_results.json").read_text(encoding="utf-8"))
 dataset = ROOT / "tests/heldout_commands.json"
 assert hashlib.sha256(dataset.read_bytes()).hexdigest() == results["dataset_sha256"]
@@ -67,12 +68,12 @@ for row in results["cases"]:
         lines += [f"Label rationale: {row['label_note']}", ""]
     lines += ["Expected:", "", "```json", json.dumps(row["expected_actions"], indent=2, ensure_ascii=False), "```", "", "Actual:", "", "```json", json.dumps(row["predicted_actions"], indent=2, ensure_ascii=False), "```", "", "Parser notices: " + ("; ".join(row["warnings"]) or "None."), ""]
 lines += ["## Reproducibility and integrity", "",
-          "From the project root, with the installed environment:", "", "```powershell", ".\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout", ".\\.venv\\Scripts\\python.exe -X utf8 evaluation\\write_heldout_report.py", "```", "",
+          "From the project root, with the installed environment:", "", "```powershell", ".\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout", ".\\.venv\\Scripts\\python.exe -X utf8 evaluation\\scripts\\write_heldout_report.py", "```", "",
           "The runner refuses changed gold labels or a parser whose source differs from the baseline captured before evaluation. Expected language errors remain in the result JSON; the script completes successfully when the evaluation itself ran. It does not silently rewrite the gold set or add these examples to the development tests.", "",
-          "- Dataset: `tests/heldout_commands.json`", "- Full predictions and notices: `evaluation/heldout_results.json`", "- Prediction-free dataset construction: `tests/create_heldout_set.py`", "- Runner: `tests/evaluate_heldout.py`", "",
+          "- Dataset: `tests/heldout_commands.json`", "- Full predictions and notices: `evaluation/results/heldout_results.json`", "- Prediction-free dataset construction: `tests/create_heldout_set.py`", "- Runner: `tests/evaluate_heldout.py`", "",
           f"- Frozen dataset SHA256: `{results['dataset_sha256']}`", f"- Parser SHA256 before: `{results['parser_sha256_before']}`", f"- Parser SHA256 after: `{results['parser_sha256_after']}`", "",
           "Runtime: " + ", ".join(f"{key}={value}" for key, value in results["runtime"].items()) + ".", "",
           "Once these failures guide parser changes, this set becomes a regression/comparison set. Author another fresh set for a future unseen-command accuracy claim.", ""]
 assert sum(not row["exact_match"] and not row["warnings"] for row in results["cases"]) == 12
-(DIRECTORY / "heldout_report.md").write_text("\n".join(lines), encoding="utf-8")
-print(DIRECTORY / "heldout_report.md")
+(REPORTS / "heldout_report.md").write_text("\n".join(lines), encoding="utf-8")
+print(REPORTS / "heldout_report.md")

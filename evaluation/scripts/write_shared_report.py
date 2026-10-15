@@ -4,8 +4,9 @@ import json
 from pathlib import Path
 from tests.evaluate_heldout import pipeline_fingerprint
 
-ROOT=Path(__file__).resolve().parents[1]
-HERE=ROOT/'evaluation'
+ROOT=Path(__file__).resolve().parents[2]
+HERE=ROOT/'evaluation'/'results'
+REPORTS=ROOT/'evaluation'/'reports'
 read=lambda name:json.loads((HERE/name).read_text(encoding='utf-8'))
 before=[read('heldout_retest_v8.json')]+[read(f'fresh_v{i}_retest_v8.json') for i in range(2,8)]+[read('fresh_results_v8.json')]
 current=[read('heldout_retest_v9.json')]+[read(f'fresh_v{i}_retest_v9.json') for i in range(2,9)]
@@ -91,15 +92,15 @@ lines += ['## Reproduce','','Use new output names for future retests to preserve
  '.\\.venv\\Scripts\\python.exe -m tests.evaluate']
 for i,r in enumerate(current+[fresh],1):
     dataset='tests/heldout_commands.json' if i==1 else f'tests/fresh_commands_v{i}.json'
-    output='evaluation/heldout_retest_v9.json' if i==1 else f'evaluation/fresh_v{i}_retest_v9.json' if i<9 else 'evaluation/fresh_results_v9.json'
+    output='evaluation/results/heldout_retest_v9.json' if i==1 else f'evaluation/fresh_v{i}_retest_v9.json' if i<9 else 'evaluation/results/fresh_results_v9.json'
     lines.append(f'.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset {dataset} --dataset-sha256 {r["dataset_sha256"]} '+('--allow-parser-change ' if i<9 else '')+f'--output {output}')
-lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.write_shared_report','```','',
+lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.scripts.write_shared_report','```','',
  'From `frontend/`: `npm test`, `npm run build`, `npm run test:e2e` with both servers running. Set `WORDWORLD_BASE_URL` to test production.','',
- 'Gold: `tests/fresh_commands_v9.json`. Predictions/notices: `evaluation/fresh_results_v9.json`. Regressions: `tests/test_shared_fixes.py`, `frontend/tests/browser/mobile.spec.js`, `frontend/tests/browser/smoke.spec.js`.','',
+ 'Gold: `tests/fresh_commands_v9.json`. Predictions/notices: `evaluation/results/fresh_results_v9.json`. Regressions: `tests/test_shared_fixes.py`, `frontend/tests/browser/mobile.spec.js`, `frontend/tests/browser/smoke.spec.js`.','',
  f"Parser SHA256: `{fresh['parser_sha256_before']}`.",
  f"Backend pipeline SHA256: `{pipeline}`.",
  f"Ninth dataset SHA256: `{fresh['dataset_sha256']}`.",'',
  'All nine evaluations verified the same backend fingerprint before and after prediction. No subsequent backend or gold tuning occurred.','']
-out=HERE/'shared_fixes_report.md'
+out=REPORTS/'shared_fixes_report.md'
 out.write_text('\n'.join(lines),encoding='utf-8')
 print(out)

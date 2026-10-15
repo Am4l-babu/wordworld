@@ -13,7 +13,7 @@ import platform
 
 ROOT = Path(__file__).resolve().parents[1]
 DATASET = Path(__file__).with_name("heldout_commands.json")
-RESULTS = ROOT / "evaluation/heldout_results.json"
+RESULTS = ROOT / "evaluation/results/heldout_results.json"
 FROZEN_DATASET_SHA256 = "d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224"
 
 

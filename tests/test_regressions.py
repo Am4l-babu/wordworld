@@ -65,3 +65,15 @@ def test_between_rejects_more_than_two_landmarks(text):
     result = parser.parse(text)
     assert result["actions"] == []
     assert result["warnings"]
+
+
+@pytest.mark.parametrize("text,count", [
+    ("Remove the bridge", 1),
+    ("Get rid of the house.", 1),
+    ("Remove every house", "all"),
+    ("Remove the houses", "all"),
+    ("Remove the village", "all"),
+    ("Remove two houses", 2),
+])
+def test_singular_definite_removal_removes_one_object(text, count):
+    assert [a["count"] for a in parser.parse(text)["actions"]] == [count]
