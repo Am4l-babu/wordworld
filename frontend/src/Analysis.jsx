@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {RELATION_LABEL} from './world';
 import {describeToken, tokenRoles, headIndex} from './grammar';
 import DependencyArcs from './components/DependencyArcs';
+import ExtractorComparison from './components/ExtractorComparison';
 
 const plural = (type, count) => count === 1 ? type : `${type}s`;
-const labels = {intent: 'Instruction', object: 'Object', quantity: 'Quantity', color: 'Color', spatial_relation: 'Relation', landmark: 'Landmark', setting: 'Setting', protected: 'Preserved', reference: 'Reference'};
+const labels = {intent: 'Instruction', object: 'Object', quantity: 'Quantity', color: 'Color', change: 'Change', spatial_relation: 'Relation', landmark: 'Landmark', setting: 'Setting', protected: 'Preserved', reference: 'Reference'};
 const MODEL_NOTE = {
   spacy: 'spaCy grammar annotations',
   'browser-preview': 'Limited browser preview',
@@ -27,9 +28,15 @@ function HighlightedCommand({parsed, onPickSpan}) {
   return <p className="grounded-command" aria-label="Annotated command">{parts}</p>;
 }
 
+const DIRECTION_LABEL = {left: 'left', right: 'right', up: 'back', down: 'forward'};
+
 function actionLabel(a) {
+  const who = `${a.count === 'all' ? 'all' : a.count} ${a.filter_color ? a.filter_color + ' ' : ''}${plural(a.type, a.count)}`;
   const main = a.action === 'add' ? `+ ${a.count} ${a.color ? a.color + ' ' : ''}${plural(a.type, a.count)}`
-    : a.action === 'remove' ? `− ${a.count === 'all' ? 'all' : a.count} ${plural(a.type, a.count)}`
+    : a.action === 'remove' ? `− ${who}`
+    : a.action === 'recolor' ? `🎨 ${who} → ${a.color}`
+    : a.action === 'resize' ? `⤢ ${who} ${a.scale > 1 ? 'bigger' : 'smaller'}`
+    : a.action === 'move' ? `↔ move ${who}${a.direction ? ` ${DIRECTION_LABEL[a.direction]}` : ''}`
     : a.action === 'setting' ? `${a.key}: ${a.value}` : 'Reset world';
   return main + (a.relation ? ` · ${RELATION_LABEL[a.relation] || a.relation} ${(a.targets || [a.target]).join(' & ')}` : '');
 }
@@ -52,7 +59,7 @@ export default function Analysis({parsed}) {
     <HighlightedCommand parsed={parsed} onPickSpan={pickSpan}/>
     <div className="span-legend">{Object.entries(labels).map(([role, label]) => <span key={role}><i className={`span-${role}`}/>{label}</span>)}</div>
     {parsed.resolutions?.length > 0 && <p className="reference-resolutions">
-      {parsed.resolutions.map((r, i) => <span key={i}>{r.text} → {r.objects.map(o => `${o.count} ${o.type}${o.count > 1 ? 's' : ''}`).join(' + ')}</span>)}
+      {parsed.resolutions.map((r, i) => <span key={i}>{r.text} → {r.objects.map(o => `${o.count} ${o.type}${o.count > 1 ? 's' : ''}`).join(' + ')}{r.earlier ? ' (from before)' : ''}</span>)}
     </p>}
     {hasDependencies && <div className="dep-section">
       <div className="dep-heading"><b>Sentence structure</b><span>spaCy dependency parse · annotation only, the actions above come from the grounding rules</span></div>
@@ -78,6 +85,7 @@ export default function Analysis({parsed}) {
       </dl>
     </>}
     <div className="actions-chips">{parsed.actions?.map((a, i) => <span key={i}>{actionLabel(a)}</span>)}</div>
+    <ExtractorComparison parsed={parsed} label={actionLabel}/>
     {parsed.warnings?.length > 0 && <ul className="parse-warnings" aria-label="Parser notices">{parsed.warnings.map(w => <li key={w}>{w}</li>)}</ul>}
     <details className="action-json"><summary>Structured actions JSON</summary><pre>{JSON.stringify(parsed.actions, null, 2)}</pre></details>
   </>;

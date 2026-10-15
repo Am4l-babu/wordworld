@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {applyActions,makeItem,cleanScene,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
+import {applyActions,makeItem,cleanScene,focusGroups,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
 import {fallbackParser} from '../src/previewParser.js';
 
 test('reference removal preserves preexisting objects of the same type',()=>{
@@ -112,4 +112,51 @@ test('removing a type that is absent explains why nothing changed',()=>{
  const result=apply([makeItem('house',300,350)],[{action:'remove',type:'castle',count:1}]);
  assert.equal(result.items.length,1);
  assert.deepEqual(result.notices,['There are no castles in the world to remove.']);
+});
+
+test('edits repaint, resize and move only the most recent matching objects',()=>{
+ const red=makeItem('house',300,320,'red'),plain=makeItem('house',400,330),lake=makeItem('lake',650,300);
+ let r=apply([red,plain,lake],[{action:'recolor',type:'house',count:1,color:'blue'}]);
+ assert.deepEqual(r.items.map(o=>o.color),['red','blue',undefined]);
+ assert.deepEqual(r.touched,[plain.id]);
+ r=apply([red,plain,lake],[{action:'recolor',type:'house',count:'all',color:'pink',filter_color:'red'}]);
+ assert.deepEqual(r.items.map(o=>o.color),['pink','pink',undefined]);
+ r=apply([red,plain],[{action:'resize',type:'house',count:'all',scale:1.25}]);
+ assert.deepEqual(r.items.map(o=>o.scale),[1.25,1.25]);
+ r=apply([makeItem('house',300,320,null,1.85)],[{action:'resize',type:'house',count:1,scale:1.25}]);
+ assert.equal(r.items[0].scale,1.9);
+ assert.deepEqual(r.notices,[]);
+ r=apply(r.items,[{action:'resize',type:'house',count:1,scale:1.25}]);
+ assert.deepEqual(r.notices,['The house is already as big as it can be.']);
+ r=apply([red,lake],[{action:'move',type:'house',count:1,relation:'left',target:'lake'}]);
+ const moved=r.items[0];
+ assert.ok(moved.x<lake.x);
+ assert.deepEqual(moved.grounding,{relation:'left',anchorIds:[lake.id]});
+ r=apply([red],[{action:'move',type:'house',count:1,direction:'right',distance:'medium'}]);
+ assert.deepEqual([r.items[0].x,r.items[0].y],[375,320]);
+});
+test('edits explain missing objects and never move without a landmark',()=>{
+ let r=apply([makeItem('tree',300,320)],[{action:'recolor',type:'house',count:1,color:'blue'}]);
+ assert.deepEqual(r.notices,['There are no houses to repaint.']);
+ const house=makeItem('house',300,320);
+ r=apply([house],[{action:'move',type:'house',count:1,relation:'near',target:'lake'}]);
+ assert.deepEqual([r.items[0].x,r.items[0].y],[300,320]);
+ assert.match(r.notices[0],/Couldn't find a lake/);
+ r=apply([makeItem('house',880,350)],[{action:'move',type:'house',count:1,direction:'right',distance:'large'}]);
+ assert.ok(r.items[0].x>=880&&((r.items[0].x-500)/390)**2+((r.items[0].y-350)/155)**2<=1);
+});
+test('context bindings let "it" edit exactly the objects the last command touched',()=>{
+ const older=makeItem('castle',300,320),newer=makeItem('house',400,320),target=makeItem('house',500,320);
+ const r=applyActions([older,newer,target],INITIAL_SETTINGS,[{action:'recolor',type:'house',count:1,color:'blue'}],[{action_index:0,edit_from:[-1]}],[{type:'house',ids:[newer.id]}]);
+ assert.deepEqual(r.items.map(o=>o.color),[undefined,'blue',undefined]);
+ const gone=applyActions([older],INITIAL_SETTINGS,[{action:'recolor',type:'house',count:1,color:'blue'}],[{action_index:0,edit_from:[-1]}],[{type:'house',ids:['deleted']}]);
+ assert.match(gone.notices[0],/no longer in the world/);
+ assert.deepEqual(focusGroups([older,newer,target],[newer.id,target.id,older.id,'missing']),[{type:'house',ids:[newer.id,target.id]},{type:'castle',ids:[older.id]}]);
+});
+test('a move with no room reports that the object stayed put without claiming it moved',()=>{
+ const lake=makeItem('lake',500,197),castle=makeItem('castle',500,450);
+ const r=apply([lake,castle],[{action:'move',type:'castle',count:1,relation:'above',target:'lake'}]);
+ assert.deepEqual([r.items[1].x,r.items[1].y],[500,450]);
+ assert.deepEqual(r.descriptions,[]);
+ assert.match(r.notices[0],/stayed put/);
 });

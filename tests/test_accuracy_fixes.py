@@ -20,10 +20,14 @@ def test_prior_diagnostic_regressions(case):
     "Never plant trees, flowers, or rocks.", "Please don't remove the lake.",
     "Keep the trees, flowers, and houses.", "Leave the towers alone.",
     "Preserve the lake and protect the houses.", "Move the houses.",
-    "I already have a lake.", "Paint the house blue.",
+    "I already have a lake.",
 ])
 def test_non_creation_mentions_never_become_creations(text):
     assert parse(text)["actions"] == []
+
+
+def test_painting_edits_existing_objects_without_creating_any():
+    assert parse("Paint the house blue.")["actions"] == [{"action": "recolor", "type": "house", "count": 1, "color": "blue"}]
 
 
 @pytest.mark.parametrize("text", [

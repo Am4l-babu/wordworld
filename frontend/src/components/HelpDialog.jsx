@@ -21,7 +21,7 @@ export default function HelpDialog({onClose}) {
     <div className="help-steps">
       <div><b>01 · Dream</b><span>“Place two red cottages next to the lake.”</span></div>
       <div><b>02 · Understand</b><span>Entity: house · Count: 2 · Color: red · Relation: near lake</span></div>
-      <div><b>03 · Explore</b><span>Click and drag to move objects. Use the explorer to modify or delete them.</span></div>
+      <div><b>03 · Explore</b><span>Click and drag to move objects, or keep talking: “paint it blue”, “make the houses bigger”, “move the castle behind the lake”.</span></div>
     </div>
     <div className="shortcuts">
       <b>Keyboard shortcuts</b>

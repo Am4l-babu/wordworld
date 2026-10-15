@@ -10,7 +10,7 @@ import Explorer from './components/Explorer';
 import HelpDialog from './components/HelpDialog';
 import ShareDialog from './components/ShareDialog';
 import {fallbackParser} from './previewParser';
-import {MAX_ITEMS, initialItems, INITIAL_SETTINGS, snapshot, makeItem, applyActions, cleanScene} from './world';
+import {MAX_ITEMS, initialItems, INITIAL_SETTINGS, snapshot, makeItem, applyActions, cleanScene, focusGroups, describeFocus} from './world';
 import {KEYS, writeJSON, getSaved, getRecent, getSharedCommand} from './storage';
 import {readSharedWorld, clearSharedWorldParam, shareUrl} from './share';
 import {DEFAULT_VIEW, clampView, zoomAt, isVisible} from './view';
@@ -42,6 +42,8 @@ function App() {
   const isCompact = useCompactLayout();
   const {theme, toggle: toggleTheme} = useTheme();
   const [items, setItems] = useState(start.scene.items), [settings, setSettings] = useState(start.scene.settings);
+  // `focus` is what 'it'/'them' mean in the next command: the objects the last command or click touched.
+  const [focus, setFocus] = useState([]);
   const [selected, setSelected] = useState(null), [view, setView] = useState(DEFAULT_VIEW), [showGuides, setShowGuides] = useState(true);
   const [prompt, setPrompt] = useState(getSharedCommand), [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState([intro]), [parsed, setParsed] = useState(null), [recent, setRecent] = useState(getRecent);
@@ -107,6 +109,7 @@ function App() {
   async function submit(text = prompt) {
     const cmd = text.trim();
     if (!cmd || busyRef.current) return;
+    const context = focusGroups(live.current.items, focus);
     busyRef.current = true;
     setBusy(true);
     setPrompt('');
@@ -115,7 +118,7 @@ function App() {
     setMessages(v => [...v.slice(-59), {text: cmd, kind: 'user'}]);
     let result;
     try {
-      const response = await fetch('/api/parse', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text: cmd}), signal: AbortSignal.timeout?.(10000)});
+      const response = await fetch('/api/parse', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text: cmd, context: context.map(g => ({type: g.type, count: g.ids.length}))}), signal: AbortSignal.timeout?.(10000)});
       const data = await response.json();
       result = response.ok ? data : {text: cmd, actions: [], tokens: [], highlights: [], warnings: [], model: apiState,
         message: typeof data.detail === 'string' ? data.detail : 'The API rejected this instruction. Please shorten or rephrase it.'};
@@ -129,11 +132,11 @@ function App() {
     setParsed(result);
     if (result.actions?.length) {
       remember();
-      const output = applyActions(current, currentSettings, result.actions, result.bindings);
+      const output = applyActions(current, currentSettings, result.actions, result.bindings, context);
       setItems(output.items);
       setSettings(output.settings);
-      const before = new Set(current.map(o => o.id));
-      setSelected(output.items.filter(o => !before.has(o.id)).at(-1)?.id ?? null);
+      setSelected(output.touched.at(-1) ?? null);
+      if (output.touched.length) setFocus(output.touched);
       const notices = [...(result.warnings || []), ...output.notices,
         ...(output.missing.length ? [`Couldn't find ${output.missing.join(', ')}; used available space instead.`] : [])];
       setParsed({...result, warnings: notices});
@@ -178,7 +181,7 @@ function App() {
     remember();
     const result = applyActions(items, settings, [{action: 'add', type, count: 1}]);
     setItems(result.items);
-    setSelected(result.items.at(-1)?.id);
+    select(result.items.at(-1)?.id);
     notify(`Added ${article(type)} ${type}`);
   }
   function deleteSelected() {
@@ -195,8 +198,13 @@ function App() {
     remember();
     const copy = makeItem(obj.type, Math.min(obj.x + 48, 880), Math.min(obj.y + 34, 500), obj.color, obj.scale);
     setItems(v => [...v, copy]);
-    setSelected(copy.id);
+    select(copy.id);
     notify('Object duplicated');
+  }
+  // Clicking an object makes it what 'it' refers to next.
+  function select(id) {
+    setSelected(id);
+    if (id) setFocus([id]);
   }
   function recolor(color) {
     remember();
@@ -226,7 +234,7 @@ function App() {
     const list = items.filter(i => i.type === type);
     if (!list.length) return;
     const next = list[(list.findIndex(i => i.id === selected) + 1) % list.length];
-    setSelected(next.id);
+    select(next.id);
     if (!isVisible(view, next)) setView(v => clampView({...v, x: next.x, y: next.y}));
   }
 
@@ -275,7 +283,8 @@ function App() {
   });
 
   const chosen = items.find(o => o.id === selected);
-  const composer = <Composer inputRef={inputRef} value={prompt} busy={busy} isCompact={isCompact} canRecall={recent.length > 0}
+  const focusLabel = describeFocus(focusGroups(items, focus));
+  const composer = <Composer inputRef={inputRef} value={prompt} busy={busy} isCompact={isCompact} canRecall={recent.length > 0} focusLabel={focusLabel}
     onChange={value => { recall.current = null; setPrompt(value); }} onKeyDown={composerKey} onSubmit={() => submit()}/>;
 
   return <div className="app-shell">
@@ -296,7 +305,7 @@ function App() {
       <main className="main-panel">
         <WorldTitle count={items.length}/>
         {isCompact && composer}
-        <WorldStage items={items} settings={settings} selected={selected} onSelect={setSelected} onMove={moveItem} onDragBegin={remember}
+        <WorldStage items={items} settings={settings} selected={selected} onSelect={select} onMove={moveItem} onDragBegin={remember}
           view={view} onView={setView} onZoom={step => setView(v => zoomAt(v, v.zoom + step))} onResetView={() => setView(DEFAULT_VIEW)}
           showGuides={showGuides} onTrySentence={() => reuse('Build three houses and plant five trees')} onRestore={loadExample}/>
         <WorldControls settings={settings} canUndo={history.length > 0} canRedo={future.length > 0} onUndo={undo} onRedo={redo}

@@ -121,3 +121,42 @@ test('sentence structure explains dependencies alongside grounding roles',async(
  await page.locator('.token-details').getByRole('button',{name:'Put'}).click();
  await expect(page.locator('.token-meaning')).toContainText('root of the sentence');
 });
+
+test('language edits recolor, resize and move existing objects, and "it" follows the last command',async({page})=>{
+ const houses=scene(page).getByRole('button',{name:'Select house',exact:true});
+ await editor(page).fill('Paint the houses blue');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(houses.locator('path[fill="#74a6ea"]')).toHaveCount(2);
+ await expect(count(page)).toContainText('22 total');
+ await editor(page).fill('Build a castle');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.locator('.focus-chip')).toContainText('1 castle');
+ const castle=scene(page).getByRole('button',{name:'Select castle',exact:true});
+ const before=await castle.getAttribute('transform');
+ await editor(page).fill('make it bigger');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(castle).not.toHaveAttribute('transform',before);
+ await expect(page.locator('.reference-resolutions')).toContainText('it → 1 castle (from before)');
+ await editor(page).fill('move it next to the lake');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByRole('group',{name:'Placement guide: near',exact:true})).toBeVisible();
+ await expect(count(page)).toContainText('23 total');
+ await scene(page).getByRole('button',{name:'Select rock',exact:true}).click();
+ await expect(page.locator('.focus-chip')).toContainText('1 rock');
+ await editor(page).fill('remove it');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(scene(page).getByRole('button',{name:'Select rock',exact:true})).toHaveCount(0);
+ await expect(scene(page).getByRole('button',{name:'Select castle',exact:true})).toHaveCount(1);
+});
+
+test('the analysis compares the rules with a dependency-parse baseline',async({page})=>{
+ await editor(page).fill('Build two red houses next to the lake');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ const compare=page.getByLabel('Extractor comparison');
+ await expect(compare).toContainText('Same actions');
+ await expect(compare).toContainText('Across 550 labelled commands');
+ await editor(page).fill('Build five houses: two blue and the remaining three red.');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(compare).toContainText('Different actions');
+ await expect(compare.locator('.compare-column').first()).toContainText('+ 2 blue houses');
+});

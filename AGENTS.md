@@ -6,6 +6,8 @@ WordWorld is a student-friendly **NLP course project**. Keep the demo visual, re
 
 - `backend/parser.py`: deterministic natural-language-to-action grammar with optional spaCy tagging
 - `backend/lexicon.py`, `backend/phrases.py`: vocabulary/regex constants and noun-phrase readers used by the parser
+- `backend/edits.py`: recolor/resize/move edits of existing objects; `parse(text, context)` resolves 'it'/'them' against the client's last-touched objects
+- `backend/dependency_baseline.py`: comparison-only extractor from spaCy dependencies; frozen (hash in `tests/compare_extractors.py`) — version it rather than tuning it on the labelled sets
 - `backend/main.py`: FastAPI `/api/parse` and `/api/health`
 - `frontend/src/Scene.jsx`: custom SVG sprites and interactive scene canvas
 - `frontend/src/world.js`: scene objects, spatial placement, actions
@@ -19,7 +21,7 @@ WordWorld is a student-friendly **NLP course project**. Keep the demo visual, re
 
 - Preserve natural language grounding: every new type/relation must be parsed and be connected to a visible world action.
 - Prefer clear, testable rules over ungrounded AI output; add examples and tests for new grammar behavior.
-- Never claim spaCy action parsing when only the token annotations come from spaCy. The current MVP uses rule-based grounding.
+- Never claim spaCy action parsing when only the token annotations come from spaCy. The world is driven by rule-based grounding; the dependency baseline is labelled as a comparison and never applied.
 - Keep object manipulations working (click, drag, add, remove, recolor, undo, zoom).
 - Maintain responsive design and keyboard accessibility wherever practical.
 - Run Python tests and `npm run build` before considering a change complete. If installing dependencies fails due to network, report that limitation rather than claiming the build succeeded.
@@ -28,12 +30,12 @@ WordWorld is a student-friendly **NLP course project**. Keep the demo visual, re
 
 Backend: `python -m uvicorn backend.main:app --reload --port 8000`
 Frontend: `cd frontend && npm install && npm run dev`
-Tests: `python -m pytest -q tests && python -m tests.evaluate`
+Tests: `python -m pytest -q tests && python -m tests.evaluate && python -m tests.compare_extractors --check`; frontend `npm test`, `npm run build`, `npm run test:e2e` (CI runs all)
 
 ## Highest-priority next tasks
 
-Done: Playwright desktop/mobile suite, inline dependency-arc explanation, two-target `between` extraction.
+Done: Playwright desktop/mobile suite, inline dependency-arc explanation, two-target `between` extraction, language edits, cross-request references, CI, rules-vs-dependency comparison.
 
 1. Broader grammar gaps from the latest report: thirds, percentages, alternate "each" wording and cross-clause collections.
-2. Cross-request references ("make it blue" after a previous command) without global server state.
+2. A fresh frozen 50-command set that includes edits and cross-request references, evaluated before any tuning.
 3. Touch pinch-to-zoom on the scene (buttons, Ctrl+wheel and drag-to-pan exist today).
