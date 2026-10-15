@@ -29,9 +29,9 @@ def labelled_sets():
     yield "development", "Development regressions (tests/commands.json)", None, [
         {"id": f"D{i + 1:02d}", "text": c["text"], "expected": c["actions"]} for i, c in enumerate(json.loads((ROOT / "tests/commands.json").read_text(encoding="utf-8")))]
     for name, path, first_run in [("heldout", "tests/heldout_commands.json", "evaluation/results/heldout_results.json")] + [
-            (f"fresh_v{n}", f"tests/fresh_commands_v{n}.json", f"evaluation/results/fresh_results_v{n}.json") for n in range(2, 11)]:
+            (f"fresh_v{n}", f"tests/fresh_commands_v{n}.json", f"evaluation/results/fresh_results_v{n}.json") for n in range(2, 12)]:
         data = json.loads((ROOT / path).read_text(encoding="utf-8"))
-        cases = [{"id": c["id"], "text": c["text"], "expected": c["expected_actions"]} for c in data["cases"]]
+        cases = [{"id": c["id"], "text": c["text"], "expected": c["expected_actions"], "context": c.get("context")} for c in data["cases"]]
         recorded = json.loads((ROOT / first_run).read_text(encoding="utf-8"))["metrics"]["exact_match"]
         yield name, f"{data['name']} ({path})", recorded, cases
 
@@ -67,7 +67,8 @@ def run():
     for name, title, first_run, cases in labelled_sets():
         rows = []
         for case in cases:
-            rules = parse(case["text"])["actions"]
+            # Rules get the client context a case carries; the baseline has no notion of it.
+            rules = parse(case["text"], case.get("context"))["actions"]
             baseline = extract(NLP(case["text"]))
             rows.append({**case, "rules": rules, "baseline": baseline,
                          "rules_score": score(rules, case["expected"]), "baseline_score": score(baseline, case["expected"]),
@@ -111,6 +112,8 @@ def write_report(summary, sets):
         f"are optimistic. Their recorded **first-run** exact match on the {first['sets']} frozen sets was **{first['correct']}/{first['total']} ({first['correct'] / first['total']:.0%})**.",
         f"- **The baseline has not.** It was written against separate example sentences and frozen (SHA-256 `{summary['baseline_sha256'][:12]}…`) "
         "before its first run here; it is not tuned on these results.",
+        "- Fresh set v11 tests edits and cross-request references. Its context cases give the rules what the previous command touched; "
+        "the baseline cannot use that context, which is part of what is being compared.",
         "- Both are implementation-aware, hand-authored diagnostics, not independent accuracy estimates.", "",
         "## Overall", "",
         "| Metric | Rules (retest) | Dependency baseline |", "|---|---|---|",

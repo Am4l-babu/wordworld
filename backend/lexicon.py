@@ -43,7 +43,7 @@ RELATION_PATTERNS = [
     ("right", r"\b(?:to the right of|right of|east of)\b"),
     ("above", r"\b(?:above|behind|north of|at the back of)\b"),
     ("below", r"\b(?:below|in front of|south of)\b"),
-    ("near", r"\b(?:beside|next to|near|by|close to|around the edge of|around|along)\b"),
+    ("near", r"\b(?:beside|next to|near|by|closer to|close to|around the edge of|around|along)\b"),
     ("between", r"\bbetween\b"),
     ("across", r"\b(?:across|over|spanning|crossing)\b"),
     ("inside", r"\b(?:inside|within|in the middle of|in the center of)\b"),

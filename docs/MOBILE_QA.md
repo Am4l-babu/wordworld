@@ -38,6 +38,19 @@ The command editor is now reachable before the island on phones, and the main co
 
 The in-app browser supplied the screenshots and DOM measurements in this audit. The automated Chromium suite separately checks 320x740, 390x844, 430x932, 768x1024 and 844x390 in desktop and mobile contexts, plus breakpoint switching. All 42 browser checks pass locally. Production verification uses the same suite after deployment.
 
+## Dark theme and new controls — 16 October 2026
+
+The dark theme, share menu, theme toggle, size buttons and composer reference chip were checked at a configured 390x844 phone viewport in Chromium, with the full Python parser.
+
+- **Touch targets (measured):** theme toggle, share menu and help 44x44px; zoom 44x44px; size buttons 44x44px; Create 100x44px.
+- **Fixed during this check:** on narrow screens the island SVG is letterboxed, and the frame behind it showed the dark app background as bands above and below the sky. The scene now paints the same sky gradient behind itself, in either theme and at night.
+- **References:** after “Build a castle”, the composer shows `it / them → 1 castle`, so a follow-up such as “make it bigger” is predictable.
+- **Gestures:** two-finger pinch zooms around the pinch midpoint and cancels any object drag; an automated check dispatches touch pointers.
+
+![Phone layout in the dark theme after “Build a castle”](assets/mobile-dark.png)
+
+The same limits apply: viewport checks, not physical devices; contrast was reviewed visually, not measured against WCAG ratios.
+
 ## Limits
 
 These are browser viewport checks, not physical iPhone/Android tests. Real on-screen keyboard occlusion, safe-area behavior, screen-reader navigation, color contrast and reduced-motion preferences were not comprehensively audited. Existing reduced-motion styles and keyboard interactions remain in place; the report does not claim full accessibility compliance. Very dense scenes and crowded placement remain separate limitations.

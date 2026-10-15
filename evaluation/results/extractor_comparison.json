@@ -1,55 +1,55 @@
 {
   "summary": {
-    "commands": 550,
+    "commands": 600,
     "rules": {
       "exact_match": {
-        "correct": 505,
-        "total": 550,
-        "accuracy": 0.9182
+        "correct": 557,
+        "total": 600,
+        "accuracy": 0.9283
       },
       "intent": {
-        "correct": 507,
-        "total": 550,
-        "accuracy": 0.9218
+        "correct": 559,
+        "total": 600,
+        "accuracy": 0.9317
       },
       "entity_count_color": {
-        "correct": 508,
-        "total": 550,
-        "accuracy": 0.9236
+        "correct": 560,
+        "total": 600,
+        "accuracy": 0.9333
       },
       "spatial": {
-        "correct": 136,
-        "total": 142,
-        "accuracy": 0.9577
+        "correct": 147,
+        "total": 153,
+        "accuracy": 0.9608
       }
     },
     "baseline": {
       "exact_match": {
-        "correct": 123,
-        "total": 550,
-        "accuracy": 0.2236
+        "correct": 138,
+        "total": 600,
+        "accuracy": 0.23
       },
       "intent": {
-        "correct": 238,
-        "total": 550,
-        "accuracy": 0.4327
+        "correct": 260,
+        "total": 600,
+        "accuracy": 0.4333
       },
       "entity_count_color": {
-        "correct": 173,
-        "total": 550,
-        "accuracy": 0.3145
+        "correct": 194,
+        "total": 600,
+        "accuracy": 0.3233
       },
       "spatial": {
-        "correct": 36,
-        "total": 142,
-        "accuracy": 0.2535
+        "correct": 41,
+        "total": 153,
+        "accuracy": 0.268
       }
     },
-    "agreement": 0.2636,
+    "agreement": 0.2667,
     "rules_first_run_exact": {
-      "correct": 398,
-      "total": 500,
-      "sets": 10
+      "correct": 442,
+      "total": 550,
+      "sets": 11
     },
     "baseline_sha256": "a3fa82150bd5cfac2fd41b0f84d7f25ab733867942376e6d0082c428e9eb529c",
     "note": "Rule scores are retests on sets used during development; first-run rule scores are listed separately. The baseline was frozen before its first run on these sets."
@@ -2442,6 +2442,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2489,6 +2490,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2534,6 +2536,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2572,6 +2575,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2610,6 +2614,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2657,6 +2662,7 @@
               "target": "flower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2702,6 +2708,7 @@
               "target": "house"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2740,6 +2747,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2787,6 +2795,7 @@
               "target": "bridge"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2825,6 +2834,7 @@
               "target": "road"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2868,6 +2878,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2915,6 +2926,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -2974,6 +2986,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3029,6 +3042,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3084,6 +3098,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3142,6 +3157,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "remove",
@@ -3193,6 +3209,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "remove",
@@ -3244,6 +3261,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "remove",
@@ -3299,6 +3317,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "reset"
@@ -3347,6 +3366,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -3402,6 +3422,7 @@
               "value": "snow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -3455,6 +3476,7 @@
               "value": "day"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -3499,6 +3521,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3540,6 +3563,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3574,6 +3598,7 @@
           "id": "H25",
           "text": "Add zero bridges and zero roads.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -3616,6 +3641,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3663,6 +3689,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3701,6 +3728,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3746,6 +3774,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3792,6 +3821,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3856,6 +3886,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3932,6 +3963,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -3980,6 +4012,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4027,6 +4060,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4078,6 +4112,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4141,6 +4176,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4200,6 +4236,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4259,6 +4296,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4314,6 +4352,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4377,6 +4416,7 @@
               "count": "all"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "remove",
@@ -4426,6 +4466,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4460,6 +4501,7 @@
           "id": "H42",
           "text": "Please do not add a tree or a rock.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -4486,6 +4528,7 @@
               "count": "all"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "remove",
@@ -4525,6 +4568,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4566,6 +4610,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4607,6 +4652,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4652,6 +4698,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -4695,6 +4742,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -4727,6 +4775,7 @@
           "id": "H49",
           "text": "Don\u2019t add any bridges.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -4762,6 +4811,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -4869,6 +4919,7 @@
           "id": "F01",
           "text": "Please don\u2019t plant a forest next to the castle.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -4889,6 +4940,7 @@
           "id": "F02",
           "text": "Never erase the bridges or the roads.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -4909,6 +4961,7 @@
           "id": "F03",
           "text": "Don\u2018t build six yellow cabins.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -4943,6 +4996,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -4983,6 +5037,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "remove",
@@ -5022,6 +5077,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5056,6 +5112,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5097,6 +5154,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5155,6 +5213,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "remove",
@@ -5194,6 +5253,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5235,6 +5295,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5278,6 +5339,7 @@
               "target": "bridge"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5323,6 +5385,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5366,6 +5429,7 @@
               "target": "road"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5404,6 +5468,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5449,6 +5514,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5487,6 +5553,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5523,6 +5590,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5564,6 +5632,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5598,6 +5667,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5634,6 +5704,7 @@
               "target": "bridge"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5679,6 +5750,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5726,6 +5798,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5773,6 +5846,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5822,6 +5896,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5881,6 +5956,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -5944,6 +6020,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6007,6 +6084,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6036,6 +6114,7 @@
           "id": "F29",
           "text": "Beside the road, do not add any trees.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -6073,6 +6152,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6138,6 +6218,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -6186,6 +6267,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -6229,6 +6311,7 @@
               "value": "day"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -6287,6 +6370,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -6335,6 +6419,7 @@
               "value": "day"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -6374,6 +6459,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6420,6 +6506,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6454,6 +6541,7 @@
           "id": "F38",
           "text": "Place \u22122 rocks by the lake.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -6474,6 +6562,7 @@
           "id": "F39",
           "text": "Add 1.5 bridges over the river.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -6494,6 +6583,7 @@
           "id": "F40",
           "text": "Build two or four cottages.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -6536,6 +6626,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6596,6 +6687,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6660,6 +6752,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6737,6 +6830,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6790,6 +6884,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6830,6 +6925,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6873,6 +6969,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6916,6 +7013,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -6945,6 +7043,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -6990,6 +7089,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -7076,6 +7176,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7121,6 +7222,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7172,6 +7274,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7231,6 +7334,7 @@
               "target": "bridge"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7288,6 +7392,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7337,6 +7442,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7397,6 +7503,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7453,6 +7560,7 @@
               "count": 3
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7515,6 +7623,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7598,6 +7707,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7670,6 +7780,7 @@
               "target": "road"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7740,6 +7851,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7813,6 +7925,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7886,6 +7999,7 @@
               "count": 6
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7932,6 +8046,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -7979,6 +8094,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8032,6 +8148,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8066,6 +8183,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8110,6 +8228,7 @@
               "action": "reset"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8178,6 +8297,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8249,6 +8369,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8302,6 +8423,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8361,6 +8483,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8413,6 +8536,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8460,6 +8584,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8511,6 +8636,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8574,6 +8700,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8638,6 +8765,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8705,6 +8833,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8777,6 +8906,7 @@
               "target": "house"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8844,6 +8974,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8887,6 +9018,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8938,6 +9070,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -8974,6 +9107,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9026,6 +9160,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "reset"
@@ -9094,6 +9229,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -9150,6 +9286,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9194,6 +9331,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9260,6 +9398,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9324,6 +9463,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9382,6 +9522,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9423,6 +9564,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9466,6 +9608,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -9502,6 +9645,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -9529,6 +9673,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -9560,6 +9705,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -9606,6 +9752,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -9652,6 +9799,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9717,6 +9865,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9757,6 +9906,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9861,6 +10011,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9902,6 +10053,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9943,6 +10095,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -9986,6 +10139,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10029,6 +10183,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10070,6 +10225,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10111,6 +10267,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10154,6 +10311,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10197,6 +10355,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10231,6 +10390,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10265,6 +10425,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10299,6 +10460,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10342,6 +10504,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10378,6 +10541,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10412,6 +10576,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10455,6 +10620,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10498,6 +10664,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10539,6 +10706,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10592,6 +10760,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10638,6 +10807,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10697,6 +10867,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10760,6 +10931,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10819,6 +10991,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10872,6 +11045,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10931,6 +11105,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -10987,6 +11162,7 @@
               "target": "bridge"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11040,6 +11216,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11081,6 +11258,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11120,6 +11298,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11174,6 +11353,7 @@
               "target": "house"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11231,6 +11411,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11276,6 +11457,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11330,6 +11512,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11401,6 +11584,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11454,6 +11638,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11502,6 +11687,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11553,6 +11739,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11610,6 +11797,7 @@
               "count": 4
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11676,6 +11864,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11728,6 +11917,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11783,6 +11973,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11824,6 +12015,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11858,6 +12050,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11905,6 +12098,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11952,6 +12146,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -11992,6 +12187,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12039,6 +12235,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12082,6 +12279,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -12116,6 +12314,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -12147,6 +12346,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -12237,6 +12437,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12278,6 +12479,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12312,6 +12514,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12346,6 +12549,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12387,6 +12591,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12430,6 +12635,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12466,6 +12672,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12509,6 +12716,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12554,6 +12762,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12595,6 +12804,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12636,6 +12846,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12677,6 +12888,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12718,6 +12930,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12759,6 +12972,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12793,6 +13007,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12840,6 +13055,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12893,6 +13109,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -12950,6 +13167,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13007,6 +13225,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13060,6 +13279,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13113,6 +13333,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13172,6 +13393,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13235,6 +13457,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13288,6 +13511,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13329,6 +13553,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13369,6 +13594,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13422,6 +13648,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13481,6 +13708,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13540,6 +13768,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13587,6 +13816,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13638,6 +13868,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13695,6 +13926,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13760,6 +13992,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13835,6 +14068,7 @@
               "count": 5
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13897,6 +14131,7 @@
               "count": 5
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -13959,6 +14194,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14017,6 +14253,7 @@
               "value": "night"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14079,6 +14316,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14131,6 +14369,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14175,6 +14414,7 @@
               "action": "reset"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14225,6 +14465,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14272,6 +14513,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14313,6 +14555,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14354,6 +14597,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14401,6 +14645,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14454,6 +14699,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14511,6 +14757,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14556,6 +14803,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14597,6 +14845,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -14628,6 +14877,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -14740,6 +14990,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14786,6 +15037,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14832,6 +15084,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14885,6 +15138,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14938,6 +15192,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -14991,6 +15246,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15044,6 +15300,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15084,6 +15341,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15125,6 +15383,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15169,6 +15428,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15232,6 +15492,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15285,6 +15546,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15326,6 +15588,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15367,6 +15630,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15408,6 +15672,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15451,6 +15716,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15494,6 +15760,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15535,6 +15802,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15575,6 +15843,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15628,6 +15897,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15675,6 +15945,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15716,6 +15987,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15750,6 +16022,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15784,6 +16057,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15825,6 +16099,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15859,6 +16134,7 @@
           "id": "L26",
           "text": "Draw roads, exactly zero total.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -15895,6 +16171,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15940,6 +16217,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -15988,6 +16266,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16047,6 +16326,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16094,6 +16374,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16145,6 +16426,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16207,6 +16489,7 @@
               "count": 3
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16277,6 +16560,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16347,6 +16631,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16415,6 +16700,7 @@
               "count": 1
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16470,6 +16756,7 @@
               "value": "night"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16531,6 +16818,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16575,6 +16863,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16636,6 +16925,7 @@
               "count": 5
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "reset"
@@ -16697,6 +16987,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16744,6 +17035,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16791,6 +17083,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16831,6 +17124,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16882,6 +17176,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16945,6 +17240,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -16985,6 +17281,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -17012,6 +17309,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -17041,6 +17339,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17088,6 +17387,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -17195,6 +17495,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17254,6 +17555,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17306,6 +17608,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17359,6 +17662,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17412,6 +17716,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17465,6 +17770,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17512,6 +17818,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17546,6 +17853,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17590,6 +17898,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17651,6 +17960,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17704,6 +18014,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17747,6 +18058,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17783,6 +18095,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17817,6 +18130,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17853,6 +18167,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17896,6 +18211,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17937,6 +18253,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -17964,6 +18281,7 @@
           "id": "M18",
           "text": "Draw towers, a total of zero.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -17984,6 +18302,7 @@
           "id": "M19",
           "text": "Place castles, a total of -2.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -18004,6 +18323,7 @@
           "id": "M20",
           "text": "Build homes, a total of 2.5.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -18024,6 +18344,7 @@
           "id": "M21",
           "text": "Plant flowers, a total of four or seven.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -18044,6 +18365,7 @@
           "id": "M22",
           "text": "Add rocks, never a total of six.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -18077,6 +18399,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18130,6 +18453,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18176,6 +18500,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18235,6 +18560,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18294,6 +18620,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18347,6 +18674,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18387,6 +18715,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18438,6 +18767,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18509,6 +18839,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18584,6 +18915,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18655,6 +18987,7 @@
               "count": 3
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "reset"
@@ -18708,6 +19041,7 @@
               "value": "snow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18759,6 +19093,7 @@
               "color": null
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18793,6 +19128,7 @@
           "id": "M36",
           "text": "Build seven houses: two pink and the remaining four white.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -18820,6 +19156,7 @@
           "id": "M37",
           "text": "Plant flowers: two yellow and the remaining three green.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -18840,6 +19177,7 @@
           "id": "M38",
           "text": "Create five trees: remaining two green and three orange.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -18867,6 +19205,7 @@
           "id": "M39",
           "text": "Build four houses: one red and remaining one blue and remaining two green.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -18894,6 +19233,7 @@
           "id": "M40",
           "text": "Place three houses: four large ones.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -18934,6 +19274,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -18974,6 +19315,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -19007,6 +19349,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19060,6 +19403,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -19094,6 +19438,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19145,6 +19490,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19210,6 +19556,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19250,6 +19597,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -19277,6 +19625,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -19308,6 +19657,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19413,6 +19763,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19451,6 +19802,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19489,6 +19841,7 @@
               "value": "rain"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19533,6 +19886,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19588,6 +19942,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19637,6 +19992,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19687,6 +20043,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19735,6 +20092,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -19785,6 +20143,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19844,6 +20203,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19896,6 +20256,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19942,6 +20303,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -19999,6 +20361,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20045,6 +20408,7 @@
           "id": "N14",
           "text": "Add flowers: no two each of pink and blue.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -20072,6 +20436,7 @@
           "id": "N15",
           "text": "Create zero each of yellow and blue flowers.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -20105,6 +20470,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20162,6 +20528,7 @@
               "count": 9
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20213,6 +20580,7 @@
           "id": "N18",
           "text": "Draw five flowers: two each of pink and green.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -20253,6 +20621,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20306,6 +20675,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20359,6 +20729,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20405,6 +20776,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20470,6 +20842,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20551,6 +20924,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20601,6 +20975,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20635,6 +21010,7 @@
           "id": "N26",
           "text": "Create trees: one orange and the remainder green.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -20662,6 +21038,7 @@
           "id": "N27",
           "text": "Build two cottages: three red and the remaining ones white.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -20689,6 +21066,7 @@
           "id": "N28",
           "text": "Place six flowers: the rest pink and two purple.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -20716,6 +21094,7 @@
           "id": "N29",
           "text": "Plant seven trees: one blue, the rest green, and the remainder yellow.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -20754,6 +21133,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -20811,6 +21191,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20852,6 +21233,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20893,6 +21275,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20934,6 +21317,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -20975,6 +21359,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21016,6 +21401,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21063,6 +21449,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21103,6 +21490,7 @@
           "id": "N38",
           "text": "Place a house whose roof has not recently been painted orange.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -21130,6 +21518,7 @@
           "id": "N39",
           "text": "Create a stone whose roof has already been coloured yellow.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -21166,6 +21555,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21211,6 +21601,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -21244,6 +21635,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21301,6 +21693,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21351,6 +21744,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -21385,6 +21779,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21438,6 +21833,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21478,6 +21874,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -21505,6 +21902,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -21536,6 +21934,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -21586,6 +21985,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -21676,6 +22076,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -21714,6 +22115,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -21751,6 +22153,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -21795,6 +22198,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -21845,6 +22249,7 @@
               "value": "clear"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -21894,6 +22299,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "setting",
@@ -21951,6 +22357,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22004,6 +22411,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22057,6 +22465,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22103,6 +22512,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22156,6 +22566,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22221,6 +22632,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22297,6 +22709,7 @@
               "count": 6
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22352,6 +22765,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22396,6 +22810,7 @@
           "id": "P15",
           "text": "Build nine houses: half blue and half orange.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -22423,6 +22838,7 @@
           "id": "P16",
           "text": "Plant trees: half red and half white.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -22443,6 +22859,7 @@
           "id": "P17",
           "text": "Create six flowers: half pink, half blue, and half yellow.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -22470,6 +22887,7 @@
           "id": "P18",
           "text": "Place zero flowers: half red and half yellow.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -22507,6 +22925,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22568,6 +22987,7 @@
               "target": "house"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22622,6 +23042,7 @@
               "target": "bridge"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22684,6 +23105,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22753,6 +23175,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22814,6 +23237,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22875,6 +23299,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22938,6 +23363,7 @@
               "target": "mountain"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -22975,6 +23401,7 @@
           "id": "P27",
           "text": "Build four houses: half pink and half white, all near.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -23002,6 +23429,7 @@
           "id": "P28",
           "text": "Create trees: two yellow and three green, all not near the castle.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -23038,6 +23466,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23079,6 +23508,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23120,6 +23550,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23161,6 +23592,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23204,6 +23636,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23249,6 +23682,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23300,6 +23734,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23357,6 +23792,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23409,6 +23845,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23448,6 +23885,7 @@
           "id": "P38",
           "text": "Create a house whose roof will not be coloured purple.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -23475,6 +23913,7 @@
           "id": "P39",
           "text": "Place a boulder whose leaves will be painted green.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -23502,6 +23941,7 @@
           "id": "P40",
           "text": "Build a house whose roof will be painted yellow or purple.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -23536,6 +23976,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -23569,6 +24010,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23615,6 +24057,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -23661,6 +24104,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23708,6 +24152,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -23735,6 +24180,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -23762,6 +24208,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23809,6 +24256,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -23842,6 +24290,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23899,6 +24348,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -23955,19 +24405,19 @@
       "commands": 50,
       "rules": {
         "exact_match": {
-          "correct": 40,
+          "correct": 42,
           "total": 50,
-          "accuracy": 0.8
+          "accuracy": 0.84
         },
         "intent": {
-          "correct": 40,
+          "correct": 42,
           "total": 50,
-          "accuracy": 0.8
+          "accuracy": 0.84
         },
         "entity_count_color": {
-          "correct": 40,
+          "correct": 42,
           "total": 50,
-          "accuracy": 0.8
+          "accuracy": 0.84
         },
         "spatial": {
           "correct": 11,
@@ -24021,6 +24471,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24074,6 +24525,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24127,6 +24579,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24180,6 +24633,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24226,6 +24680,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24285,6 +24740,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24344,6 +24800,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24394,6 +24851,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24440,6 +24898,7 @@
           "id": "Q09",
           "text": "Create zero flowers: one quarter white and three quarters pink.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -24467,6 +24926,7 @@
           "id": "Q10",
           "text": "Build ten houses: one quarter purple and three quarters yellow.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -24494,6 +24954,7 @@
           "id": "Q11",
           "text": "Plant sixteen trees: three quarters blue and half pink.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -24514,6 +24975,7 @@
           "id": "Q12",
           "text": "Place flowers: one quarter pink and three quarters purple.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -24553,6 +25015,7 @@
               "color": "pink"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24612,6 +25075,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24664,6 +25128,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24723,6 +25188,7 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24780,6 +25246,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24837,6 +25304,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24888,6 +25356,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -24933,6 +25402,7 @@
           "id": "Q20",
           "text": "Add two flowers of each color: blue and gray.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -24960,6 +25430,7 @@
           "id": "Q21",
           "text": "Plant two green trees of each color: red and purple.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -25012,6 +25483,7 @@
               "target": "bridge"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25091,6 +25563,7 @@
               "target": "castle"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25160,6 +25633,7 @@
               "target": "tower"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25235,6 +25709,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25316,6 +25791,7 @@
               "target": "lake"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25389,6 +25865,7 @@
               "target": "house"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25482,6 +25959,7 @@
               ]
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25577,6 +26055,7 @@
               "target": "road"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25629,6 +26108,7 @@
           "id": "Q30",
           "text": "Place a tower and two trees, all not near the river.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -25666,6 +26146,7 @@
           "id": "Q31",
           "text": "Build a house beside the lake and two flowers, all left of the tower.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -25695,6 +26176,7 @@
           "id": "Q32",
           "text": "Draw a rock and a mountain, all near.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -25735,6 +26217,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25776,6 +26259,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25817,6 +26301,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25860,6 +26345,7 @@
               "target": "river"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25909,6 +26395,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -25961,6 +26448,7 @@
               "count": 2
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -26000,6 +26488,7 @@
           "id": "Q39",
           "text": "Build a cottage whose roof will not have been painted orange.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -26027,6 +26516,7 @@
           "id": "Q40",
           "text": "Create a castle whose petals will have been painted red.",
           "expected": [],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -26061,6 +26551,7 @@
               "color": "red"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -26094,19 +26585,26 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
               "type": "tree",
-              "count": 12,
-              "color": null
+              "count": 4,
+              "color": "purple"
+            },
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 8,
+              "color": "green"
             }
           ],
           "baseline": [],
           "rules_score": {
-            "exact_match": false,
-            "intent": false,
-            "entity_count_color": false,
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
             "spatial": null
           },
           "baseline_score": {
@@ -26134,6 +26632,7 @@
               "color": "yellow"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -26180,6 +26679,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -26227,6 +26727,7 @@
               "color": "orange"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -26254,6 +26755,7 @@
               "color": "white"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [],
           "rules_score": {
@@ -26287,12 +26789,19 @@
               "color": "purple"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
               "type": "flower",
-              "count": 8,
-              "color": null
+              "count": 2,
+              "color": "pink"
+            },
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 6,
+              "color": "purple"
             }
           ],
           "baseline": [
@@ -26304,9 +26813,9 @@
             }
           ],
           "rules_score": {
-            "exact_match": false,
-            "intent": false,
-            "entity_count_color": false,
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
             "spatial": null
           },
           "baseline_score": {
@@ -26334,6 +26843,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -26374,6 +26884,7 @@
               "color": "green"
             }
           ],
+          "context": null,
           "rules": [
             {
               "action": "add",
@@ -26415,6 +26926,7 @@
               "color": "blue"
             }
           ],
+          "context": null,
           "rules": [],
           "baseline": [
             {
@@ -26435,6 +26947,2193 @@
             "intent": true,
             "entity_count_color": false,
             "spatial": null
+          },
+          "agree": false
+        }
+      ]
+    },
+    {
+      "name": "fresh_v11",
+      "title": "WordWorld eleventh fresh 50-command evaluation \u2014 2026-10-16 (tests/fresh_commands_v11.json)",
+      "commands": 50,
+      "rules": {
+        "exact_match": {
+          "correct": 50,
+          "total": 50,
+          "accuracy": 1.0
+        },
+        "intent": {
+          "correct": 50,
+          "total": 50,
+          "accuracy": 1.0
+        },
+        "entity_count_color": {
+          "correct": 50,
+          "total": 50,
+          "accuracy": 1.0
+        },
+        "spatial": {
+          "correct": 11,
+          "total": 11,
+          "accuracy": 1.0
+        }
+      },
+      "baseline": {
+        "exact_match": {
+          "correct": 15,
+          "total": 50,
+          "accuracy": 0.3
+        },
+        "intent": {
+          "correct": 22,
+          "total": 50,
+          "accuracy": 0.44
+        },
+        "entity_count_color": {
+          "correct": 21,
+          "total": 50,
+          "accuracy": 0.42
+        },
+        "spatial": {
+          "correct": 5,
+          "total": 11,
+          "accuracy": 0.4545
+        }
+      },
+      "agreement": 0.3,
+      "rules_first_run_exact": {
+        "correct": 44,
+        "total": 50,
+        "accuracy": 0.88
+      },
+      "cases": [
+        {
+          "id": "R01",
+          "text": "Paint the cottage pink.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "pink"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "pink"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "pink"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R02",
+          "text": "Colour all the flowers orange.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "orange"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "orange"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "orange"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R03",
+          "text": "Make the woods purple.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "tree",
+              "count": "all",
+              "color": "purple"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "tree",
+              "count": "all",
+              "color": "purple"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "recolor",
+              "type": "tree",
+              "count": "all",
+              "color": "purple"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R04",
+          "text": "Dye the yellow flowers blue.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "blue",
+              "filter_color": "yellow"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "blue",
+              "filter_color": "yellow"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "blue"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R05",
+          "text": "Change the colour of the homes to green.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "green"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "green"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R06",
+          "text": "Change the house to orange.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "orange"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "orange"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R07",
+          "text": "Paint the castle red.",
+          "expected": [],
+          "context": null,
+          "rules": [],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R08",
+          "text": "Don't paint the trees white.",
+          "expected": [],
+          "context": null,
+          "rules": [],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R09",
+          "text": "Make the lake bigger.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "lake",
+              "count": 1,
+              "scale": 1.25
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "resize",
+              "type": "lake",
+              "count": 1,
+              "scale": 1.25
+            }
+          ],
+          "baseline": [
+            {
+              "action": "resize",
+              "type": "lake",
+              "count": 1,
+              "scale": 1.25
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R10",
+          "text": "Make all the rocks much smaller.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "rock",
+              "count": "all",
+              "scale": 0.67
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "resize",
+              "type": "rock",
+              "count": "all",
+              "scale": 0.67
+            }
+          ],
+          "baseline": [
+            {
+              "action": "resize",
+              "type": "rock",
+              "count": "all",
+              "scale": 0.8
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R11",
+          "text": "Enlarge the tower slightly.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "tower",
+              "count": 1,
+              "scale": 1.12
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "resize",
+              "type": "tower",
+              "count": 1,
+              "scale": 1.12
+            }
+          ],
+          "baseline": [
+            {
+              "action": "resize",
+              "type": "tower",
+              "count": 1,
+              "scale": 1.25
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R12",
+          "text": "Shrink the mountains.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "mountain",
+              "count": "all",
+              "scale": 0.8
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "resize",
+              "type": "mountain",
+              "count": "all",
+              "scale": 0.8
+            }
+          ],
+          "baseline": [
+            {
+              "action": "resize",
+              "type": "mountain",
+              "count": "all",
+              "scale": 0.8
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R13",
+          "text": "Make the bridge a little larger.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "bridge",
+              "count": 1,
+              "scale": 1.12
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "resize",
+              "type": "bridge",
+              "count": 1,
+              "scale": 1.12
+            }
+          ],
+          "baseline": [
+            {
+              "action": "resize",
+              "type": "bridge",
+              "count": 1,
+              "scale": 1.25
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R14",
+          "text": "Resize the castle.",
+          "expected": [],
+          "context": null,
+          "rules": [],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R15",
+          "text": "Move the castle next to the river.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "relation": "near",
+              "target": "river"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "relation": "near",
+              "target": "river"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "relation": "near",
+              "target": "river"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "agree": true
+        },
+        {
+          "id": "R16",
+          "text": "Move the flowers in front of the cottage.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "flower",
+              "count": "all",
+              "relation": "below",
+              "target": "house"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "flower",
+              "count": "all",
+              "relation": "below",
+              "target": "house"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "move",
+              "type": "flower",
+              "count": "all",
+              "relation": "below",
+              "target": "house"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "agree": true
+        },
+        {
+          "id": "R17",
+          "text": "Relocate the tower to the right of the mountain.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "tower",
+              "count": 1,
+              "relation": "right",
+              "target": "mountain"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "tower",
+              "count": 1,
+              "relation": "right",
+              "target": "mountain"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "move",
+              "type": "tower",
+              "count": 1,
+              "relation": "right",
+              "target": "mountain"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "agree": true
+        },
+        {
+          "id": "R18",
+          "text": "Shift the rock between the lake and the road.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "rock",
+              "count": 1,
+              "relation": "between",
+              "target": "lake",
+              "targets": [
+                "lake",
+                "road"
+              ]
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "rock",
+              "count": 1,
+              "relation": "between",
+              "target": "lake",
+              "targets": [
+                "lake",
+                "road"
+              ]
+            }
+          ],
+          "baseline": [
+            {
+              "action": "move",
+              "type": "rock",
+              "count": 1,
+              "relation": "between",
+              "target": "lake",
+              "targets": [
+                "lake",
+                "road"
+              ]
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "agree": true
+        },
+        {
+          "id": "R19",
+          "text": "Move two of the trees behind the castle.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "tree",
+              "count": 2,
+              "relation": "above",
+              "target": "castle"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "tree",
+              "count": 2,
+              "relation": "above",
+              "target": "castle"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": false
+          },
+          "agree": false
+        },
+        {
+          "id": "R20",
+          "text": "Move the bridge across the river.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "bridge",
+              "count": 1,
+              "relation": "across",
+              "target": "river"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "bridge",
+              "count": 1,
+              "relation": "across",
+              "target": "river"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "move",
+              "type": "bridge",
+              "count": 1,
+              "relation": "across",
+              "target": "river"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "agree": true
+        },
+        {
+          "id": "R21",
+          "text": "Move the house to the left.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "house",
+              "count": 1,
+              "direction": "left",
+              "distance": "medium"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "house",
+              "count": 1,
+              "direction": "left",
+              "distance": "medium"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R22",
+          "text": "Slide the castle a bit to the right.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "direction": "right",
+              "distance": "small"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "direction": "right",
+              "distance": "small"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R23",
+          "text": "Shift the trees far back.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "tree",
+              "count": "all",
+              "direction": "up",
+              "distance": "large"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "tree",
+              "count": "all",
+              "direction": "up",
+              "distance": "large"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R24",
+          "text": "Move the lake forward.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "lake",
+              "count": 1,
+              "direction": "down",
+              "distance": "medium"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "lake",
+              "count": 1,
+              "direction": "down",
+              "distance": "medium"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R25",
+          "text": "Paint the houses red and the flowers white.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "red"
+            },
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "white"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "red"
+            },
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": "all",
+              "color": "white"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "red"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R26",
+          "text": "Make the castle bigger and move it behind the lake.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "castle",
+              "count": 1,
+              "scale": 1.25
+            },
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "relation": "above",
+              "target": "lake"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "resize",
+              "type": "castle",
+              "count": 1,
+              "scale": 1.25
+            },
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "relation": "above",
+              "target": "lake"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "resize",
+              "type": "castle",
+              "count": 1,
+              "scale": 1.25
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": false
+          },
+          "agree": false
+        },
+        {
+          "id": "R27",
+          "text": "Build two towers, then make them smaller.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "tower",
+              "count": 2,
+              "color": null
+            },
+            {
+              "action": "resize",
+              "type": "tower",
+              "count": 2,
+              "scale": 0.8
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "add",
+              "type": "tower",
+              "count": 2,
+              "color": null
+            },
+            {
+              "action": "resize",
+              "type": "tower",
+              "count": 2,
+              "scale": 0.8
+            }
+          ],
+          "baseline": [
+            {
+              "action": "add",
+              "type": "tower",
+              "count": 2,
+              "color": null
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R28",
+          "text": "Plant a tree and paint it orange.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": null
+            },
+            {
+              "action": "recolor",
+              "type": "tree",
+              "count": 1,
+              "color": "orange"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": null
+            },
+            {
+              "action": "recolor",
+              "type": "tree",
+              "count": 1,
+              "color": "orange"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": null
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R29",
+          "text": "Make it purple.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "purple"
+            }
+          ],
+          "context": [
+            {
+              "type": "house",
+              "count": 1
+            }
+          ],
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "purple"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R30",
+          "text": "Move them to the left of the lake.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "tree",
+              "count": 3,
+              "relation": "left",
+              "target": "lake"
+            }
+          ],
+          "context": [
+            {
+              "type": "tree",
+              "count": 3
+            }
+          ],
+          "rules": [
+            {
+              "action": "move",
+              "type": "tree",
+              "count": 3,
+              "relation": "left",
+              "target": "lake"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": false
+          },
+          "agree": false
+        },
+        {
+          "id": "R31",
+          "text": "Make them much bigger.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "house",
+              "count": 2,
+              "scale": 1.5
+            },
+            {
+              "action": "resize",
+              "type": "tree",
+              "count": 1,
+              "scale": 1.5
+            }
+          ],
+          "context": [
+            {
+              "type": "house",
+              "count": 2
+            },
+            {
+              "type": "tree",
+              "count": 1
+            }
+          ],
+          "rules": [
+            {
+              "action": "resize",
+              "type": "house",
+              "count": 2,
+              "scale": 1.5
+            },
+            {
+              "action": "resize",
+              "type": "tree",
+              "count": 1,
+              "scale": 1.5
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R32",
+          "text": "Get rid of it.",
+          "expected": [
+            {
+              "action": "remove",
+              "type": "castle",
+              "count": 1
+            }
+          ],
+          "context": [
+            {
+              "type": "castle",
+              "count": 1
+            }
+          ],
+          "rules": [
+            {
+              "action": "remove",
+              "type": "castle",
+              "count": 1
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R33",
+          "text": "Put two flowers next to it.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 2,
+              "color": null,
+              "relation": "near",
+              "target": "castle"
+            }
+          ],
+          "context": [
+            {
+              "type": "castle",
+              "count": 1
+            }
+          ],
+          "rules": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 2,
+              "color": null,
+              "relation": "near",
+              "target": "castle"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 2,
+              "color": null
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": false
+          },
+          "agree": false
+        },
+        {
+          "id": "R34",
+          "text": "Paint it white.",
+          "expected": [],
+          "context": [
+            {
+              "type": "flower",
+              "count": 4
+            }
+          ],
+          "rules": [],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R35",
+          "text": "Plant a tree and make it pink.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": null
+            },
+            {
+              "action": "recolor",
+              "type": "tree",
+              "count": 1,
+              "color": "pink"
+            }
+          ],
+          "context": [
+            {
+              "type": "house",
+              "count": 1
+            }
+          ],
+          "rules": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": null
+            },
+            {
+              "action": "recolor",
+              "type": "tree",
+              "count": 1,
+              "color": "pink"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": null
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R36",
+          "text": "Plant fifteen trees: a third pink and the rest green.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 5,
+              "color": "pink"
+            },
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 10,
+              "color": "green"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 5,
+              "color": "pink"
+            },
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 10,
+              "color": "green"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R37",
+          "text": "Create ten flowers: 40% white and 60% yellow.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 4,
+              "color": "white"
+            },
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 6,
+              "color": "yellow"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 4,
+              "color": "white"
+            },
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 6,
+              "color": "yellow"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 10,
+              "color": null
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R38",
+          "text": "Build six houses: two thirds blue and one third red.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "house",
+              "count": 4,
+              "color": "blue"
+            },
+            {
+              "action": "add",
+              "type": "house",
+              "count": 2,
+              "color": "red"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "add",
+              "type": "house",
+              "count": 4,
+              "color": "blue"
+            },
+            {
+              "action": "add",
+              "type": "house",
+              "count": 2,
+              "color": "red"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "add",
+              "type": "house",
+              "count": 6,
+              "color": null
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R39",
+          "text": "Plant five trees: one fifth orange and four fifths green.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": "orange"
+            },
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 4,
+              "color": "green"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 1,
+              "color": "orange"
+            },
+            {
+              "action": "add",
+              "type": "tree",
+              "count": 4,
+              "color": "green"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R40",
+          "text": "Build seven houses: a third blue and the rest red.",
+          "expected": [],
+          "context": null,
+          "rules": [],
+          "baseline": [
+            {
+              "action": "add",
+              "type": "house",
+              "count": 7,
+              "color": null
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R41",
+          "text": "Turn the two blue houses white.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 2,
+              "color": "white",
+              "filter_color": "blue"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 2,
+              "color": "white",
+              "filter_color": "blue"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R42",
+          "text": "Give the cottage a red roof.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "red"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 1,
+              "color": "red"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R43",
+          "text": "Move the castle closer to the lake.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "relation": "near",
+              "target": "lake"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "relation": "near",
+              "target": "lake"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": false
+          },
+          "agree": false
+        },
+        {
+          "id": "R44",
+          "text": "Make both houses green.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 2,
+              "color": "green"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": 2,
+              "color": "green"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "green"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": true,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R45",
+          "text": "Make the houses a bit taller.",
+          "expected": [
+            {
+              "action": "resize",
+              "type": "house",
+              "count": "all",
+              "scale": 1.12
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "resize",
+              "type": "house",
+              "count": "all",
+              "scale": 1.12
+            }
+          ],
+          "baseline": [
+            {
+              "action": "resize",
+              "type": "house",
+              "count": "all",
+              "scale": 0.8
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R46",
+          "text": "Move the castle up a little.",
+          "expected": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "direction": "up",
+              "distance": "small"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "move",
+              "type": "castle",
+              "count": 1,
+              "direction": "up",
+              "distance": "small"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R47",
+          "text": "Make it night and paint the houses blue.",
+          "expected": [
+            {
+              "action": "setting",
+              "key": "time",
+              "value": "night"
+            },
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "blue"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "setting",
+              "key": "time",
+              "value": "night"
+            },
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "blue"
+            }
+          ],
+          "baseline": [
+            {
+              "action": "setting",
+              "key": "time",
+              "value": "night"
+            },
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "blue"
+            }
+          ],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "agree": true
+        },
+        {
+          "id": "R48",
+          "text": "Recolor every cottage in purple.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "purple"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "house",
+              "count": "all",
+              "color": "purple"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R49",
+          "text": "Plant twelve flowers: 25 per cent pink, a quarter white and the rest yellow.",
+          "expected": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 3,
+              "color": "pink"
+            },
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 3,
+              "color": "white"
+            },
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 6,
+              "color": "yellow"
+            }
+          ],
+          "context": null,
+          "rules": [
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 3,
+              "color": "pink"
+            },
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 3,
+              "color": "white"
+            },
+            {
+              "action": "add",
+              "type": "flower",
+              "count": 6,
+              "color": "yellow"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": null
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": null
+          },
+          "agree": false
+        },
+        {
+          "id": "R50",
+          "text": "Make them yellow and move them next to the road.",
+          "expected": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": 2,
+              "color": "yellow"
+            },
+            {
+              "action": "move",
+              "type": "flower",
+              "count": 2,
+              "relation": "near",
+              "target": "road"
+            }
+          ],
+          "context": [
+            {
+              "type": "flower",
+              "count": 2
+            }
+          ],
+          "rules": [
+            {
+              "action": "recolor",
+              "type": "flower",
+              "count": 2,
+              "color": "yellow"
+            },
+            {
+              "action": "move",
+              "type": "flower",
+              "count": 2,
+              "relation": "near",
+              "target": "road"
+            }
+          ],
+          "baseline": [],
+          "rules_score": {
+            "exact_match": true,
+            "intent": true,
+            "entity_count_color": true,
+            "spatial": true
+          },
+          "baseline_score": {
+            "exact_match": false,
+            "intent": false,
+            "entity_count_color": false,
+            "spatial": false
           },
           "agree": false
         }

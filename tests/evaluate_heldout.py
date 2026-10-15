@@ -54,7 +54,8 @@ def evaluate(dataset_path=DATASET, output_path=RESULTS, expected_sha256=FROZEN_D
     for case in dataset["cases"]:
         error = None
         try:
-            output = parse(case["text"])
+            # Cases from round eleven may carry the client context of a previous command.
+            output = parse(case["text"], case.get("context"))
         except Exception as exc:
             output = {"actions": [], "warnings": []}
             error = f"{type(exc).__name__}: {exc}"

@@ -1,0 +1,929 @@
+{
+  "name": "WordWorld eleventh fresh 50-command evaluation — 2026-10-16",
+  "method": "50 newly hand-authored commands and expected actions frozen before first prediction, after adding language edits (recolor/resize/move), cross-request references and thirds/fifths/percentages. The author wrote the grammar and saw prior errors; not independent.",
+  "scope": "40 preassigned core cases (edits, landmarks, directions, chains, references with client context, fractions, negation, unmapped colors, missing values, agreement and non-integral fractions) and 10 broader probes.",
+  "gold_policy": "Exact ordered action dictionaries. A case's optional context lists what the previous command touched, oldest first, as the client sends it. Scale factors follow the documented edit semantics (bigger 1.25, much 1.5, a bit 1.12; smaller 0.8, much 0.67, a bit 0.89). Probe gold represents intended natural English, including forms outside the grammar.",
+  "parser_sha256_before": "d976e55158edb3c1440671777d12b7217a7e867975a8a3f80168584392345950",
+  "pipeline_sha256_before": "35a3447a0a31f0441a2c4eea67ed4417d09cd1e02e04ed152e116926a6886614",
+  "source_files_sha256": {
+    "backend/dependency_baseline.py": "a3fa82150bd5cfac2fd41b0f84d7f25ab733867942376e6d0082c428e9eb529c",
+    "backend/edits.py": "4dd26801e7f6492e9e7331b893d177653eb3651b54b778aac69b8011a8df5ac3",
+    "backend/lexicon.py": "35cb1ac4bc26f69b7ddd2461f29d1f5e224dd6295966ccd38e72570d09df6bf7",
+    "backend/main.py": "ea79c104ba3e48bfe374fa8e5b0e25704f72b3a4af7f3953807992393f18df65",
+    "backend/parser.py": "d976e55158edb3c1440671777d12b7217a7e867975a8a3f80168584392345950",
+    "backend/phrases.py": "6e8d27b7bf7e6a41147950ac0b2faacd1a7f0def2d3f8f90f19f8d75358840b7",
+    "backend/references.py": "49248372c17ee1688d358bbbba0c0748272423d847fab6e35ca6844baa84c710"
+  },
+  "uniqueness": "No normalized exact overlaps with all eleven earlier datasets, Python test literals, browser/scene test and UI example literals, README/archive lines or decoded command links at freeze time.",
+  "development_inputs_sha256": {
+    "tests/commands.json": "2b4c4eb37c64ea7996fc018f5bf9f67e8dbb86fa0b8512a8bdd04dca5200978b",
+    "tests/heldout_commands.json": "d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224",
+    "tests/fresh_commands_v2.json": "050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b",
+    "tests/fresh_commands_v3.json": "bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927",
+    "tests/fresh_commands_v4.json": "83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd",
+    "tests/fresh_commands_v5.json": "e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e",
+    "tests/fresh_commands_v6.json": "b4c823eafa84322f3c164fcaa0080bf5ed4f94f61d374c8dcd2145c74fed3703",
+    "tests/fresh_commands_v7.json": "b1c66ed63c5747d59c87b9baaf37f923307cf9d1d42868e7bfeb1ef3fef4b85e",
+    "tests/fresh_commands_v8.json": "44e7288480226cbe1597aa5d925fd41b518b43bec82b260104ffe266c4be1dc5",
+    "tests/fresh_commands_v9.json": "393d87061735968e5d33452530c341e1ff8ffbe9aa88418932d6f4440b44d475",
+    "tests/fresh_commands_v10.json": "9ef33daf26d8e90aaf06df666a76d04d6b2fdcf777e4b805e741ba57b019c79a",
+    "tests/test_accuracy_fixes.py": "91f00c7a6266d827c682825a7513bc1f6870a51c3cec0401d00fa59d45add85d",
+    "tests/test_api.py": "b479d77a3e41bd0cfe3cceec53ccc0a4996dcd73b4c1107206510127181f3f73",
+    "tests/test_colon_fixes.py": "2dbced6f482ebc8433b288f70ab8474d2c3fa9820819ee7335f56eb1e2833379",
+    "tests/test_distributive_fixes.py": "1559b95d9cd695ae5e3bcda9a9b9ce51c8ff9df40c91405d95ed8fd3860db493",
+    "tests/test_edits.py": "d36310c691b5a0685137d7ef1d8cd3e18d38d6f42e04b88db2a989b5e563ef98",
+    "tests/test_ellipsis_fixes.py": "ccc344840d2aa1f427ee49350d0225e5f1c7532982f572ef44ecde67a068bc4a",
+    "tests/test_evaluation_empty_metrics.py": "b4a0b54681fb297a1ed5b86794f2af85ba7a6bd28361598e856e7e4ee8cf9959",
+    "tests/test_parser.py": "2b0e97f268bd131c5fbf7cfeaac08c84c541e4c79eb6b343aef2291387acd82e",
+    "tests/test_partition_fixes.py": "84ff629afb806763135cef14371fc5cdce5a3525b6dddd9a6194d8fbae71f16e",
+    "tests/test_postnoun_fixes.py": "bcb665be4f8a7c7af223b3a4a7fc9be28ef173bb43678f7f221f0c519fc97cf6",
+    "tests/test_quarter_fixes.py": "779c7cc0636fa34fef61e3eaff5866091f5b91c78451684c0965876f64f12f17",
+    "tests/test_reference_fixes.py": "72e12f3e748bed6135f4dc5ca188921e427e01409521b385d098ca20c9d60bad",
+    "tests/test_regressions.py": "aa217c190610c18b197dca81d292f522553444e60f31bcdf0ec0fb6f4a1afe5e",
+    "tests/test_shared_fixes.py": "4e411f53c3c6cff4f93360a255e0737bef6c2aa7ca4de2e298d84cd947516a6e",
+    "frontend/tests/browser/mobile.spec.js": "33dac8a49d39a4490143fe008e826252618e1a7d0790bfccf6007fabe166a9b7",
+    "frontend/tests/browser/smoke.spec.js": "b233e49f6f69fe801fb1a2786fc9e3ad826b1cd19d098874d33b6c506610bfd9",
+    "frontend/tests/browser/ux.spec.js": "0aca67cd37bd830b8bf7d89b67d16b7c00fb092a37234f45c198e564a496c847",
+    "frontend/tests/world.test.js": "153dfe7f4e93cf19494f6ba637b4bf3531b297870e35bf382aa4f48230dfc439",
+    "frontend/scripts/capture-readme.mjs": "052d732e8be3a11c151dcd835ae85e818f6f6573fd18ef4d1ebef212e8b8fe1e",
+    "frontend/src/world.js": "409e324d89beca59ea6546965d98de7013a79bec22f417c9afc1acf68adc8a80",
+    "frontend/src/App.jsx": "3e9efb3728fb42b2540edde09b9af6880f0cbeb11312464436537971eac66dd0",
+    "frontend/src/components/HelpDialog.jsx": "5323bbce8d45cc344631d6a2e43c933d9ad386aecc4d3d411004db4df959d73c",
+    "README.md": "4d587408dab58c5038e0be2ad27dbaad2c50c14760d1eb4b18be66d2d721d509",
+    "docs/DEVELOPMENT.md": "bdd9e45d8e72602d1b83ea1680c75ea02aa0d5748c7850260756aaa5d2593ea7"
+  },
+  "cases": [
+    {
+      "id": "R01",
+      "text": "Paint the cottage pink.",
+      "category": "recolor",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R02",
+      "text": "Colour all the flowers orange.",
+      "category": "recolor_all",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R03",
+      "text": "Make the woods purple.",
+      "category": "recolor_collective",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": "all",
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R04",
+      "text": "Dye the yellow flowers blue.",
+      "category": "recolor_filtered",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "blue",
+          "filter_color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R05",
+      "text": "Change the colour of the homes to green.",
+      "category": "recolor_change_of",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": "all",
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R06",
+      "text": "Change the house to orange.",
+      "category": "recolor_change_to",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R07",
+      "text": "Paint the castle red.",
+      "category": "recolor_unmapped",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "Castles have no color mapping; a notice, no action."
+    },
+    {
+      "id": "R08",
+      "text": "Don't paint the trees white.",
+      "category": "recolor_negated",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "R09",
+      "text": "Make the lake bigger.",
+      "category": "resize",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "lake",
+          "count": 1,
+          "scale": 1.25
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R10",
+      "text": "Make all the rocks much smaller.",
+      "category": "resize_amount",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "rock",
+          "count": "all",
+          "scale": 0.67
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R11",
+      "text": "Enlarge the tower slightly.",
+      "category": "resize_verb_amount",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "tower",
+          "count": 1,
+          "scale": 1.12
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R12",
+      "text": "Shrink the mountains.",
+      "category": "resize_verb",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "mountain",
+          "count": "all",
+          "scale": 0.8
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R13",
+      "text": "Make the bridge a little larger.",
+      "category": "resize_amount",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "bridge",
+          "count": 1,
+          "scale": 1.12
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R14",
+      "text": "Resize the castle.",
+      "category": "resize_missing_value",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "R15",
+      "text": "Move the castle next to the river.",
+      "category": "move_relation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "castle",
+          "count": 1,
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R16",
+      "text": "Move the flowers in front of the cottage.",
+      "category": "move_relation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "flower",
+          "count": "all",
+          "relation": "below",
+          "target": "house"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R17",
+      "text": "Relocate the tower to the right of the mountain.",
+      "category": "move_relation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "tower",
+          "count": 1,
+          "relation": "right",
+          "target": "mountain"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R18",
+      "text": "Shift the rock between the lake and the road.",
+      "category": "move_between",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "rock",
+          "count": 1,
+          "relation": "between",
+          "target": "lake",
+          "targets": [
+            "lake",
+            "road"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R19",
+      "text": "Move two of the trees behind the castle.",
+      "category": "move_partial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "tree",
+          "count": 2,
+          "relation": "above",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R20",
+      "text": "Move the bridge across the river.",
+      "category": "move_across",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "bridge",
+          "count": 1,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R21",
+      "text": "Move the house to the left.",
+      "category": "move_direction",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "house",
+          "count": 1,
+          "direction": "left",
+          "distance": "medium"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R22",
+      "text": "Slide the castle a bit to the right.",
+      "category": "move_direction_amount",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "castle",
+          "count": 1,
+          "direction": "right",
+          "distance": "small"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R23",
+      "text": "Shift the trees far back.",
+      "category": "move_direction_amount",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "tree",
+          "count": "all",
+          "direction": "up",
+          "distance": "large"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R24",
+      "text": "Move the lake forward.",
+      "category": "move_direction",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "lake",
+          "count": 1,
+          "direction": "down",
+          "distance": "medium"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R25",
+      "text": "Paint the houses red and the flowers white.",
+      "category": "coordinated_edit",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": "all",
+          "color": "red"
+        },
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R26",
+      "text": "Make the castle bigger and move it behind the lake.",
+      "category": "edit_chain_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "castle",
+          "count": 1,
+          "scale": 1.25
+        },
+        {
+          "action": "move",
+          "type": "castle",
+          "count": 1,
+          "relation": "above",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R27",
+      "text": "Build two towers, then make them smaller.",
+      "category": "create_then_edit",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "resize",
+          "type": "tower",
+          "count": 2,
+          "scale": 0.8
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R28",
+      "text": "Plant a tree and paint it orange.",
+      "category": "create_then_edit",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": 1,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R29",
+      "text": "Make it purple.",
+      "category": "context_recolor",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": 1,
+          "color": "purple"
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "house",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "R30",
+      "text": "Move them to the left of the lake.",
+      "category": "context_move",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "tree",
+          "count": 3,
+          "relation": "left",
+          "target": "lake"
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "tree",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "R31",
+      "text": "Make them much bigger.",
+      "category": "context_mixed_resize",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "house",
+          "count": 2,
+          "scale": 1.5
+        },
+        {
+          "action": "resize",
+          "type": "tree",
+          "count": 1,
+          "scale": 1.5
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "house",
+          "count": 2
+        },
+        {
+          "type": "tree",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "R32",
+      "text": "Get rid of it.",
+      "category": "context_remove",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "castle",
+          "count": 1
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "castle",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "R33",
+      "text": "Put two flowers next to it.",
+      "category": "context_landmark",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "castle",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "R34",
+      "text": "Paint it white.",
+      "category": "context_agreement",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "'it' cannot name four flowers.",
+      "context": [
+        {
+          "type": "flower",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "R35",
+      "text": "Plant a tree and make it pink.",
+      "category": "context_local_first",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "house",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "R36",
+      "text": "Plant fifteen trees: a third pink and the rest green.",
+      "category": "thirds",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 5,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 10,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R37",
+      "text": "Create ten flowers: 40% white and 60% yellow.",
+      "category": "percentages",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 6,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R38",
+      "text": "Build six houses: two thirds blue and one third red.",
+      "category": "thirds",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "red"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R39",
+      "text": "Plant five trees: one fifth orange and four fifths green.",
+      "category": "fifths",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R40",
+      "text": "Build seven houses: a third blue and the rest red.",
+      "category": "nonintegral_thirds",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "R41",
+      "text": "Turn the two blue houses white.",
+      "category": "recolor_counted_filter",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": 2,
+          "color": "white",
+          "filter_color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R42",
+      "text": "Give the cottage a red roof.",
+      "category": "recolor_give",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R43",
+      "text": "Move the castle closer to the lake.",
+      "category": "move_closer",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "castle",
+          "count": 1,
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R44",
+      "text": "Make both houses green.",
+      "category": "recolor_both",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": 2,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R45",
+      "text": "Make the houses a bit taller.",
+      "category": "resize_taller",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "house",
+          "count": "all",
+          "scale": 1.12
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R46",
+      "text": "Move the castle up a little.",
+      "category": "move_trailing_amount",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "castle",
+          "count": 1,
+          "direction": "up",
+          "distance": "small"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R47",
+      "text": "Make it night and paint the houses blue.",
+      "category": "setting_then_edit",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        },
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": "all",
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R48",
+      "text": "Recolor every cottage in purple.",
+      "category": "recolor_every_in",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": "all",
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R49",
+      "text": "Plant twelve flowers: 25 per cent pink, a quarter white and the rest yellow.",
+      "category": "mixed_percent_fraction",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 6,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "R50",
+      "text": "Make them yellow and move them next to the road.",
+      "category": "context_edit_chain",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": 2,
+          "color": "yellow"
+        },
+        {
+          "action": "move",
+          "type": "flower",
+          "count": 2,
+          "relation": "near",
+          "target": "road"
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "flower",
+          "count": 2
+        }
+      ]
+    }
+  ]
+}

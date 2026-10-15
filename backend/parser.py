@@ -468,7 +468,7 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
                 if variants is not None or NEGATION_RE.search(prefix):
                     attribute_error = 'A negated or already coordinated source cannot supply a counted partition; that instruction was skipped.'
                 elif declared_total and count != group_total:
-                    attribute_error = 'Partition counts do not match the declared total; that object instruction was skipped.'
+                    attribute_error = attribute_error or 'Partition counts do not match the declared total; that object instruction was skipped.'
                 if color or post_colors:
                     shared_color = post_colors[-1][0] if post_colors else color.group().lower()
                     if any(d['color'] not in {None, shared_color} for d in continued['descriptions']):

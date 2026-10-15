@@ -5,7 +5,10 @@ function useCorpusScores() {
   const [scores, setScores] = useState(null);
   useEffect(() => {
     scoresRequest ??= fetch('/api/extractors').then(r => r.ok ? r.json() : null).catch(() => null);
-    scoresRequest.then(setScores);
+    scoresRequest.then(result => {
+      if (!result) scoresRequest = null;  // retry on the next analysis instead of caching a failure
+      setScores(result);
+    });
   }, []);
   return scores;
 }

@@ -99,6 +99,26 @@ function toSvgPoint(svg,clientX,clientY){const pt=svg.createSVGPoint();pt.x=clie
 export default function Scene({items,settings,selected,onSelect,onMove,onDragBegin,view=DEFAULT_VIEW,onView,showGuides=true}){
  const svgRef=useRef(null), dragging=useRef(null), lastKeyMove=useRef({id:null,at:0}), panning=useRef(null), suppressClick=useRef(false);
  const [isPanning,setPanning]=useState(false);
+ // Two-finger pinch zooms around the midpoint; it works over objects too and cancels their drag.
+ const touches=useRef(new Map()),pinch=useRef(null);
+ function touchDown(e){
+  if(e.pointerType!=='touch')return;
+  touches.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(touches.current.size!==2||!onView)return;
+  const [a,b]=[...touches.current.values()],svg=svgRef.current,matrix=svg.getScreenCTM().inverse(),pt=svg.createSVGPoint();
+  pt.x=(a.x+b.x)/2;pt.y=(a.y+b.y)/2;
+  pinch.current={distance:Math.hypot(a.x-b.x,a.y-b.y)||1,view,mid:pt.matrixTransform(matrix)};
+  dragging.current=null;panning.current=null;suppressClick.current=true;
+ }
+ function touchMove(e){
+  if(!touches.current.has(e.pointerId))return false;
+  touches.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(!pinch.current||touches.current.size<2)return false;
+  const [a,b]=[...touches.current.values()],start=pinch.current;
+  onView(zoomAt(start.view,start.view.zoom*Math.hypot(a.x-b.x,a.y-b.y)/start.distance,start.mid));
+  return true;
+ }
+ function touchUp(e){touches.current.delete(e.pointerId);if(touches.current.size<2)pinch.current=null}
  const latest=useRef({view,onView});latest.current={view,onView};
  // Ctrl/⌘ + wheel zooms around the cursor; a plain wheel keeps scrolling the page.
  useEffect(()=>{const svg=svgRef.current;function wheel(e){if(!(e.ctrlKey||e.metaKey)||!latest.current.onView)return;e.preventDefault();const {view,onView}=latest.current;onView(zoomAt(view,view.zoom+(e.deltaY<0?.1:-.1),toSvgPoint(svg,e.clientX,e.clientY)))}svg.addEventListener('wheel',wheel,{passive:false});return()=>svg.removeEventListener('wheel',wheel)},[]);
@@ -113,9 +133,9 @@ export default function Scene({items,settings,selected,onSelect,onMove,onDragBeg
  // Dragging empty space pans when zoomed in. The matrix is frozen at the start so the
  // moving viewBox does not feed back into the pointer math.
  function startPan(e){if(view.zoom<=1||!onView||e.button>0)return;const svg=svgRef.current,matrix=svg.getScreenCTM().inverse(),toWorld=(x,y)=>{const pt=svg.createSVGPoint();pt.x=x;pt.y=y;return pt.matrixTransform(matrix)};panning.current={toWorld,origin:toWorld(e.clientX,e.clientY),view,client:[e.clientX,e.clientY]};e.currentTarget.setPointerCapture(e.pointerId);setPanning(true)}
- function move(e){if(panning.current){const pan=panning.current,pt=pan.toWorld(e.clientX,e.clientY);if(Math.hypot(e.clientX-pan.client[0],e.clientY-pan.client[1])>3)suppressClick.current=true;onView(panBy(pan.view,pan.origin.x-pt.x,pan.origin.y-pt.y));return}if(!dragging.current)return;let pt=toSvgPoint(svgRef.current,e.clientX,e.clientY);if(!dragging.current.started){if(Math.hypot(pt.x-dragging.current.startX,pt.y-dragging.current.startY)<3)return;dragging.current.started=true;onDragBegin?.();}onMove(dragging.current.id,Math.max(77,Math.min(925,pt.x+dragging.current.dx)),Math.max(110,Math.min(525,pt.y+dragging.current.dy)))}
+ function move(e){if(touchMove(e))return;if(panning.current){const pan=panning.current,pt=pan.toWorld(e.clientX,e.clientY);if(Math.hypot(e.clientX-pan.client[0],e.clientY-pan.client[1])>3)suppressClick.current=true;onView(panBy(pan.view,pan.origin.x-pt.x,pan.origin.y-pt.y));return}if(!dragging.current)return;let pt=toSvgPoint(svgRef.current,e.clientX,e.clientY);if(!dragging.current.started){if(Math.hypot(pt.x-dragging.current.startX,pt.y-dragging.current.startY)<3)return;dragging.current.started=true;onDragBegin?.();}onMove(dragging.current.id,Math.max(77,Math.min(925,pt.x+dragging.current.dx)),Math.max(110,Math.min(525,pt.y+dragging.current.dy)))}
  function stop(){dragging.current=null;panning.current=null;setPanning(false)}
- return <svg ref={svgRef} className={'world-svg'+(isNight?' night':'')+(view.zoom>1?' pannable':'')+(isPanning?' panning':'')} viewBox={viewBox(view)} preserveAspectRatio="xMidYMid meet" onPointerDown={startPan} onPointerMove={move} onPointerUp={stop} onPointerCancel={stop} onClick={()=>{if(suppressClick.current){suppressClick.current=false;return}onSelect(null)}} role="group" aria-label="Interactive illustrated world. Select objects with Enter; move with arrow keys or drag.">
+ return <svg ref={svgRef} className={'world-svg'+(isNight?' night':'')+(view.zoom>1?' pannable':'')+(isPanning?' panning':'')} viewBox={viewBox(view)} preserveAspectRatio="xMidYMid meet" onPointerDownCapture={touchDown} onPointerDown={startPan} onPointerMove={move} onPointerUp={stop} onPointerCancel={stop} onPointerUpCapture={touchUp} onPointerCancelCapture={touchUp} onClick={()=>{if(suppressClick.current){suppressClick.current=false;return}onSelect(null)}} role="group" aria-label="Interactive illustrated world. Select objects with Enter; move with arrow keys or drag.">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stopColor={isNight?'#28305f':'#e3f8ff'}/><stop offset="1" stopColor={isNight?'#7371ad':'#f5fae9'}/></linearGradient>
     <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#cfeb9c"/><stop offset="1" stopColor="#8fce83"/></linearGradient>

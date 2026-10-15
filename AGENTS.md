@@ -34,8 +34,8 @@ Tests: `python -m pytest -q tests && python -m tests.evaluate && python -m tests
 
 ## Highest-priority next tasks
 
-Done: Playwright desktop/mobile suite, inline dependency-arc explanation, two-target `between` extraction, language edits, cross-request references, CI, rules-vs-dependency comparison.
+Done: Playwright desktop/mobile suite, inline dependency-arc explanation, two-target `between` extraction, language edits, cross-request references, CI, rules-vs-dependency comparison, thirds/fifths/percentages, pinch-to-zoom, frozen round-eleven set (`tests/fresh_commands_v11.json`).
 
-1. Broader grammar gaps from the latest report: thirds, percentages, alternate "each" wording and cross-clause collections.
-2. A fresh frozen 50-command set that includes edits and cross-request references, evaluated before any tuning.
-3. Touch pinch-to-zoom on the scene (buttons, Ctrl+wheel and drag-to-pan exist today).
+1. Remaining grammar gaps: alternate "each" wording and cross-clause collections (see `evaluation/reports/quarter_fixes_report.md`).
+2. Spatially filtered edits and removals ("paint the trees near the lake red") need a filter field in the action schema and the scene.
+3. Freeze a round-twelve set before tuning on any new grammar; keep first-run and retest numbers separate.
