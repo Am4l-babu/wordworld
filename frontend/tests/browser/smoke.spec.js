@@ -279,3 +279,21 @@ test('weather switches, each groups, inferred rest and passive adverbs reach the
  await page.locator('.main-panel').screenshot({path:`../.runtime/distributive-fixes-${test.info().project.name}.png`});
  expect(errors).toEqual([]);
 });
+
+test('storm stop, half partitions, shared comma placement and future roofs reach the world',async({page})=>{
+ await submit(page,'Make it rain');
+ await expect(scene(page).locator('.rain')).toHaveCount(1);
+ await submit(page,'Make it dawn and stop the storm.');
+ await expect(scene(page).locator('.rain')).toHaveCount(0);
+ await submit(page,'Build four houses: half whose roofs will be painted blue and half whose roofs will be painted white, all near the lake.');
+ await expect(count(page)).toContainText('26 total');
+ const houses=scene(page).getByRole('button',{name:'Select house',exact:true});
+ await expect(houses.locator('path[fill="#74a6ea"]')).toHaveCount(2);
+ await expect(houses.locator('path[fill="#f7efe5"]')).toHaveCount(2);
+ await expect(page.getByRole('group',{name:'Placement guide: near',exact:true})).toBeVisible();
+ await expect(page.locator('.grounded-command .span-quantity')).toHaveText(['four','half','half']);
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('wordworld-scene-v1')).items.slice(-4));
+ expect(saved.every(x=>x.grounding?.relation==='near')).toBeTruthy();
+ await expect(page.getByLabel('Parser notices')).toHaveCount(0);
+ await page.locator('.main-panel').screenshot({path:`../.runtime/shared-fixes-${test.info().project.name}.png`});
+});

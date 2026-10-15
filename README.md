@@ -55,6 +55,8 @@ Colon and comma partitions replace the default group. An explicit total must agr
 | Add, remove, place and color objects with short English commands | See phrase highlights, exact text spans, token annotations and action JSON | Select, drag, recolor, duplicate and delete |
 | Use counted groups, within-request pronouns, spatial relations and weather | Read notices when a request is ambiguous or unsupported | Undo/redo, zoom, keyboard movement and JSON export |
 
+On phones, the command editor sits above the island with a visible **Create** button, 16px input text and larger touch controls. Tablet and landscape alignment, draft preservation and help dialogs have responsive checks. See the [mobile before/after review](docs/MOBILE_QA.md).
+
 The world autosaves in your browser. There is no account or cloud scene storage. Missing landmarks and crowded placement are explained in the UI; scenes hold up to 120 objects.
 
 <details>
@@ -75,21 +77,21 @@ flowchart LR
 
 The live app includes the English spaCy model. `/api/health` reports `parser: "spacy"`; `/api/parse` returns `model: "spacy"`. Without the model, local token annotations are limited. An offline browser preview supports only simple commands; use the Python backend for the NLP demonstration.
 
-Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/distributive_fixes_report.md) for concrete failures and complete predictions.
+Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/shared_fixes_report.md) for concrete failures and complete predictions.
 
 </details>
 
 ### Measured, with the rough edges showing
 
-Current verification and eight diagnostic scores are recorded in the [latest evaluation report](evaluation/distributive_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
+Current verification and nine diagnostic scores are recorded in the [latest evaluation report](evaluation/shared_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**422 Python tests · 16 scene tests · 28 desktop/mobile browser checks · production build passed.**
+**466 Python tests · 16 scene tests · 42 desktop/mobile browser checks · production build passed.**
 
-| Saved sets 1 → 7, retested | New sample 8, first run |
+| Saved sets 1 → 8, retested | New sample 9, first run |
 |---|---|
-| 50/50 · 48/50 · 45/50 · 46/50 · 47/50 · 45/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
+| 50/50 · 48/50 · 45/50 · 46/50 · 47/50 · 46/50 · 45/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
 
-The latest fixes address weather switches, each-color quantities, inferred remainders and common passive adverbs. Broader gaps include half-and-half quantities, shared comma tails, future passive clauses and setting paraphrases; the report shows expected and actual actions for every failure.
+The latest fixes address “stop the storm,” half-and-half quantities, shared locations after commas and future passive color clauses. Halves require an explicit even total; comma locations apply to one same-noun collection. Broader gaps include quarters, “of each color,” mixed-type shared locations and future perfect clauses; the report shows every failure.
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 
@@ -108,7 +110,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The report includes exact dataset hashes, backend fingerprints and commands for all eight evaluations. Parser tests cover action semantics and source spans; scene tests cover placement and references; browser tests cover the API-to-canvas flow on desktop and mobile, editing, saved state, failures and safe README command links.
+The report includes exact dataset hashes, backend fingerprints and commands for all nine evaluations. Parser tests cover action semantics and source spans; scene tests cover placement and references; browser tests cover the API-to-canvas flow on desktop and mobile, editing, saved state, failures and safe README command links.
 
 Set `WORDWORLD_BASE_URL` to a hosted URL to run the same browser suite remotely. To regenerate the preview with the local servers running: `cd frontend; node scripts/capture-readme.mjs`. Then use FFmpeg from the root:
 
