@@ -116,9 +116,12 @@ def clauses(text: str):
             source_groups = continued_descriptions(text[group_start:], kind)
             if group_start + source_groups['end'] > separator.start():
                 continue
+            each_colors = post_each_colors(text[noun.end():], kind)
+            if each_colors and noun.end() + each_colors['end'] > separator.start():
+                continue
             shared_tail = re.match(r'\s*all\s+(?:(?:not|no|without)\s+)?', text[separator.end():], re.I)
-            if source_groups['descriptions'] and shared_tail and leading_relation(text[separator.end()+shared_tail.end():])[0]:
-                continue  # One same-noun collection owns this shared placement.
+            if shared_tail and leading_relation(text[separator.end()+shared_tail.end():])[0] and (source_groups['descriptions'] or operation and operation.lastgroup in {'add','remove'}):
+                continue  # The shared placement belongs to this creation clause.
             # Appositive attributes belong to the preceding noun, including
             # the 'them' in a quantity, rather than a new command/reference.
             attributes = postnoun_attributes(text[separator.start():], WORD_TO_TYPE[nouns[-1].group().lower()])
@@ -232,7 +235,7 @@ POST_COLOR_RE = re.compile(
     r'(?:(?:that|which)\s+)?(?:is|are)\s+(?P<predicate>' + '|'.join(COLORS) + r')\b|'
     r'(?:with|having|(?:that|which)\s+(?:has|have))\s+(?:(?:a|an|the)\s+)?(?P<before>' + '|'.join(COLORS) + r')\s+(?P<part_before>roofs?|leaves|foliage|petals?)\b|'
     r'(?:whose|with|having|(?:that|which)\s+(?:has|have))\s+(?:(?:a|an|the)\s+)?(?P<part_after>roofs?|leaves|foliage|petals?)\s+'
-    r'(?:(?:(?:that|which)\s+)?(?:is|are)\s+' + PASSIVE_ADVERBS + r'(?:(?:painted|colou?red)\s+)?|(?:(?:that|which)\s+)?(?:will|shall)\s+be\s+' + PASSIVE_ADVERBS + r'(?:painted|colou?red)\s+|(?:(?:that|which)\s+)?(?:has|have|had)\s+' + PASSIVE_ADVERBS + r'been\s+' + PASSIVE_ADVERBS + r'(?:painted|colou?red)\s+|(?:painted|colou?red)\s+)'
+    r'(?:(?:(?:that|which)\s+)?(?:is|are)\s+' + PASSIVE_ADVERBS + r'(?:(?:painted|colou?red)\s+)?|(?:(?:that|which)\s+)?(?:will|shall)\s+' + PASSIVE_ADVERBS + r'(?:be|have\s+' + PASSIVE_ADVERBS + r'been)\s+' + PASSIVE_ADVERBS + r'(?:painted|colou?red)\s+|(?:(?:that|which)\s+)?(?:has|have|had)\s+' + PASSIVE_ADVERBS + r'been\s+' + PASSIVE_ADVERBS + r'(?:painted|colou?red)\s+|(?:painted|colou?red)\s+)'
     r'(?P<after>' + '|'.join(COLORS) + r')\b|'
     r'(?:in\s+)?(?P<bare>' + '|'.join(COLORS) + r')\b)', re.I)
 COLOR_PARTS = {'house': {'roof', 'roofs'}, 'tree': {'leaves', 'foliage'}, 'flower': {'petal', 'petals'}}
@@ -312,6 +315,24 @@ GROUP_SIZES = {'small','large','little','tiny','cozy','big','tall','short'}
 GROUP_MODIFIER_RE = re.compile(r'\s+(' + '|'.join(sorted(GROUP_SIZES | set(COLORS))) + r')\b', re.I)
 
 
+def post_each_colors(suffix: str, kind: str):
+    """Read an adjacent of-each-color list without scanning through another noun."""
+    marker = re.match(r'\s+of\s+each\s+colou?r\b\s*[:,]?\s*', suffix, re.I)
+    if not marker:
+        return None
+    word = r'(?:' + '|'.join(COLORS) + r')\b'
+    listing = re.match(word + r'(?:\s*(?:,\s*(?:and\s+)?|and\s+)' + word + r')+', suffix[marker.end():], re.I)
+    end = marker.end() + listing.end() if listing else marker.end()
+    error = None
+    colors = list(COLOR_RE.finditer(suffix,marker.end(),end))
+    if not listing or kind not in COLOR_PARTS or len({c.group().lower() for c in colors}) != len(colors):
+        error = 'Of each color needs a distinct supported color list; that instruction was skipped.'
+    tail = re.match(r'\s*(?:or|to)\b|\s*(?:,\s*|and\s+)(?P<next>\w+)', suffix[end:], re.I)
+    if tail and (not tail.group('next') or not NUMBER_RE.fullmatch(tail.group('next')) and not ENTITY_RE.fullmatch(tail.group('next'))):
+        error = 'Of each color has an ambiguous or unsupported list; that instruction was skipped.'
+    return {'end':end, 'colors':colors, 'error':error}
+
+
 def distributive_description(fragment: str, kind: str):
     """A single explicit quantity distributes over an adjacent color list."""
     prefix = re.match(r'\s*(?:(?:not|no|never|without)\s+)?(?:exactly\s+)?', fragment, re.I)
@@ -361,7 +382,11 @@ def continued_descriptions(suffix: str, kind: str):
             result['end'] = start + each['end']
             continue
         inferred = re.match(r'(?:(?:not|no|never|without)\s+)?(?:the\s+(?:rest|remainder)|(?:the\s+)?remaining\s+ones?)\b', suffix[start:], re.I)
-        fraction = re.match(r'(?:(?:not|no|never|without)\s+)?(?:a\s+)?half\b(?!\s+(?:a\s+)?dozen)(?:\s+of\s+them\b)?', suffix[start:], re.I)
+        fraction = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?P<half>(?:a\s+)?half\b(?!\s+(?:a\s+)?dozen))|(?:(?P<quarters>' + NUMERAL + r'|a)[ -]+)?quarters?\b)(?:\s+of\s+them\b)?', suffix[start:], re.I)
+        ratio = None
+        if fraction:
+            numerator = fraction.group('quarters') or 'one'
+            ratio = (1,2) if fraction.group('half') else (1 if numerator.lower()=='a' else number_value(numerator.lower()),4)
         qualifier = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?:the\s+)?remaining\s+)?(?:exactly\s+)?', suffix[start:], re.I)
         number_start = start + qualifier.end()
         number = NUMBER_RE.match(suffix, number_start) if not inferred and not fraction else None
@@ -423,7 +448,7 @@ def continued_descriptions(suffix: str, kind: str):
             result['first_comma'] = connector.group().lstrip().startswith((',', ':'))
             result['first_colon'] = connector.group().lstrip().startswith(':')
             result['first_form'] = form
-        result['descriptions'].append({'count':count, 'color':color, 'negated':negated, 'remainder':bool(remainder), 'fraction':bool(fraction)})
+        result['descriptions'].append({'count':count, 'color':color, 'negated':negated, 'remainder':bool(remainder), 'fraction':ratio})
         if remainder:
             result['highlights'].append((start + remainder.start(), start + remainder.end(), 'quantity'))
         if number:
@@ -560,6 +585,22 @@ def parse(text: str) -> dict[str, Any]:
                 mark(offset + weather.start(), offset + weather.end(), "setting")
                 break
 
+        # Resolve a shared comma tail before any source objects enter references.
+        shared_relation, shared_targets, shared_groups = None, [], []
+        shared = re.search(r',\s*all\s+(?:(?:not|no|without)\s+)?',clause,re.I)
+        if shared:
+            shared_relation, shared_match = leading_relation(clause[shared.end():])
+            if shared_relation:
+                relation_start = shared.end() + shared_match.start()
+                relation_end = shared.end() + shared_match.end()
+                found = list(MENTION_RE.finditer(clause,relation_end))
+                shared_targets, consumed, shared_groups = read_landmarks(clause,shared_relation,relation_end,found,0,offset)
+                mark(offset+relation_start,offset+relation_end,'spatial_relation')
+                if (intent != 'add' or NEGATION_RE.search(shared.group()) or relation_in(clause[:shared.start()])[0]
+                        or not shared_targets or shared_relation=='between' and len(shared_targets)!=2 or consumed!=len(found)-1):
+                    warnings.append('A shared placement needs one unambiguous, positive location and named landmarks; that creation clause was skipped.')
+                    continue
+                clause = clause[:shared.start()]
         entities = list(MENTION_RE.finditer(clause))
         front_relation, front_match = leading_relation(clause)
         front_targets = []
@@ -634,6 +675,14 @@ def parse(text: str) -> dict[str, Any]:
             kind = WORD_TO_TYPE[entity.group().lower()]
             attributes = postnoun_attributes(clause[entity.end():], kind)
             attribute_error = attributes['error']
+            each_colors = post_each_colors(clause[entity.end():],kind)
+            if each_colors:
+                attribute_error = each_colors['error']
+                if count is None or number is None or variants is not None or color:
+                    attribute_error = attribute_error or 'Of each color needs one explicit count without conflicting source colors; that instruction was skipped.'
+                variants = [{'count':count, 'color':c.group().lower(), 'number':number,
+                             'color_match':None,'offset':0,'negated':bool(NEGATION_RE.search(prefix))} for c in each_colors['colors']] if not attribute_error else []
+                attributes['end'] = each_colors['end']
             if attributes['has_quantity']:
                 post_count = attributes['count']
                 if variants is not None or number and not number.group('article') and count != post_count:
@@ -662,11 +711,14 @@ def parse(text: str) -> dict[str, Any]:
                 not number.group('article') or quantity('', entity.group())[0] == 1))
             fractions = [d for d in continued['descriptions'] if d.get('fraction')]
             if fractions:
-                if not declared_total or count is None or count % 2 or not continued['first_comma']:
-                    attribute_error = 'Half groups need an explicit even whole-number total and a partition; that instruction was skipped.'
+                if (not declared_total or count is None or not continued['first_comma'] or any(
+                        d['fraction'][0] is None or not 0 <= d['fraction'][0] <= d['fraction'][1]
+                        or count*d['fraction'][0] % d['fraction'][1] for d in fractions)):
+                    attribute_error = 'Fraction groups need a declared total giving non-negative whole-object counts and a partition; that instruction was skipped.'
                 else:
                     for description in fractions:
-                        description['count'] = count // 2
+                        numerator,denominator = description['fraction']
+                        description['count'] = count*numerator // denominator
             group_total = sum(d['count'] for d in continued['descriptions'] if not d['negated'] and d['count'] is not None)
             partition = bool(continued['descriptions'] and continued['first_comma'] and (not post_colors or continued['first_colon']) and (
                 not declared_total or continued['first_form'] != 'ones' or group_total == count or continued['first_colon'] or any(d.get('remainder') for d in continued['descriptions'])))
@@ -722,6 +774,8 @@ def parse(text: str) -> dict[str, Any]:
             if front_relation and not relation:
                 relation, targets = front_relation, front_targets
                 target_groups = front_groups
+            if shared_relation:
+                relation, targets, target_groups = shared_relation,shared_targets,shared_groups
             mark(offset + entity.start(), offset + entity.end(), "object")
             if number and variants is None:
                 mark(offset + cursor + number.start(), offset + cursor + number.end(), "quantity")
@@ -733,6 +787,8 @@ def parse(text: str) -> dict[str, Any]:
                 mark(base + post_number.start(), base + post_number.end(), 'quantity')
             for _, start, end in post_colors:
                 mark(offset + entity.end() + start, offset + entity.end() + end, 'color')
+            for each_color in each_colors['colors'] if each_colors else []:
+                mark(offset+entity.end()+each_color.start(),offset+entity.end()+each_color.end(),'color')
             for start, end, role in continued['highlights']:
                 mark(offset + group_start + start, offset + group_start + end, role)
             for variant in variants or []:

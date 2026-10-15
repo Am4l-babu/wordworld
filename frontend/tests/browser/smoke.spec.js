@@ -297,3 +297,29 @@ test('storm stop, half partitions, shared comma placement and future roofs reach
  await expect(page.getByLabel('Parser notices')).toHaveCount(0);
  await page.locator('.main-panel').screenshot({path:`../.runtime/shared-fixes-${test.info().project.name}.png`});
 });
+
+test('quarters, of-each-color, mixed shared locations and future perfect reach the scene',async({page})=>{
+ await submit(page,'Plant eight trees: one quarter blue and three quarters white.');
+ await expect(count(page)).toContainText('30 total');
+ const trees=scene(page).getByRole('button',{name:'Select tree',exact:true});
+ await expect(trees.locator('circle[fill="#74a6ea"]')).toHaveCount(6);
+ await expect(trees.locator('circle[fill="#f7efe5"]')).toHaveCount(18);
+ await expect(page.locator('.grounded-command .span-quantity')).toHaveText(['eight','one quarter','three quarters']);
+ await submit(page,'Add three flowers of each color: red and white.');
+ await expect(count(page)).toContainText('36 total');
+ const colors=await page.evaluate(()=>JSON.parse(localStorage.getItem('wordworld-scene-v1')).items.slice(-6).map(x=>x.color));
+ expect(colors).toEqual(['red','red','red','white','white','white']);
+ await submit(page,'Build two blue houses and three yellow flowers, all beside the lake.');
+ await expect(count(page)).toContainText('41 total');
+ const mixed=await page.evaluate(()=>JSON.parse(localStorage.getItem('wordworld-scene-v1')).items.slice(-5));
+ expect(mixed.map(x=>x.type)).toEqual(['house','house','flower','flower','flower']);
+ expect(mixed.every(x=>x.grounding?.relation==='near')).toBeTruthy();
+ expect(new Set(mixed.flatMap(x=>x.grounding.anchorIds)).size).toBe(1);
+ await submit(page,'Build a cottage whose roof will have been painted purple.');
+ await expect(count(page)).toContainText('42 total');
+ await expect(scene(page).getByRole('button',{name:'Select house',exact:true}).locator('path[fill="#a78bd8"]')).toHaveCount(1);
+ await expect(page.getByLabel('Parser notices')).toHaveCount(0);
+ await page.getByRole('button',{name:'Undo',exact:true}).click();await expect(count(page)).toContainText('41 total');
+ await page.getByRole('button',{name:'Redo',exact:true}).click();await expect(count(page)).toContainText('42 total');
+ await page.locator('.main-panel').screenshot({path:`../.runtime/quarter-fixes-${test.info().project.name}.png`});
+});
