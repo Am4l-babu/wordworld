@@ -1,0 +1,1012 @@
+{
+  "name": "WordWorld sixth fresh 50-command evaluation — 2026-10-15",
+  "method": "50 newly hand-authored commands and expected actions frozen before first prediction after partition/passive/predicate fixes. Author saw implementation and prior errors; not independently human-labeled or randomly sampled. No tuning on round-six predictions.",
+  "scope": "40 preassigned core cases and 10 broader probes. Core includes zero/negated groups and a zero-total refusal. Comma partitions replace implicit defaults; declared totals must match group sums. Adjacent and groups remain additions; omitted colors follow the existing noun-type inheritance contract. Trailing locations apply to the groups. Size rendering, geometry and cross-request reference are not scored.",
+  "gold_policy": "Exact ordered action dictionaries with aliases and the existing 16-per-action cap. Probe gold represents natural intended English even outside implemented syntax. Each request starts with empty reference state; counted groups feed later bounded removals and two-object spatial references.",
+  "parser_sha256_before": "2a9f0ce3d09d21c993863504216a0283fc1c22496edc9cd65647df76a8ce5359",
+  "pipeline_sha256_before": "34f1a1013de988362e5b1f78197424fb5b2e414497fe294e4d2554d2b3979d6f",
+  "source_files_sha256": {
+    "backend/main.py": "b2c67f4c9bea1394f5548cc081c83d90c899457bdab138dc9c70e3292ffb1c7f",
+    "backend/parser.py": "2a9f0ce3d09d21c993863504216a0283fc1c22496edc9cd65647df76a8ce5359",
+    "backend/references.py": "49248372c17ee1688d358bbbba0c0748272423d847fab6e35ca6844baa84c710"
+  },
+  "uniqueness": "No normalized exact overlaps with all six earlier datasets, Python regression string literals, browser test literals or README lines at freeze time. Similar grammar is intentional; semantic independence is not claimed.",
+  "development_inputs_sha256": {
+    "tests\\commands.json": "2b4c4eb37c64ea7996fc018f5bf9f67e8dbb86fa0b8512a8bdd04dca5200978b",
+    "tests\\heldout_commands.json": "d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224",
+    "tests\\fresh_commands_v2.json": "050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b",
+    "tests\\fresh_commands_v3.json": "bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927",
+    "tests\\fresh_commands_v4.json": "83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd",
+    "tests\\fresh_commands_v5.json": "e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e",
+    "tests\\test_accuracy_fixes.py": "c54e8e5d2327e40308d21773c3f330da75471177de0d46d19effbaa28d3e705a",
+    "tests\\test_api.py": "5c2d7840dcfd5e421d5b4e935bf96763ea6f383e29bedcf3fd5916f736e1ca98",
+    "tests\\test_ellipsis_fixes.py": "ccc344840d2aa1f427ee49350d0225e5f1c7532982f572ef44ecde67a068bc4a",
+    "tests\\test_parser.py": "2b0e97f268bd131c5fbf7cfeaac08c84c541e4c79eb6b343aef2291387acd82e",
+    "tests\\test_partition_fixes.py": "84ff629afb806763135cef14371fc5cdce5a3525b6dddd9a6194d8fbae71f16e",
+    "tests\\test_postnoun_fixes.py": "bcb665be4f8a7c7af223b3a4a7fc9be28ef173bb43678f7f221f0c519fc97cf6",
+    "tests\\test_reference_fixes.py": "72e12f3e748bed6135f4dc5ca188921e427e01409521b385d098ca20c9d60bad",
+    "tests\\test_regressions.py": "dd20abe95284b09c1211d85a7963e23e65b00dfc2195eeaa889608c63651ffc5",
+    "frontend\\tests\\browser\\smoke.spec.js": "0a9143524bef7cb25f383d9cc822bd6146605fba679dda2364f80c8442870f75",
+    "README.md": "a9e25000f138607805cc17cdf7a7c1b460051f207208aa9b06e4c0e4137877b5"
+  },
+  "cases": [
+    {
+      "id": "L01",
+      "text": "Plant trees, three green and two purple.",
+      "category": "bare_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L02",
+      "text": "Build houses, two with orange roofs and three with white roofs.",
+      "category": "bare_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L03",
+      "text": "Create flowers, four pink ones and two yellow ones.",
+      "category": "bare_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L04",
+      "text": "Place six cottages, two with blue roofs and four with green roofs.",
+      "category": "declared_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L05",
+      "text": "Add flowers, three whose petals are red and one whose petals are purple.",
+      "category": "bare_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L06",
+      "text": "Build four houses, one whose roof has been painted orange and three white.",
+      "category": "declared_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L07",
+      "text": "Plant blue trees, two small ones and one large one.",
+      "category": "shared_partition_color",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L08",
+      "text": "Add trees, zero purple and four green.",
+      "category": "partition_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L09",
+      "text": "Add trees, not one pink and two white.",
+      "category": "partition_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L10",
+      "text": "Draw flowers, one blue and one purple near the lake.",
+      "category": "partition_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "blue",
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L11",
+      "text": "Create houses, two that are white, three that are yellow, and one pink.",
+      "category": "bare_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L12",
+      "text": "Add three houses, three with pink roofs.",
+      "category": "declared_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L13",
+      "text": "Build two houses whose roofs have been painted orange.",
+      "category": "passive_parts",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L14",
+      "text": "Place a cottage with a roof which has been coloured purple.",
+      "category": "passive_parts",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L15",
+      "text": "Add a home with a roof that had been colored blue.",
+      "category": "passive_parts",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L16",
+      "text": "Create a house whose roof has been painted green near the river.",
+      "category": "passive_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green",
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L17",
+      "text": "Plant two trees with leaves which have been coloured pink.",
+      "category": "passive_parts",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L18",
+      "text": "Place flowers whose petals have been colored red.",
+      "category": "passive_parts",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L19",
+      "text": "Add a house with a roof which had been painted yellow and two with roofs that have been painted white.",
+      "category": "passive_continuation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L20",
+      "text": "Add a house with a roof that has been painted white and three blue ones.",
+      "category": "passive_continuation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L21",
+      "text": "Add rocks, eight total.",
+      "category": "quantity_total",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 8,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L22",
+      "text": "Build cottages, exactly four total.",
+      "category": "quantity_total",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L23",
+      "text": "Plant trees, half a dozen total.",
+      "category": "quantity_total",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L24",
+      "text": "Create towers, two pairs total.",
+      "category": "quantity_total",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 4,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L25",
+      "text": "Add flowers, twenty-five total.",
+      "category": "quantity_total",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 16,
+          "color": null
+        }
+      ],
+      "label_note": "Existing 16-per-action cap applies."
+    },
+    {
+      "id": "L26",
+      "text": "Draw roads, exactly zero total.",
+      "category": "quantity_total",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "L27",
+      "text": "Add bridges, three total over the stream.",
+      "category": "quantity_total_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 3,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L28",
+      "text": "Place mountains, five total behind the castle.",
+      "category": "quantity_total_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "mountain",
+          "count": 5,
+          "color": null,
+          "relation": "above",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L29",
+      "text": "Plant one tree that is blue and two pink and three white.",
+      "category": "omitted_predicates",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L30",
+      "text": "Build two houses with green roofs and four orange.",
+      "category": "omitted_predicates",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L31",
+      "text": "Add two flowers that are purple and not three pink.",
+      "category": "omitted_predicates",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L32",
+      "text": "Build three small houses and two blue near the pond.",
+      "category": "omitted_predicate_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L33",
+      "text": "Add two flowers that are yellow and one purple; remove them.",
+      "category": "group_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple"
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 3
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L34",
+      "text": "Build houses, one blue and one green; put a rock between them.",
+      "category": "partition_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L35",
+      "text": "Place two cottages, one with a yellow roof and one with an orange roof; remove them.",
+      "category": "partition_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 2
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L36",
+      "text": "Plant trees, two green and three pink; remove four of them; remove it.",
+      "category": "partition_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 4
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 1
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L37",
+      "text": "Keep the lake; add flowers, exactly three total; make it night.",
+      "category": "quantities_settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": null
+        },
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L38",
+      "text": "Behind the tower, plant trees, one blue and two purple.",
+      "category": "fronted_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "blue",
+          "relation": "above",
+          "target": "tower"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "purple",
+          "relation": "above",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L39",
+      "text": "Don’t build a house whose roof has been painted red; add a tree.",
+      "category": "passive_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L40",
+      "text": "Reset; build houses, two with pink roofs and three with white roofs; remove them.",
+      "category": "partition_reset",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "reset"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white"
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 5
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L41",
+      "text": "Build five houses: two blue and three red.",
+      "category": "colon_partition",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L42",
+      "text": "Add flowers, a total of five.",
+      "category": "quantity_word_order",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 5,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L43",
+      "text": "Plant five trees, two green and the remaining three yellow.",
+      "category": "remainder_partition",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L44",
+      "text": "Build a house whose roof has already been painted blue.",
+      "category": "passive_adverb",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L45",
+      "text": "Build five houses, two blue, three red, all near the lake.",
+      "category": "shared_tail_modifier",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue",
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L46",
+      "text": "Plant trees, two green, three pink; add two more of the latter.",
+      "category": "latter_reference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L47",
+      "text": "Create two groups of three yellow flowers.",
+      "category": "group_multiplication",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 6,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L48",
+      "text": "Leave the trees untouched while building two houses.",
+      "category": "subordinate_creation",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L49",
+      "text": "Build a bridge that goes over the stream.",
+      "category": "finite_relation",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "L50",
+      "text": "Make it daylight without any snow.",
+      "category": "setting_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": ""
+    }
+  ]
+}

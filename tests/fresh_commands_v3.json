@@ -1,0 +1,1104 @@
+{
+  "name": "WordWorld third fresh 50-command evaluation — 2026-10-15",
+  "method": "50 newly hand-authored commands and expected actions frozen before prediction after reference/coordination fixes. Author saw implementation and prior results; not independently human-labeled or randomly sampled. No tuning on round-three results.",
+  "scope": "40 core commands and 10 preassigned broader grammar probes. All commands start with empty request-local reference context. Singular it resolves the latest live singular introduction; them resolves the latest coordinated creation collection. Explicit new creation verbs reset collection focus. Existing named landmarks assumed; geometry and cross-request context are not scored.",
+  "gold_policy": "Exact ordered action dictionaries; existing aliases/count cap apply. Missing or ambiguous antecedents and repeated removals from exhausted references intentionally abstain. Refusal cases measure the documented conservative contract, not general English understanding.",
+  "parser_sha256_before": "ebd28a8e790143913c5d52db10af0de1b02e5db3dd42841c48f83e5f9dee7ec0",
+  "pipeline_sha256_before": "3846424e07c0a52fcae4d73473603065f1d038a83404fc5ca361d4b14798eba4",
+  "source_files_sha256": {
+    "backend/main.py": "b2c67f4c9bea1394f5548cc081c83d90c899457bdab138dc9c70e3292ffb1c7f",
+    "backend/parser.py": "ebd28a8e790143913c5d52db10af0de1b02e5db3dd42841c48f83e5f9dee7ec0",
+    "backend/references.py": "49248372c17ee1688d358bbbba0c0748272423d847fab6e35ca6844baa84c710"
+  },
+  "uniqueness": "No normalized exact overlaps with all three previous sets, Python regression string literals, browser smoke-test string literals, or README command lines. Similar grammar constructions are intentional.",
+  "development_inputs_sha256": {
+    "tests\\commands.json": "2b4c4eb37c64ea7996fc018f5bf9f67e8dbb86fa0b8512a8bdd04dca5200978b",
+    "tests\\heldout_commands.json": "d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224",
+    "tests\\fresh_commands_v2.json": "050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b",
+    "tests\\test_accuracy_fixes.py": "c54e8e5d2327e40308d21773c3f330da75471177de0d46d19effbaa28d3e705a",
+    "tests\\test_api.py": "5c2d7840dcfd5e421d5b4e935bf96763ea6f383e29bedcf3fd5916f736e1ca98",
+    "tests\\test_parser.py": "2b0e97f268bd131c5fbf7cfeaac08c84c541e4c79eb6b343aef2291387acd82e",
+    "tests\\test_reference_fixes.py": "72e12f3e748bed6135f4dc5ca188921e427e01409521b385d098ca20c9d60bad",
+    "tests\\test_regressions.py": "dd20abe95284b09c1211d85a7963e23e65b00dfc2195eeaa889608c63651ffc5",
+    "frontend\\tests\\browser\\smoke.spec.js": "ad65eb524f2ddfd5d5b465c090ea7e2cc87cbe0b3d059fb7b35274caae74fdb5",
+    "README.md": "1617cd01726f9dc3a00131183980b8621d9b84510a0a8a62bffd45c538488e8b"
+  },
+  "cases": [
+    {
+      "id": "G01",
+      "text": "Add two bridges spanning the stream.",
+      "category": "relational_roles",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 2,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G02",
+      "text": "Place a road crossing the creek.",
+      "category": "relational_roles",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "road",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G03",
+      "text": "Draw a bridge spanning the river and three red cottages.",
+      "category": "relational_roles",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G04",
+      "text": "Build a bridge spanning the creek; plant four trees behind it.",
+      "category": "reference_landmarks",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": null,
+          "relation": "above",
+          "target": "bridge"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G05",
+      "text": "Don’t build bridges crossing the stream; add a tower.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G06",
+      "text": "Create a castle, then put a tree to the left of it.",
+      "category": "reference_landmarks",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null,
+          "relation": "left",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G07",
+      "text": "Build three red cottages; remove two of them.",
+      "category": "reference_removal",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 2
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G08",
+      "text": "Plant four flowers; remove one of them; remove them.",
+      "category": "reference_removal",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 1
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 3
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G09",
+      "text": "Make a tower and a cottage; place a rock between them.",
+      "category": "reference_landmarks",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "tower",
+          "targets": [
+            "tower",
+            "house"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G10",
+      "text": "Add two lakes; put a bridge between them.",
+      "category": "reference_landmarks",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "lake",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "lake",
+          "targets": [
+            "lake",
+            "lake"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G11",
+      "text": "Create a road; make it night; plant two trees near it.",
+      "category": "reference_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "road",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G12",
+      "text": "Add a rock; remove it; remove it again.",
+      "category": "reference_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "rock",
+          "count": 1
+        }
+      ],
+      "label_note": "The second removal has no live antecedent and must abstain, preserving unrelated scene rocks."
+    },
+    {
+      "id": "G13",
+      "text": "Build a house, a tower, and a castle; remove them.",
+      "category": "reference_removal",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 1
+        },
+        {
+          "action": "remove",
+          "type": "tower",
+          "count": 1
+        },
+        {
+          "action": "remove",
+          "type": "castle",
+          "count": 1
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G14",
+      "text": "Create six trees; erase twenty of them.",
+      "category": "reference_removal",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 6
+        }
+      ],
+      "label_note": "Removal is bounded by the six introduced trees, not by unrelated existing trees; a notice is expected."
+    },
+    {
+      "id": "G15",
+      "text": "Add two rocks; never remove them.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G16",
+      "text": "Build a cottage and a tower; delete one of them.",
+      "category": "reference_ambiguity",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "A partial selection from a mixed collection is ambiguous; removal abstains with a notice."
+    },
+    {
+      "id": "G17",
+      "text": "Plant three trees; remove it.",
+      "category": "reference_ambiguity",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "label_note": "Singular it cannot select one unspecified member of a plural group."
+    },
+    {
+      "id": "G18",
+      "text": "Remove them; add a lake.",
+      "category": "reference_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "lake",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "Every command starts with an empty reference context."
+    },
+    {
+      "id": "G19",
+      "text": "Build a house; reset; put a flower near it.",
+      "category": "reference_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "reset"
+        }
+      ],
+      "label_note": "Reset invalidates the house antecedent; the final spatial instruction abstains."
+    },
+    {
+      "id": "G20",
+      "text": "Create one white and one orange house; add a flower between them.",
+      "category": "coordination_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G21",
+      "text": "Add two green and four purple trees.",
+      "category": "coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G22",
+      "text": "Build a yellow and a pink cottage.",
+      "category": "coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G23",
+      "text": "Place three white, two blue, and one purple flower.",
+      "category": "coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G24",
+      "text": "Plant a pair of yellow and three pink flowers.",
+      "category": "coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G25",
+      "text": "Build two red and not three blue cottages.",
+      "category": "coordination_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "red"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G26",
+      "text": "Near the tower, plant one pink and one white flower.",
+      "category": "coordination_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "pink",
+          "relation": "near",
+          "target": "tower"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "white",
+          "relation": "near",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G27",
+      "text": "Add two blue and three red houses behind the lake.",
+      "category": "coordination_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue",
+          "relation": "above",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red",
+          "relation": "above",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G28",
+      "text": "Create one green and one yellow tree; remove them.",
+      "category": "coordination_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "yellow"
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 2
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G29",
+      "text": "Put one purple and one pink flower beside the castle, then remove it.",
+      "category": "coordination_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple",
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "pink",
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 1
+        }
+      ],
+      "label_note": "It selects the last singular subject group, the pink flower."
+    },
+    {
+      "id": "G30",
+      "text": "Build two red houses and one blue house; put a rock behind it.",
+      "category": "reference_landmarks",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null,
+          "relation": "above",
+          "target": "house"
+        }
+      ],
+      "label_note": "It refers specifically to the last singular introduction, the blue house."
+    },
+    {
+      "id": "G31",
+      "text": "Keep the lake; add fourteen white flowers.",
+      "category": "quantity_preservation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 14,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G32",
+      "text": "Don’t create any castles; build a bridge spanning the stream.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G33",
+      "text": "South of the tower, place a dozen pink flowers.",
+      "category": "fronted_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 12,
+          "color": "pink",
+          "relation": "below",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G34",
+      "text": "Build one hundred and three blue cottages.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 16,
+          "color": "blue"
+        }
+      ],
+      "label_note": "Apply the existing 16-object action cap to 103 requested objects."
+    },
+    {
+      "id": "G35",
+      "text": "Clear everything; add a river; build a bridge spanning it.",
+      "category": "reference_landmarks",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "reset"
+        },
+        {
+          "action": "add",
+          "type": "river",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G36",
+      "text": "Make it rain and then stop raining; create a rock.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "rain"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G37",
+      "text": "Build zero red and one green house.",
+      "category": "coordination_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G38",
+      "text": "Add a tree; make it day; remove it.",
+      "category": "reference_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 1
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G39",
+      "text": "Beside the castle, add a pair of orange flowers and a red house.",
+      "category": "fronted_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "orange",
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red",
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G40",
+      "text": "Build a tower; remove it; add two blue flowers.",
+      "category": "reference_removal",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "tower",
+          "count": 1
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G41",
+      "text": "Build a cottage with an orange roof.",
+      "category": "postposed_attributes",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G42",
+      "text": "Place a house whose roof is green.",
+      "category": "postposed_attributes",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G43",
+      "text": "Build a bridge that crosses the river.",
+      "category": "relation_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": "The finite verb crosses paraphrases across; expected output does not request a second river."
+    },
+    {
+      "id": "G44",
+      "text": "Construct three white homes near the river.",
+      "category": "verb_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white",
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G45",
+      "text": "Keep the trees untouched while building a house.",
+      "category": "clause_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G46",
+      "text": "Make it day without any rain.",
+      "category": "negated_setting_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G47",
+      "text": "Add a house to the east side of the lake.",
+      "category": "direction_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null,
+          "relation": "right",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G48",
+      "text": "Plant two trees and put a flower between those trees.",
+      "category": "demonstrative_noun_reference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "tree",
+          "targets": [
+            "tree",
+            "tree"
+          ]
+        }
+      ],
+      "label_note": "Those trees names the type explicitly; a correct action match does not establish general demonstrative or color-filtered reference support."
+    },
+    {
+      "id": "G49",
+      "text": "Build houses, three of them.",
+      "category": "postposed_quantity",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "G50",
+      "text": "Place two small and three large houses.",
+      "category": "coordination_without_colors",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "label_note": "Score distinct coordinated count groups using existing action fields; size rendering is not scored."
+    }
+  ]
+}
