@@ -44,7 +44,7 @@ Clear the world
 
 **Objects:** houses, trees, lakes, rivers, roads, bridges, flowers, mountains, towers, castles and rocks. **Colors:** red, blue, green, yellow, pink, purple, orange and white. Aliases such as cottage, creek and pond work too.
 
-Colon and comma partitions replace the default group. An explicit total must agree with the counted groups, and an explicitly counted `remaining` group must come last. Unclear or conflicting counts produce a notice. Size words describe groups but do not resize sprites.
+Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Unclear or conflicting counts produce a notice. Size words describe groups but do not resize sprites.
 
 </details>
 
@@ -75,21 +75,21 @@ flowchart LR
 
 The live app includes the English spaCy model. `/api/health` reports `parser: "spacy"`; `/api/parse` returns `model: "spacy"`. Without the model, local token annotations are limited. An offline browser preview supports only simple commands; use the Python backend for the NLP demonstration.
 
-Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/colon_fixes_report.md) for concrete failures and complete predictions.
+Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/distributive_fixes_report.md) for concrete failures and complete predictions.
 
 </details>
 
 ### Measured, with the rough edges showing
 
-Current verification and seven diagnostic scores are recorded in the [latest evaluation report](evaluation/colon_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
+Current verification and eight diagnostic scores are recorded in the [latest evaluation report](evaluation/distributive_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**360 Python tests · 16 scene tests · 26 desktop/mobile browser checks · production build passed.**
+**422 Python tests · 16 scene tests · 28 desktop/mobile browser checks · production build passed.**
 
-| Saved sets 1 → 6, retested | New sample 7, first run |
+| Saved sets 1 → 7, retested | New sample 8, first run |
 |---|---|
-| 50/50 · 47/50 · 45/50 · 46/50 · 46/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
+| 50/50 · 48/50 · 45/50 · 46/50 · 47/50 · 45/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
 
-The latest fixes address colon partitions, `a total of five`, and counted `remaining` groups. Broader gaps include inferred remainders, distributive quantities, passive adverbs and setting paraphrases; the report shows expected and actual actions for every failure.
+The latest fixes address weather switches, each-color quantities, inferred remainders and common passive adverbs. Broader gaps include half-and-half quantities, shared comma tails, future passive clauses and setting paraphrases; the report shows expected and actual actions for every failure.
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 
@@ -108,7 +108,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The report includes exact dataset hashes, backend fingerprints and commands for all seven evaluations. Parser tests cover action semantics and source spans; scene tests cover placement and references; browser tests cover the API-to-canvas flow on desktop and mobile, editing, saved state, failures and safe README command links.
+The report includes exact dataset hashes, backend fingerprints and commands for all eight evaluations. Parser tests cover action semantics and source spans; scene tests cover placement and references; browser tests cover the API-to-canvas flow on desktop and mobile, editing, saved state, failures and safe README command links.
 
 Set `WORDWORLD_BASE_URL` to a hosted URL to run the same browser suite remotely. To regenerate the preview with the local servers running: `cd frontend; node scripts/capture-readme.mjs`. Then use FFmpeg from the root:
 

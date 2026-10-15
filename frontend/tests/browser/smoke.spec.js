@@ -248,3 +248,34 @@ test('shared links never execute markup or partially load oversized commands',as
  await expect(page.getByLabel('Describe your imagination')).toHaveValue('');
  await expect(count(page)).toContainText('22 total');
 });
+
+test('weather switches, each groups, inferred rest and passive adverbs reach the scene',async({page})=>{
+ const errors=[];page.on('pageerror',error=>errors.push(error.message));
+ await submit(page,'Make it rain');
+ await expect(scene(page).locator('.rain')).toHaveCount(1);
+ await submit(page,'Turn off the rain');
+ await expect(scene(page).locator('.rain')).toHaveCount(0);
+ await expect(page.locator('.grounded-command .span-setting')).toHaveText('Turn off the rain');
+ await submit(page,'Create six flowers: three each of pink and white.');
+ await expect(count(page)).toContainText('28 total');
+ const flowers=scene(page).getByRole('button',{name:'Select flower',exact:true});
+ await expect(flowers).toHaveCount(12);
+ const newFlowers=await page.evaluate(()=>JSON.parse(localStorage.getItem('wordworld-scene-v1')).items.slice(-6));
+ expect(newFlowers.map(x=>x.color)).toEqual(['pink','pink','pink','white','white','white']);
+ await submit(page,'Plant seven trees: two purple and the rest green.');
+ await expect(count(page)).toContainText('35 total');
+ await expect(page.locator('.grounded-command .span-quantity')).toHaveText(['seven','two','the rest']);
+ const trees=scene(page).getByRole('button',{name:'Select tree',exact:true});
+ await expect(trees.locator('circle[fill="#a78bd8"]')).toHaveCount(6);
+ await expect(trees.locator('circle[fill="#80bea1"]')).toHaveCount(15);
+ await submit(page,'Build a cottage whose roof has recently been painted orange.');
+ await expect(count(page)).toContainText('36 total');
+ await expect(scene(page).getByRole('button',{name:'Select house',exact:true}).locator('path[fill="#f4a565"]')).toHaveCount(1);
+ await expect(page.getByLabel('Parser notices')).toHaveCount(0);
+ await page.getByRole('button',{name:'Undo',exact:true}).click();
+ await expect(count(page)).toContainText('35 total');
+ await page.getByRole('button',{name:'Redo',exact:true}).click();
+ await expect(count(page)).toContainText('36 total');
+ await page.locator('.main-panel').screenshot({path:`../.runtime/distributive-fixes-${test.info().project.name}.png`});
+ expect(errors).toEqual([]);
+});

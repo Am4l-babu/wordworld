@@ -1,0 +1,2224 @@
+{
+  "name": "WordWorld fifth fresh 50-command evaluation — 2026-10-15",
+  "method": "50 newly hand-authored commands and gold actions frozen before first prediction after quantity/roof/ellipsis fixes. Author saw implementation and prior failures; not independently human-labeled or randomly sampled. No tuning on round-five predictions.",
+  "scope": "40 preassigned core cases and 10 broader probes. Core includes zero/negated count groups and one reset-reference refusal. Adjacent ones inherits a noun type, not existing object IDs or omitted colors. Trailing placement applies to adjacent groups; sizes are neither rendered nor scored. Scene geometry is not scored. Probe gold follows natural intended English, including partition and cross-clause forms beyond the bounded implemented contract.",
+  "evaluation_kind": "retest after parser development; not unseen-command accuracy",
+  "matches_frozen_parser": false,
+  "dataset_parser_sha256": "23fd7136e3f65ebf637aadbdfadb89188e8b4d5c8216125dcd65445dd25ab731",
+  "dataset_sha256": "e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e",
+  "parser_sha256_before": "f5439a5326181b13a4555648da3217000876d5f8f40051291391831a7290bbbf",
+  "parser_sha256_after": "f5439a5326181b13a4555648da3217000876d5f8f40051291391831a7290bbbf",
+  "parser_unchanged": true,
+  "pipeline_sha256_before": "d65a3896893a81bafce4b68d0c7c45f8a219732d61dc189817d5e0bb4726fdf9",
+  "pipeline_sha256_after": "d65a3896893a81bafce4b68d0c7c45f8a219732d61dc189817d5e0bb4726fdf9",
+  "source_files_sha256": {
+    "backend/main.py": "b2c67f4c9bea1394f5548cc081c83d90c899457bdab138dc9c70e3292ffb1c7f",
+    "backend/parser.py": "f5439a5326181b13a4555648da3217000876d5f8f40051291391831a7290bbbf",
+    "backend/references.py": "49248372c17ee1688d358bbbba0c0748272423d847fab6e35ca6844baa84c710"
+  },
+  "runtime": {
+    "python": "3.12.7",
+    "spacy": "3.8.16",
+    "en_core_web_sm": "3.8.0",
+    "annotations": "spacy",
+    "grounding": "rules"
+  },
+  "metric_definitions": {
+    "exact_match": "Complete ordered action dictionaries match, including all emitted fields; per command over all 50.",
+    "intent": "Ordered action-name sequence matches; per command over all 50. Does not validate entity or setting value.",
+    "entity_count_color": "Ordered (action, type, count, color) tuples for all typed actions match, per command over all 50. Pure setting/no-op cases contribute empty typed-action lists.",
+    "spatial": "Ordered (type, relation, target, targets) tuples for all typed actions match, on gold-spatial commands only. Extra subjects are penalized.",
+    "settings": "Ordered (key, value) tuples for setting actions match, on gold-setting commands only."
+  },
+  "metrics": {
+    "exact_match": {
+      "correct": 47,
+      "total": 50,
+      "accuracy": 0.94
+    },
+    "intent": {
+      "correct": 48,
+      "total": 50,
+      "accuracy": 0.96
+    },
+    "entity_count_color": {
+      "correct": 47,
+      "total": 50,
+      "accuracy": 0.94
+    },
+    "spatial": {
+      "correct": 7,
+      "total": 8,
+      "accuracy": 0.875
+    },
+    "settings": {
+      "correct": 2,
+      "total": 2,
+      "accuracy": 1.0
+    }
+  },
+  "categories": {
+    "exact_quantities": {
+      "correct": 6,
+      "total": 6
+    },
+    "exact_quantities_spatial": {
+      "correct": 2,
+      "total": 2
+    },
+    "roof_clauses": {
+      "correct": 5,
+      "total": 5
+    },
+    "part_color_clauses": {
+      "correct": 2,
+      "total": 2
+    },
+    "part_color_scope": {
+      "correct": 1,
+      "total": 1
+    },
+    "noun_ellipsis": {
+      "correct": 5,
+      "total": 5
+    },
+    "noun_ellipsis_spatial": {
+      "correct": 2,
+      "total": 2
+    },
+    "noun_ellipsis_negation": {
+      "correct": 2,
+      "total": 2
+    },
+    "relative_coordination": {
+      "correct": 4,
+      "total": 4
+    },
+    "relative_coordination_negation": {
+      "correct": 1,
+      "total": 1
+    },
+    "relative_coordination_spatial": {
+      "correct": 1,
+      "total": 1
+    },
+    "mixed_continuations": {
+      "correct": 1,
+      "total": 1
+    },
+    "continuation_references": {
+      "correct": 2,
+      "total": 2
+    },
+    "quantity_references": {
+      "correct": 1,
+      "total": 1
+    },
+    "fronted_continuations": {
+      "correct": 1,
+      "total": 1
+    },
+    "quantities_settings": {
+      "correct": 1,
+      "total": 1
+    },
+    "relative_references": {
+      "correct": 1,
+      "total": 1
+    },
+    "negation_quantities": {
+      "correct": 1,
+      "total": 1
+    },
+    "reference_reset": {
+      "correct": 1,
+      "total": 1
+    },
+    "postnoun_partition": {
+      "correct": 1,
+      "total": 1
+    },
+    "compound_adjective": {
+      "correct": 1,
+      "total": 1
+    },
+    "passive_roof_clause": {
+      "correct": 1,
+      "total": 1
+    },
+    "quantity_tail_variant": {
+      "correct": 1,
+      "total": 1
+    },
+    "predicate_ellipsis": {
+      "correct": 1,
+      "total": 1
+    },
+    "partitioned_roof_groups": {
+      "correct": 1,
+      "total": 1
+    },
+    "cross_clause_ellipsis": {
+      "correct": 0,
+      "total": 1
+    },
+    "group_multiplication": {
+      "correct": 0,
+      "total": 1
+    },
+    "subordinate_creation": {
+      "correct": 0,
+      "total": 1
+    },
+    "setting_paraphrase": {
+      "correct": 1,
+      "total": 1
+    }
+  },
+  "scopes": {
+    "core": {
+      "correct": 40,
+      "total": 40
+    },
+    "capability_probe": {
+      "correct": 7,
+      "total": 10
+    }
+  },
+  "outcomes": {
+    "correct": 47,
+    "missing_actions": 1,
+    "wrong_fields": 1,
+    "explicit_abstention": 1
+  },
+  "cases": [
+    {
+      "id": "J01",
+      "text": "Add flowers, exactly eight in all.",
+      "category": "exact_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 8,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 8,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J02",
+      "text": "Plant trees, exactly a pair in all.",
+      "category": "exact_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J03",
+      "text": "Place cottages, exactly eleven of them.",
+      "category": "exact_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 11,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 11,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J04",
+      "text": "Add boulders, exactly half a dozen in total.",
+      "category": "exact_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 6,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 6,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J05",
+      "text": "Create towers, exactly three in all.",
+      "category": "exact_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J06",
+      "text": "Build bridges, exactly two of them across the stream.",
+      "category": "exact_quantities_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 2,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 2,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J07",
+      "text": "Add flowers, exactly eighteen in all.",
+      "category": "exact_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 16,
+          "color": null
+        }
+      ],
+      "label_note": "Existing 16-per-action cap applies.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 16,
+          "color": null
+        }
+      ],
+      "warnings": [
+        "Limited flower quantity to 16."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J08",
+      "text": "Create exactly four white flowers near the castle.",
+      "category": "exact_quantities_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "white",
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "white",
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J09",
+      "text": "Build three homes with roofs painted pink.",
+      "category": "roof_clauses",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J10",
+      "text": "Place a cabin with a roof which is painted green.",
+      "category": "roof_clauses",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J11",
+      "text": "Add a cottage whose roof is coloured white.",
+      "category": "roof_clauses",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J12",
+      "text": "Build a home which has an orange roof.",
+      "category": "roof_clauses",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J13",
+      "text": "Add a house with roofs that are painted red.",
+      "category": "roof_clauses",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J14",
+      "text": "Plant two trees with leaves painted purple.",
+      "category": "part_color_clauses",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "purple"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "purple"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J15",
+      "text": "Place three flowers with petals which are blue.",
+      "category": "part_color_clauses",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J16",
+      "text": "Build a house with a roof that is yellow and two trees with green foliage.",
+      "category": "part_color_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J17",
+      "text": "Place three small towers and two large ones.",
+      "category": "noun_ellipsis",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 3,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 3,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J18",
+      "text": "Draw two short bridges and a tall one over the creek.",
+      "category": "noun_ellipsis_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 2,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        },
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": "A trailing relation is shared by the adjacent groups under the documented grammar. Size rendering is not scored.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 2,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        },
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J19",
+      "text": "Add a rock and three small ones.",
+      "category": "noun_ellipsis",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J20",
+      "text": "Plant four trees and a pair of blue ones.",
+      "category": "noun_ellipsis",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "blue"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J21",
+      "text": "Build two white cottages and one pink one.",
+      "category": "noun_ellipsis",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J22",
+      "text": "Add two tiny castles, three big ones, and a little one.",
+      "category": "noun_ellipsis",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 3,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 3,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J23",
+      "text": "Place two flowers and four purple ones beside the castle.",
+      "category": "noun_ellipsis_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "purple",
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "purple",
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J24",
+      "text": "Build one house and zero big ones.",
+      "category": "noun_ellipsis_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "warnings": [
+        "Skipped a negated or zero-count house group."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J25",
+      "text": "Build no homes and three yellow ones.",
+      "category": "noun_ellipsis_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "warnings": [
+        "Skipped a negated or zero-count house group."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J26",
+      "text": "Plant three trees that are pink and two which are blue.",
+      "category": "relative_coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "blue"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J27",
+      "text": "Add one house whose roof is white and two whose roofs are orange.",
+      "category": "relative_coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J28",
+      "text": "Place four flowers that are yellow, two that are pink, and three that are white.",
+      "category": "relative_coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J29",
+      "text": "Build two cottages with blue roofs and one whose roof is painted purple.",
+      "category": "relative_coordination",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "purple"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "purple"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J30",
+      "text": "Plant two trees that are green and not four that are yellow.",
+      "category": "relative_coordination_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        }
+      ],
+      "warnings": [
+        "Skipped a negated or zero-count tree group."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J31",
+      "text": "Create one house and one whose roof is painted red near the lake.",
+      "category": "relative_coordination_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J32",
+      "text": "Add two trees with pink leaves and three blue ones.",
+      "category": "mixed_continuations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J33",
+      "text": "Build one pink house and one blue one; put a flower between them.",
+      "category": "continuation_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J34",
+      "text": "Add flowers, exactly seven in all; remove two of them; remove them.",
+      "category": "quantity_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 7,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 2
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 5
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 7,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 2
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 5
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J35",
+      "text": "Build three houses with red roofs and two large ones; remove them.",
+      "category": "continuation_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 5
+        }
+      ],
+      "label_note": "Ones inherits only the source noun type; omitted color uses the existing default.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 5
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J36",
+      "text": "Near the castle, build a house with a roof which is green and two large ones.",
+      "category": "fronted_continuations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green",
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green",
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J37",
+      "text": "Preserve the flowers; add trees, exactly five in all; make it night.",
+      "category": "quantities_settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 5,
+          "color": null
+        },
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 5,
+          "color": null
+        },
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        }
+      ],
+      "warnings": [
+        "Preserved referenced objects; no creation or removal was applied for that clause."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": true,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J38",
+      "text": "Grow two trees that are green and three that are purple; remove two of them.",
+      "category": "relative_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "purple"
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 2
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "purple"
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 2
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J39",
+      "text": "Don’t add cottages with roofs painted red; add flowers, exactly four in total.",
+      "category": "negation_quantities",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": null
+        }
+      ],
+      "warnings": [
+        "Skipped a negated instruction; no objects were changed for that clause."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J40",
+      "text": "Build a house with a blue roof; reset; remove it.",
+      "category": "reference_reset",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "reset"
+        }
+      ],
+      "label_note": "Reset invalidates the antecedent; the final removal must abstain.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "reset"
+        }
+      ],
+      "warnings": [
+        "'it' has no object antecedent in this command."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J41",
+      "text": "Add trees, two that are green and three that are yellow.",
+      "category": "postnoun_partition",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "label_note": "A bare plural followed by counted descriptions specifies the complete collection; do not add an extra default tree.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J42",
+      "text": "Build exactly five blue-roofed cottages.",
+      "category": "compound_adjective",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 5,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 5,
+          "color": "blue"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J43",
+      "text": "Build a house whose roof has been painted red.",
+      "category": "passive_roof_clause",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J44",
+      "text": "Add flowers, five total.",
+      "category": "quantity_tail_variant",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 5,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 5,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J45",
+      "text": "Plant two trees that are green and three yellow.",
+      "category": "predicate_ellipsis",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J46",
+      "text": "Place two houses, one with a blue roof and one with a green roof.",
+      "category": "partitioned_roof_groups",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        }
+      ],
+      "label_note": "The two later groups partition the explicit total of two houses; no extra default group is requested.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J47",
+      "text": "Build two cottages near the lake; add three large ones behind the tower.",
+      "category": "cross_clause_ellipsis",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": null,
+          "relation": "above",
+          "target": "tower"
+        }
+      ],
+      "label_note": "Natural-English noun-type inheritance across an explicit new verb is broader than the documented adjacent-group contract; gold requests houses, never a new tower.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "warnings": [
+        "An inherited noun after a placement or new verb needs an explicit source noun; its landmark was not created.",
+        "Could not resolve an inherited noun outside an adjacent creation group; use an explicit object noun."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": false,
+      "settings_correct": null,
+      "outcome": "missing_actions",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J48",
+      "text": "Create castles in three groups of two.",
+      "category": "group_multiplication",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 6,
+          "color": null
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": false,
+      "intent_correct": true,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "wrong_fields",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J49",
+      "text": "Keep the flowers while adding two blue houses.",
+      "category": "subordinate_creation",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Preserved referenced objects; no creation or removal was applied for that clause."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "explicit_abstention",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "J50",
+      "text": "Make it daylight and stop the snow.",
+      "category": "setting_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": true,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    }
+  ]
+}
