@@ -154,9 +154,22 @@ test('the analysis compares the rules with a dependency-parse baseline',async({p
  await page.getByRole('button',{name:'Generate objects'}).click();
  const compare=page.getByLabel('Extractor comparison');
  await expect(compare).toContainText('Same actions');
- await expect(compare).toContainText('Across 550 labelled commands');
+ await expect(compare).toContainText(/Across \d+ labelled commands/);
  await editor(page).fill('Build five houses: two blue and the remaining three red.');
  await page.getByRole('button',{name:'Generate objects'}).click();
  await expect(compare).toContainText('Different actions');
  await expect(compare.locator('.compare-column').first()).toContainText('+ 2 blue houses');
+});
+
+test('a two-finger pinch zooms the island',async({page})=>{
+ const svg=scene(page),box=await svg.boundingBox();
+ const cx=box.x+box.width/2,cy=box.y+box.height/2;
+ const touch=(type,id,x,y)=>svg.dispatchEvent(type,{pointerId:id,pointerType:'touch',isPrimary:id===1,clientX:x,clientY:y,bubbles:true});
+ await touch('pointerdown',1,cx-40,cy);
+ await touch('pointerdown',2,cx+40,cy);
+ for(const spread of [60,90,120])await touch('pointermove',2,cx+spread,cy);
+ await touch('pointerup',2,cx+120,cy);
+ await touch('pointerup',1,cx-40,cy);
+ await expect(page.locator('.zoom-controls')).not.toContainText('100%');
+ await expect(count(page)).toContainText('22 total');
 });

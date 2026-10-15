@@ -385,3 +385,7 @@
 .compare-columns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.compare-column{min-width:0;background:var(--bg-violet-97);border-radius:9px;padding:9px 10px}.compare-column>b{font-size:11px;color:var(--fg-blue-22)}.compare-column>small{display:block;font-size:9.5px;color:var(--fg-gray-60);margin-top:1px}.compare-column .actions-chips{margin-top:8px}.compare-column em{font-size:11px;color:var(--fg-gray-60)}
 .compare-corpus{margin-top:9px;font-size:10.5px;line-height:1.55;color:var(--fg-gray-60)}
 @media(max-width:735px){.compare-columns{grid-template-columns:1fr}}
+.size-control{display:flex;align-items:center;gap:8px;margin-top:14px}.size-control small{font-size:9px;color:var(--fg-gray-60);font-weight:800;margin-right:auto}.size-control button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line-violet-94);background:var(--bg-violet-97);color:var(--fg-violet-49);display:grid;place-items:center}.size-control span{min-width:42px;text-align:center;font-size:11px;font-weight:800;color:var(--fg-blue-22)}
+@media(max-width:735px), (max-width:950px) and (max-height:500px){.size-control button{width:44px;height:44px}}
+/* Letterboxed space around the island shows the same sky as the scene, in either app theme. */
+.world-svg{background:linear-gradient(#e3f8ff,#f5fae9)}.world-svg.night{background:linear-gradient(#28305f,#7371ad)}

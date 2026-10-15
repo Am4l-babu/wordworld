@@ -12,10 +12,19 @@
 </div>
 
 <a href="https://wordworld.vercel.app" title="Open the interactive WordWorld playground">
-<img src="docs/assets/world-preview.gif" alt="Real WordWorld recording: the starter island gains blue and red houses, green and purple trees, a bridge, then nighttime rain. Click to play with the live world." width="100%" />
+<img src="docs/assets/world-preview.gif" alt="Real WordWorld recording: the starter island gains blue and red houses, green and purple trees and a bridge; the red houses are repainted yellow and enlarged, then night rain falls. Click to play with the live world." width="100%" />
 </a>
 
 <p align="center"><em>A recording of the real app, powered by the Python parser. Click the island to try it.</em></p>
+
+<details>
+<summary><strong>🌗 See the whole interface in light and dark</strong></summary>
+
+| Light | Dark |
+|---|---|
+| ![WordWorld interface in the light theme with the journal, island, explorer and sentence analysis](docs/assets/ui-light.png) | ![The same interface in the dark theme](docs/assets/ui-dark.png) |
+
+</details>
 
 ### Cast your first sentence
 
@@ -88,7 +97,9 @@ Pronouns resolve within one request, with bindings to actual new objects. Across
 
 Current verification and ten diagnostic scores are recorded in the [latest evaluation report](evaluation/reports/quarter_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**559 Python tests · 27 scene tests · 66 desktop/mobile browser checks · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
+**627 Python tests · 27 scene tests · 68 desktop/mobile browser checks · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
+
+Round eleven froze 50 new commands covering edits, cross-request references and fractions before the parser saw them: **44/50 first run, 40/40 core**, then 50/50 after fixes with no regressions elsewhere ([report](evaluation/reports/edits_fixes_report.md)).
 
 | Saved sets 1 → 9, retested | New sample 10, first run |
 |---|---|
@@ -96,7 +107,7 @@ Current verification and ten diagnostic scores are recorded in the [latest evalu
 
 The latest fixes address quarters, “of each color,” mixed-type shared locations and future perfect part-color clauses. Fractions require an explicit total that gives whole objects. Shared comma tails apply to all sources in one creation clause and resolve before new objects enter reference state. Broader gaps include thirds, percentages, alternate each wording and cross-clause collections; the report shows every failure.
 
-**Why rules?** A [dependency-parse baseline](evaluation/reports/extractor_comparison_report.md) reads the same actions from spaCy's arcs alone. Frozen before its first run on all 550 labelled commands, it matches **22%** exactly against the rules' **92%** retest and **80%** first-run scores: arcs find verbs, objects and prepositions, but not how a total splits into colored groups, what a pronoun means, or that a kept object is protected. The analysis panel shows both readings of every sentence.
+**Why rules?** A [dependency-parse baseline](evaluation/reports/extractor_comparison_report.md) reads the same actions from spaCy's arcs alone. Frozen before its first run, it matches **23%** of 600 labelled commands exactly, against the rules' **93%** retest and **80%** first-run scores: arcs find verbs, objects and prepositions, but not how a total splits into colored groups, what a pronoun means, or that a kept object is protected. The analysis panel shows both readings of every sentence.
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 

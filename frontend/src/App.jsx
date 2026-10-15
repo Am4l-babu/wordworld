@@ -210,6 +210,11 @@ function App() {
     remember();
     setItems(v => v.map(o => o.id === selected ? {...o, color} : o));
   }
+  // Same limits as the language edit "make it bigger/smaller".
+  function resize(factor) {
+    remember();
+    setItems(v => v.map(o => o.id === selected ? {...o, scale: Math.round(Math.min(1.9, Math.max(0.45, (o.scale || 1) * factor)) * 100) / 100} : o));
+  }
   function moveItem(id, x, y) {
     setItems(v => v.map(it => it.id === id ? {...it, x, y, grounding: undefined} : it));
   }
@@ -313,7 +318,7 @@ function App() {
         <KnowledgePanel parsed={parsed} open={analysisOpen} onToggle={() => setAnalysisOpen(v => !v)}/>
       </main>
       <Explorer items={items} selected={selected} apiState={apiState} onRetryApi={checkHealth} onSelectType={selectType} onAdd={addDirect}
-        onDuplicate={duplicateSelected} onDelete={deleteSelected} onRecolor={recolor}/>
+        onDuplicate={duplicateSelected} onDelete={deleteSelected} onRecolor={recolor} onResize={resize}/>
     </div>
     <div className="toast-region" aria-live="polite">
       {toast && <div className="toast" role="status">

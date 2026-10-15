@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from fractions import Fraction
 
 from .lexicon import (
     COLORS, COLOR_PARTS, COLOR_RE, COUNT_WORDS, ENTITY_RE, GROUP_MODIFIER_RE,
@@ -211,6 +212,30 @@ def distributive_description(fragment: str, kind: str):
             'end':end, 'negated':bool(NEGATION_RE.search(fragment[:number.start()]))}
 
 
+# Fractions of a declared total: halves, thirds, quarters/fourths, fifths, tenths and
+# percentages, optionally "the remaining ...". Counts must still come out whole.
+FRACTION_UNITS = {"half": 2, "halves": 2, "third": 3, "thirds": 3, "quarter": 4, "quarters": 4, "fourth": 4, "fourths": 4,
+                  "fifth": 5, "fifths": 5, "tenth": 10, "tenths": 10}
+FRACTION_RE = re.compile(
+    r"(?:(?:not|no|never|without)\s+)?(?:(?:the\s+)?remaining\s+)?(?:"
+    r"(?P<half>(?:a\s+)?half\b(?!\s+(?:a\s+)?dozen))"
+    r"|(?P<percent>\d+(?:\.\d+)?)\s*(?:%|percent\b|per\s+cent\b)"
+    r"|(?:(?P<numerator>" + NUMERAL + r"|a|an)[ -]+)?(?P<unit>thirds?|quarters?|fourths?|fifths?|tenths?)\b"
+    r")(?:\s+of\s+them\b)?", re.I)
+
+
+def fraction_ratio(match):
+    """(numerator, denominator) for a FRACTION_RE match; numerator is None when unreadable."""
+    if match.group("half"):
+        return (1, 2)
+    if match.group("percent"):
+        value = Fraction(match.group("percent")) / 100
+        return (value.numerator, value.denominator)
+    numerator = (match.group("numerator") or "one").lower()
+    count = 1 if numerator in {"a", "an", "one"} else number_value(numerator)
+    return (count, FRACTION_UNITS[match.group("unit").lower()])
+
+
 def continued_descriptions(suffix: str, kind: str):
     """Adjacent count groups can reuse a noun through ones or a relative clause.
 
@@ -238,11 +263,8 @@ def continued_descriptions(suffix: str, kind: str):
             result['end'] = start + each['end']
             continue
         inferred = re.match(r'(?:(?:not|no|never|without)\s+)?(?:the\s+(?:rest|remainder)|(?:the\s+)?remaining\s+ones?)\b', suffix[start:], re.I)
-        fraction = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?P<half>(?:a\s+)?half\b(?!\s+(?:a\s+)?dozen))|(?:(?P<quarters>' + NUMERAL + r'|a)[ -]+)?quarters?\b)(?:\s+of\s+them\b)?', suffix[start:], re.I)
-        ratio = None
-        if fraction:
-            numerator = fraction.group('quarters') or 'one'
-            ratio = (1,2) if fraction.group('half') else (1 if numerator.lower()=='a' else number_value(numerator.lower()),4)
+        fraction = FRACTION_RE.match(suffix[start:])
+        ratio = fraction_ratio(fraction) if fraction else None
         qualifier = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?:the\s+)?remaining\s+)?(?:exactly\s+)?', suffix[start:], re.I)
         number_start = start + qualifier.end()
         number = NUMBER_RE.match(suffix, number_start) if not inferred and not fraction else None

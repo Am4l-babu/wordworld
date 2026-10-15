@@ -16,18 +16,22 @@ from .phrases import leading_relation, number_value
 _NOUN = "|".join(sorted(map(re.escape, WORD_TO_TYPE), key=len, reverse=True))
 _COLOR = "|".join(COLORS)
 _LEAD = r"^\s*(?:(?:please|and|then|now|also|next|so|can\s+you|could\s+you)\s+)*"
-_DET = (rf"(?P<det>all\s+(?:of\s+)?(?:the\s+)?|every\s+|each\s+(?:of\s+the\s+)?|the\s+|that\s+|this\s+|these\s+|those\s+|my\s+"
-        rf"|(?P<num>{NUMERAL})\s+(?:of\s+the\s+)?)?")
+_DET = (rf"(?P<det>all\s+(?:of\s+)?(?:the\s+)?|every\s+|each\s+(?:of\s+the\s+)?|both\s+(?:of\s+the\s+)?|(?:the\s+)?(?P<num>{NUMERAL})\s+(?:of\s+the\s+)?"
+        rf"|the\s+|that\s+|this\s+|these\s+|those\s+|my\s+)?")
 NP_RE = re.compile(rf"\s*(?:(?P<pronoun>it|them)|{_DET}(?:(?P<filter>{_COLOR})\s+)?(?P<noun>{_NOUN}))\b", re.I)
-HEAD_RE = re.compile(rf"{_LEAD}(?P<neg>(?:do\s+not|don'?t|never)\s+)?(?P<verb>{PAINT_VERBS}|{MOVE_VERBS}|{RESIZE_VERBS}|{CHANGE_VERBS})\b", re.I)
+HEAD_RE = re.compile(rf"{_LEAD}(?P<neg>(?:do\s+not|don'?t|never)\s+)?(?P<verb>{PAINT_VERBS}|{MOVE_VERBS}|{RESIZE_VERBS}|{CHANGE_VERBS}|give)\b", re.I)
+# "give the cottage a red roof": a color for the part the sprite draws.
+PART_COLOR_RE = re.compile(rf"\s*(?:an?\s+)?(?:(?:bright|light|dark|pale)\s+)?(?P<color>{_COLOR})\s+(?:roofs?|leaves|foliage|petals?|colou?r)\b", re.I)
 JOIN_RE = re.compile(r"\s*(?:,\s*(?:and\s+)?|\s+and\s+)(?=\s*(?:it|them|all|every|each|the|that|this|these|those|my|\w+\s+of\s+the)\b)", re.I)
 COLOR_VALUE_RE = re.compile(rf"\s*(?:(?:to|into|in|with)\s+)?(?:(?:be|become)\s+)?(?:(?:the\s+)?colou?r\s+)?(?:a\s+)?(?:(?:bright|light|dark|pale)\s+)?(?P<color>{_COLOR})\b", re.I)
-SIZE_VALUE_RE = re.compile(r"\s*(?:(?:to\s+be|look)\s+)?(?P<amount>much|a\s+lot|way|a\s+(?:bit|little)|slightly|even)?\s*(?P<size>bigger|larger|smaller|tinier|huge|giant|tiny|big|large|small|little)\b", re.I)
+SIZE_VALUE_RE = re.compile(r"\s*(?:(?:to\s+be|look)\s+)?(?P<amount>much|a\s+lot|way|a\s+(?:bit|little)|slightly|even)?\s*(?P<size>bigger|larger|taller|wider|smaller|tinier|shorter|huge|giant|tiny|big|large|small|little)\b", re.I)
 AMOUNT_RE = re.compile(r"\s*(?P<amount>much|a\s+lot|way|a\s+(?:bit|little)|slightly)\b", re.I)
-DIRECTION_RE = re.compile(r"\s*(?P<amount>a\s+(?:bit|little)|slightly|far|a\s+lot|way)?\s*(?:(?:over\s+)?(?:to(?:wards?)?\s+the|to)\s+)?(?P<dir>left|right|up|down|forwards?|backwards?|back|north|south|east|west)\b(?!\s+of\b)", re.I)
+DIRECTION_RE = re.compile(r"\s*(?P<amount>a\s+(?:bit|little)|slightly|far|a\s+lot|way)?\s*(?:(?:over\s+)?(?:to(?:wards?)?\s+the|to)\s+)?(?P<dir>left|right|up|down|forwards?|backwards?|back|north|south|east|west)\b(?!\s+of\b)"
+                          r"(?:\s+(?P<after>a\s+(?:bit|little)|slightly|a\s+lot|far))?", re.I)
+MOVE_AMOUNT_RE = re.compile(r"\s*(?:(?:a\s+(?:bit|little)|slightly|much)\s+)?", re.I)
 DIRECTIONS = {"left": "left", "west": "left", "right": "right", "east": "right", "up": "up", "back": "up", "backward": "up",
               "backwards": "up", "north": "up", "down": "down", "forward": "down", "forwards": "down", "south": "down"}
-GROW = {"bigger", "larger", "huge", "giant", "big", "large"}
+GROW = {"bigger", "larger", "taller", "wider", "huge", "giant", "big", "large"}
 COLLECTIVE = {"village", "town", "forest", "woods", "woodland", "garden"}
 
 
@@ -45,12 +49,14 @@ def _target(match: re.Match, base: int) -> dict:
     det = (match.group("det") or "").lower().strip()
     if match.group("num"):
         count = number_value(match.group("num").lower())
+    elif det.startswith("both"):
+        count = 2
     elif det.startswith(("all", "every", "each")) or noun not in SINGULAR_NOUNS or noun in COLLECTIVE:
         count = "all"
     else:
         count = 1
     # "two of the houses" names existing objects; "two houses" may describe new ones.
-    definite = bool(det) and not (match.group("num") and "of the" not in det)
+    definite = bool(det) and not (match.group("num") and "of the" not in det and not det.startswith("the"))
     target = {"pronoun": None, "type": WORD_TO_TYPE[noun], "count": count, "span": span, "definite": definite,
               "filter": match.group("filter").lower() if match.group("filter") else None}
     if match.group("num"):
@@ -92,8 +98,13 @@ def read_edit(clause: str, inherited: dict | None = None) -> dict | None:
     rest = clause[cursor:]
     edit = {"verb": verb, "verb_span": verb_span, "negated": negated, "targets": targets}
     family = ("paint" if re.fullmatch(PAINT_VERBS, verb) else "move" if re.fullmatch(MOVE_VERBS, verb)
-              else "resize" if re.fullmatch(RESIZE_VERBS, verb) else "change")
-    if family in {"paint", "change"} and (color := COLOR_VALUE_RE.match(rest)):
+              else "resize" if re.fullmatch(RESIZE_VERBS, verb) else "give" if verb == "give" else "change")
+    if family == "give":
+        color = PART_COLOR_RE.match(rest)
+        if not color or not all(t["definite"] for t in targets):
+            return None  # "give me two houses" stays a creation request
+        edit.update(kind="recolor", color=color.group("color").lower(), value_span=(cursor + color.start("color"), cursor + color.end("color")), end=cursor + color.end())
+    elif family in {"paint", "change"} and (color := COLOR_VALUE_RE.match(rest)):
         edit.update(kind="recolor", color=color.group("color").lower(), value_span=(cursor + color.start("color"), cursor + color.end("color")), end=cursor + color.end())
     elif family in {"change", "resize"} and (size := SIZE_VALUE_RE.match(rest)):
         edit.update(kind="resize", scale=_scale(size.group("size"), size.group("amount")), value_span=(cursor + size.start("size"), cursor + size.end("size")), end=cursor + size.end())
@@ -101,13 +112,14 @@ def read_edit(clause: str, inherited: dict | None = None) -> dict | None:
         amount = AMOUNT_RE.match(rest)
         edit.update(kind="resize", scale=_scale(verb, amount.group("amount") if amount else None), value_span=verb_span, end=cursor + (amount.end() if amount else 0))
     elif family == "move" and (direction := DIRECTION_RE.match(rest)):
-        amount = (direction.group("amount") or "").lower()
+        amount = re.sub(r"\s+", " ", (direction.group("amount") or direction.group("after") or "").lower())
         edit.update(kind="move", direction=DIRECTIONS[direction.group("dir").lower()],
                     distance="small" if amount in {"a bit", "a little", "slightly"} else "large" if amount in {"far", "a lot", "way"} else "medium",
                     value_span=(cursor + direction.start("dir"), cursor + direction.end("dir")), end=cursor + direction.end())
-    elif family == "move" and (relation := leading_relation(rest))[0]:
+    elif family == "move" and (relation := leading_relation(rest[(lead := MOVE_AMOUNT_RE.match(rest).end()):]))[0]:
+        # "a little closer to the house": the amount softens the wording but the place is the same.
         name, match = relation
-        edit.update(kind="move", relation=name, relation_span=(cursor + match.start(), cursor + match.end()), end=cursor + match.end())
+        edit.update(kind="move", relation=name, relation_span=(cursor + lead + match.start(), cursor + lead + match.end()), end=cursor + lead + match.end())
     elif family == "change":
         return None  # "make two houses", "make it night", "turn the rain off": not an edit
     else:

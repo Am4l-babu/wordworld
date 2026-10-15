@@ -8,7 +8,7 @@ const SHORTCUTS = [
   [['Ctrl', 'Z'], <>Undo · add <kbd>Shift</kbd> to redo</>],
   [['Del'], 'Delete the selected object'],
   [['Arrows'], <>Move the selected object (<kbd>Shift</kbd> = faster)</>],
-  [['Ctrl', 'Scroll'], 'Zoom the island; drag empty space to pan'],
+  [['Ctrl', 'Scroll'], 'Zoom the island (pinch on touch screens); drag empty space to pan'],
   [['Esc'], 'Deselect or close this dialog'],
 ];
 

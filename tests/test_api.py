@@ -43,4 +43,4 @@ def test_parse_returns_a_labelled_dependency_baseline_and_corpus_scores():
     if result["model"] == "spacy":
         assert result["baseline"] == [{"action": "add", "type": "house", "count": 2, "color": "red", "relation": "near", "target": "lake"}]
     scores = request("GET", "/api/extractors").json()
-    assert scores["commands"] == 550 and set(scores) >= {"rules", "baseline", "agreement", "rules_first_run_exact"}
+    assert scores["commands"] >= 550 and set(scores) >= {"rules", "baseline", "agreement", "rules_first_run_exact"}

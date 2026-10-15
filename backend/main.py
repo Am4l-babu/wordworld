@@ -39,7 +39,11 @@ def parse_prompt(prompt: Prompt):
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     # Comparison only: the world applies `actions`; `baseline` is what dependency arcs alone would extract.
-    result["baseline"] = extract_text(parser.NLP, prompt.text)
+    # A failure in the comparison must never cost the person their real result.
+    try:
+        result["baseline"] = extract_text(parser.NLP, prompt.text)
+    except Exception:  # noqa: BLE001 - comparison is best-effort
+        result["baseline"] = None
     return result
 
 

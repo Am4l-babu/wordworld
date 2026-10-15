@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Layers3, Plus, Copy, Trash2, MousePointer2, RefreshCw} from 'lucide-react';
+import {Layers3, Plus, Minus, Copy, Trash2, MousePointer2, RefreshCw} from 'lucide-react';
 import {TYPES, TYPE_EMOJI, PALETTE, COLOR_PART, MAX_ITEMS, RELATION_LABEL} from '../world';
 
 const typeLabel = type => type.replaceAll('_', ' ');
@@ -33,7 +33,7 @@ function QuickAdd({full, onAdd}) {
   </div>;
 }
 
-function SelectionPanel({items, chosen, full, onDuplicate, onDelete, onRecolor}) {
+function SelectionPanel({items, chosen, full, onDuplicate, onDelete, onRecolor, onResize}) {
   if (!chosen) return <div className="selection-panel">
     <div className="selection-label">SELECTED OBJECT</div>
     <div className="nothing-selected"><MousePointer2 size={21}/><span>Select any object on the canvas to inspect, recolor, move, or delete it.</span></div>
@@ -54,6 +54,12 @@ function SelectionPanel({items, chosen, full, onDuplicate, onDelete, onRecolor})
     <div className="selection-actions">
       <button onClick={onDuplicate} disabled={full}><Copy size={15}/> Duplicate</button>
       <button className="delete" onClick={onDelete} title="Delete (Del)"><Trash2 size={15}/> Delete</button>
+    </div>
+    <div className="size-control">
+      <small>SIZE</small>
+      <button onClick={() => onResize(0.8)} disabled={(chosen.scale || 1) <= 0.45} aria-label="Make smaller" title="Smaller (or say “make it smaller”)"><Minus size={15}/></button>
+      <span>{Math.round((chosen.scale || 1) * 100)}%</span>
+      <button onClick={() => onResize(1.25)} disabled={(chosen.scale || 1) >= 1.9} aria-label="Make bigger" title="Bigger (or say “make it bigger”)"><Plus size={15}/></button>
     </div>
     {COLOR_PART[chosen.type] && <div className="color-options">
       <small>{COLOR_PART[chosen.type].toUpperCase()}</small>
@@ -79,7 +85,7 @@ function ApiStatus({state, onRetry}) {
   </div>;
 }
 
-export default function Explorer({items, selected, apiState, onRetryApi, onSelectType, onAdd, onDuplicate, onDelete, onRecolor}) {
+export default function Explorer({items, selected, apiState, onRetryApi, onSelectType, onAdd, onDuplicate, onDelete, onRecolor, onResize}) {
   const [tab, setTab] = useState('objects');
   const full = items.length >= MAX_ITEMS;
   const chosen = items.find(o => o.id === selected);
@@ -95,7 +101,7 @@ export default function Explorer({items, selected, apiState, onRetryApi, onSelec
     {tab === 'objects'
       ? <ObjectList items={items} selected={selected} onSelectType={onSelectType}/>
       : <QuickAdd full={full} onAdd={onAdd}/>}
-    <SelectionPanel items={items} chosen={chosen} full={full} onDuplicate={onDuplicate} onDelete={onDelete} onRecolor={onRecolor}/>
+    <SelectionPanel items={items} chosen={chosen} full={full} onDuplicate={onDuplicate} onDelete={onDelete} onRecolor={onRecolor} onResize={onResize}/>
     <div className="tip-card"><span className="tip-icon">💡</span><strong>Little tip!</strong><p>Try describing where things should go: <em>“Add a tree to the left of the house.”</em> Then change it: <em>“make it purple.”</em></p></div>
     <ApiStatus state={apiState} onRetry={onRetryApi}/>
   </aside>;

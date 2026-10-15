@@ -98,3 +98,22 @@ def test_rules_and_unicode_offsets_do_not_depend_on_spacy(monkeypatch):
     assert [h['text'] for h in result['highlights'] if h['role']=='quantity']==['eight','one quarter','three‑quarters']
     for span in result['highlights']+result['tokens']:
         assert text[span['start']:span['end']]==span['text']
+
+
+@pytest.mark.parametrize("text,groups", [
+    ("Build twelve houses: a third blue and the rest red.", [(4, "blue"), (8, "red")]),
+    ("Build nine trees, two thirds of them purple and the remaining third green.", [(6, "purple"), (3, "green")]),
+    ("Build ten houses: 30% blue and the rest red.", [(3, "blue"), (7, "red")]),
+    ("Plant ten flowers, half pink and 20 percent white and the rest yellow.", [(5, "pink"), (2, "white"), (3, "yellow")]),
+    ("Build twelve houses: three quarters blue and the remaining quarter red.", [(9, "blue"), (3, "red")]),
+    ("Build ten trees: a fifth pink and the rest green", [(2, "pink"), (8, "green")]),
+    ("Create eight flowers: 12.5% pink and the rest purple.", [(1, "pink"), (7, "purple")]),
+])
+def test_thirds_fifths_and_percentages_partition_a_declared_total(text, groups):
+    assert [(a["count"], a["color"]) for a in parse(text)["actions"]] == groups
+
+
+@pytest.mark.parametrize("text", ["Build ten houses: 33% blue and the rest red.", "Build ten trees: a third pink and the rest green."])
+def test_fractions_that_do_not_give_whole_objects_are_explained(text):
+    result = parse(text)
+    assert result["actions"] == [] and result["warnings"][0].startswith("Fraction groups need a declared total giving")
