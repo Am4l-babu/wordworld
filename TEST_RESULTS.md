@@ -1,5 +1,7 @@
 # WordWorld initial local verification — 15 October 2026
 
+The latest colon/total-of/remainder round is in [evaluation/colon_fixes_report.md](evaluation/colon_fixes_report.md): **360 Python tests (38 added), 16 scene tests, 26 desktop/mobile browser tests and the production build pass**. Six preserved sets retest at **50/50, 47/50, 45/50, 46/50, 46/50 and 44/50**, with no regressions. The seventh fresh 50 scores **40/50 (80%)**, split into 40/40 core and 0/10 broader probes. All gold actions and backend hashes were frozen before prediction; no subsequent parser/gold tuning occurred. These are implementation-aware diagnostic samples. The README now includes a real animated preview and safe command links into the Vercel app. Earlier entries below are historical snapshots.
+
 This records the initial setup run. The latest priority-fix verification is in `evaluation/priority_fixes_report.md`: 142 Python tests, 13 scene tests, 14 browser tests and the production build pass; the original diagnostic-set retest is 46/50, and the second fresh diagnostic set is 40/50.
 
 The reference/coordination round is in `evaluation/reference_fixes_report.md`: 170 Python tests, 16 scene tests, 16 browser tests and the production build pass. Both earlier diagnostic sets retest at 50/50 and 46/50; the third fresh set scores 41/50.

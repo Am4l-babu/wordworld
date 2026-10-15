@@ -215,6 +215,7 @@ POST_COLOR_RE = re.compile(
     r'(?:in\s+)?(?P<bare>' + '|'.join(COLORS) + r')\b)', re.I)
 COLOR_PARTS = {'house': {'roof', 'roofs'}, 'tree': {'leaves', 'foliage'}, 'flower': {'petal', 'petals'}}
 POST_QUANTITY_RE = re.compile(r'\s*,?\s*(?P<phrase>[\w+.-]+(?:\s+[\w+.-]+){0,7}?)\s+(?:of\s+them|in\s+(?:total|all)|total|altogether)\b', re.I)
+TOTAL_OF_PREFIX_RE = re.compile(r'\s*[, :]?\s*(?:(?:not|no|never|without)\s+)?(?:a|the)\s+total\s+of\s+', re.I)
 POST_QUANTITY_WORDS = set(COUNT_WORDS) | {'exactly','dozen','dozens','pair','pairs','couples','half','of','hundred','thousand','and','or','to','not'} | UNKNOWN_QUANTITY_WORDS
 
 
@@ -228,6 +229,24 @@ def postnoun_attributes(suffix: str, kind: str):
     result = {'end': 0, 'count': None, 'has_quantity': False, 'number': None, 'number_offset': 0, 'colors': [], 'error': None}
     while True:
         start = result['end']
+        total_of = TOTAL_OF_PREFIX_RE.match(suffix, start)
+        if total_of:
+            qualifier = re.match(r'(?:exactly\s+)?', suffix[total_of.end():], re.I)
+            number_start = total_of.end() + qualifier.end()
+            number = NUMBER_RE.match(suffix, number_start)
+            end = number.end() if number else number_start
+            count, _ = quantity(suffix[number_start:end], kind)
+            if not number or NEGATION_RE.search(suffix[start:total_of.end()]):
+                count = None
+            alternative = re.match(r'\s+(?:or|to)\s+', suffix[end:], re.I)
+            if alternative:
+                second = NUMBER_RE.match(suffix, end + alternative.end())
+                end = second.end() if second else end + alternative.end()
+                count = None
+            if result['has_quantity']:
+                result['error'] = 'Multiple post-noun quantities are ambiguous; that object instruction was skipped.'
+            result.update(count=count, has_quantity=True, number=number, number_offset=0, end=end)
+            continue
         post_quantity = POST_QUANTITY_RE.match(suffix, start)
         if post_quantity and all(re.fullmatch(r'[+-]?\d+(?:\.\d+)?', word) or all(part in POST_QUANTITY_WORDS for part in word.split('-')) for word in post_quantity.group('phrase').lower().split()):
             phrase = post_quantity.group('phrase')
@@ -279,10 +298,10 @@ def continued_descriptions(suffix: str, kind: str):
     Returned annotations retain offsets into the unchanged suffix.
     """
     result = {'end': 0, 'descriptions': [], 'highlights': [], 'error': None,
-              'first_comma': False, 'first_form': None}
-    while connector := re.match(r'\s*(?:,\s*(?:and\s+)?|and\s+)', suffix[result['end']:], re.I):
+              'first_comma': False, 'first_colon': False, 'first_form': None}
+    while connector := re.match(r'\s*(?:[,:]\s*(?:and\s+)?|and\s+)', suffix[result['end']:], re.I):
         start = result['end'] + connector.end()
-        qualifier = re.match(r'(?:(?:not|no|never|without)\s+)?(?:exactly\s+)?', suffix[start:], re.I)
+        qualifier = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?:the\s+)?remaining\s+)?(?:exactly\s+)?', suffix[start:], re.I)
         number_start = start + qualifier.end()
         number = NUMBER_RE.match(suffix, number_start)
         if number is None:
@@ -338,10 +357,14 @@ def continued_descriptions(suffix: str, kind: str):
         if attributes['colors']:
             color = attributes['colors'][-1][0]
         negated = bool(NEGATION_RE.search(suffix[start:number.start()]))
+        remainder = re.search(r'\bremaining\b', suffix[start:number.start()], re.I)
         if not result['descriptions']:
-            result['first_comma'] = connector.group().lstrip().startswith(',')
+            result['first_comma'] = connector.group().lstrip().startswith((',', ':'))
+            result['first_colon'] = connector.group().lstrip().startswith(':')
             result['first_form'] = form
-        result['descriptions'].append({'count':count, 'color':color, 'negated':negated})
+        result['descriptions'].append({'count':count, 'color':color, 'negated':negated, 'remainder':bool(remainder)})
+        if remainder:
+            result['highlights'].append((start + remainder.start(), start + remainder.end(), 'quantity'))
         result['highlights'].append((number.start(), number.end(), 'quantity'))
         result['highlights'] += [(a, b, 'color') for _, a, b in colors]
         result['highlights'] += [(attribute_start + a, attribute_start + b, 'color') for _, a, b in attributes['colors']]
@@ -561,15 +584,18 @@ def parse(text: str) -> dict[str, Any]:
             group_total = sum(d['count'] for d in continued['descriptions'] if not d['negated'])
             declared_total = bool(attributes['has_quantity'] or number and (
                 not number.group('article') or quantity('', entity.group())[0] == 1))
-            partition = bool(continued['descriptions'] and continued['first_comma'] and not post_colors and (
-                not declared_total or continued['first_form'] != 'ones' or group_total == count))
+            partition = bool(continued['descriptions'] and continued['first_comma'] and (not post_colors or continued['first_colon']) and (
+                not declared_total or continued['first_form'] != 'ones' or group_total == count or continued['first_colon']))
+            remainders = [j for j,d in enumerate(continued['descriptions']) if d.get('remainder')]
+            if remainders and (not partition or not declared_total or remainders != [len(continued['descriptions'])-1]):
+                attribute_error = 'A remaining group needs a declared total and must be the final partition group; that instruction was skipped.'
             if partition:
                 if variants is not None or NEGATION_RE.search(prefix):
                     attribute_error = 'A negated or already coordinated source cannot supply a counted partition; that instruction was skipped.'
                 elif declared_total and count != group_total:
                     attribute_error = 'Partition counts do not match the declared total; that object instruction was skipped.'
-                if color:
-                    shared_color = color.group().lower()
+                if color or post_colors:
+                    shared_color = post_colors[-1][0] if post_colors else color.group().lower()
                     if any(d['color'] not in {None, shared_color} for d in continued['descriptions']):
                         attribute_error = 'Partition colors conflict with the source color; that object instruction was skipped.'
                     continued['descriptions'] = [{**d, 'color': d['color'] or shared_color} for d in continued['descriptions']]
