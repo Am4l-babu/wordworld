@@ -162,9 +162,11 @@ After the counted-partition/passive/predicate fixes, all five saved sets retest 
 
 The root `vercel.json` deploys the Vite frontend and Python FastAPI backend together using Vercel Services (currently beta). `/api/*`, `/docs`, and `/openapi.json` reach the backend; other paths reach the frontend. Browser requests use the same-origin API, so no production API URL or browser secret is required.
 
-The backend uses Python 3.12 with runtime/model versions pinned in `pyproject.toml`. The spaCy English model is installed at build time. Virtual environments, node_modules, runtime logs, local environment files and browser artifacts are excluded from uploads. The Python function excludes frontend/test/evaluation files from its bundle.
+The backend uses Python 3.12 with runtime/model versions pinned in `backend/requirements.txt` and `pyproject.toml`. Vercel installs the requirements nearest its resolved Python entrypoint. The spaCy English model is installed at build time. Virtual environments, node_modules, runtime logs, local environment files and browser artifacts are excluded from uploads. The Python function excludes frontend/test/evaluation files from its bundle.
 
 After linking the intended Vercel project, deploy the committed source with `vercel deploy --prod --skip-domain`, verify `/api/health`, `/api/parse`, and the UI on that deployment, then promote the tested URL with `vercel promote <deployment-url>`. Local development commands remain unchanged.
+
+To run browser checks against a hosted URL, set `WORDWORLD_BASE_URL` to that URL before `npm run test:e2e`. Protected deployment URLs require authenticated access; the production domain can be tested directly. The repository remains private; Git-based automatic deployments also require the Vercel GitHub integration to have access to that repository.
 
 ## Architectural notes and limitations
 
