@@ -1,0 +1,911 @@
+{
+  "name": "WordWorld new-command evaluation 2026-10-15",
+  "method": "50 new hand-authored commands and gold actions frozen before executing the parser. Author had access to implementation and development examples; not independently human-labeled or randomly sampled.",
+  "parser_sha256_before": "ae2df7bbad16d5b8f9973154c7ef4b70b1fbab9a9ac27e9d047c3784a7c7a91a",
+  "development_json_sha256": "2b4c4eb37c64ea7996fc018f5bf9f67e8dbb86fa0b8512a8bdd04dca5200978b",
+  "scope": "44 core commands plus 6 explicitly marked capability probes. Each command is parsed independently; pronoun probes contain their antecedents within the same command. Landmarks are assumed to exist; scene placement is not scored.",
+  "gold_policy": "Exact ordered action JSON using existing aliases and action schema. Do not tune the parser or alter labels after observing results. All counts fit the 16-object cap. No out-of-vocabulary object types are requested.",
+  "uniqueness": "50 unique commands; no normalized exact matches in development JSON, Python test string literals, browser smoke test literals, or README lines.",
+  "cases": [
+    {
+      "id": "H01",
+      "text": "Please build four purple cottages beside the stream.",
+      "category": "lexical_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "purple",
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H02",
+      "text": "Plant seven green trees south of the tower.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 7,
+          "color": "green",
+          "relation": "below",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H03",
+      "text": "Place 6 yellow blossoms north of the fortress.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 6,
+          "color": "yellow",
+          "relation": "above",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H04",
+      "text": "Give me three white cabins west of the pond.",
+      "category": "lexical_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white",
+          "relation": "left",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H05",
+      "text": "Draw two paths next to the creek.",
+      "category": "lexical_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "road",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H06",
+      "text": "Put a boulder in the center of the garden.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null,
+          "relation": "inside",
+          "target": "flower"
+        }
+      ],
+      "label_note": "Use the project's garden→flower alias; this evaluates parsing, not garden geometry."
+    },
+    {
+      "id": "H07",
+      "text": "Show a lighthouse at the back of the cottages.",
+      "category": "lexical_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "above",
+          "target": "house"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H08",
+      "text": "Create nine pink flowers around the lake.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 9,
+          "color": "pink",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H09",
+      "text": "Insert a mountain to the right of the bridge.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "mountain",
+          "count": 1,
+          "color": null,
+          "relation": "right",
+          "target": "bridge"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H10",
+      "text": "Grow a woodland close to the road.",
+      "category": "lexical_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": null,
+          "relation": "near",
+          "target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H11",
+      "text": "Add 12 blue homes.",
+      "category": "lexical_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 12,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H12",
+      "text": "Build a bridge between the tower and the castle.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "tower",
+          "targets": [
+            "tower",
+            "castle"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H13",
+      "text": "Place two rocks between the pond and the house.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 2,
+          "color": null,
+          "relation": "between",
+          "target": "lake",
+          "targets": [
+            "lake",
+            "house"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H14",
+      "text": "Plant three flowers within the castle.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": null,
+          "relation": "inside",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H15",
+      "text": "Build a hut, a tower, and a road.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "road",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H16",
+      "text": "Delete 4 boulders, then plant six blossoms.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "rock",
+          "count": 4
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 6,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H17",
+      "text": "Cut down a couple of trees; create a pond.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 2
+        },
+        {
+          "action": "add",
+          "type": "lake",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H18",
+      "text": "Erase one bridge and place three yellow cottages.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "bridge",
+          "count": 1
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H19",
+      "text": "Clear the map; show a river and a bridge.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "reset"
+        },
+        {
+          "action": "add",
+          "type": "river",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H20",
+      "text": "Make it morning and plant two trees.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H21",
+      "text": "Make it midnight with snowing.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "snow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H22",
+      "text": "Stop the snow and make it sunshine.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        },
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H23",
+      "text": "Do not erase the towers; plant five trees.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 5,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H24",
+      "text": "Don't build houses, towers, or castles; add a rock.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H25",
+      "text": "Add zero bridges and zero roads.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "H26",
+      "text": "Build eleven houses near the lake.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 11,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H27",
+      "text": "Plant a dozen flowers behind the tower.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 12,
+          "color": null,
+          "relation": "above",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H28",
+      "text": "Place a pair of rocks beside the river.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H29",
+      "text": "Add twelve orange cottages.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 12,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H30",
+      "text": "Build a house, then remove it.",
+      "category": "coreference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 1
+        }
+      ],
+      "label_note": "Within-command antecedent: it refers to the newly created house. Pronoun resolution is a documented limitation."
+    },
+    {
+      "id": "H31",
+      "text": "Build a red house and a blue house, then put a tree between them.",
+      "category": "coreference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "label_note": "Them refers to the two newly created houses. This tests a documented capability gap."
+    },
+    {
+      "id": "H32",
+      "text": "Plant five trees and then delete two of them.",
+      "category": "coreference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 5,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 2
+        }
+      ],
+      "label_note": "Them refers to the five newly created trees; remove two, not all five."
+    },
+    {
+      "id": "H33",
+      "text": "Near the lake, plant four trees.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": "Initial prepositional phrase modifies plant; lake is an existing landmark."
+    },
+    {
+      "id": "H34",
+      "text": "To the left of the castle, build a tower.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "left",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H35",
+      "text": "Between the house and the tower, place a bridge.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "tower"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H36",
+      "text": "Add a tree near the lake and a flower beside the castle.",
+      "category": "spatial_grounding",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H37",
+      "text": "Build three red houses and three blue towers.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": "Color extraction is scored; tower material recoloring is a separate rendering limitation."
+    },
+    {
+      "id": "H38",
+      "text": "Build one red and one blue house.",
+      "category": "coordination_ellipsis",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        }
+      ],
+      "label_note": "One red [house] and one blue house: the omitted first noun denotes a separate house."
+    },
+    {
+      "id": "H39",
+      "text": "Add three red houses and two blue flowers near the river.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "blue",
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": "Use the documented local/nearest noun-phrase attachment convention for the final relation."
+    },
+    {
+      "id": "H40",
+      "text": "Remove all houses and all towers.",
+      "category": "multi_action_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "house",
+          "count": "all"
+        },
+        {
+          "action": "remove",
+          "type": "tower",
+          "count": "all"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H41",
+      "text": "Don't remove any trees, but add two flowers.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H42",
+      "text": "Please do not add a tree or a rock.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "H43",
+      "text": "Keep the houses and remove the trees.",
+      "category": "protected_mentions",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": "all"
+        }
+      ],
+      "label_note": "Keep explicitly protects houses. No new action type is needed: emit only tree removal."
+    },
+    {
+      "id": "H44",
+      "text": "Leave the lake alone and add a bridge.",
+      "category": "protected_mentions",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "Lake is a protected mention, not an add subject."
+    },
+    {
+      "id": "H45",
+      "text": "Remove no trees and add two rocks.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H46",
+      "text": "Build two houses but not a castle.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H47",
+      "text": "Make it rain, then stop raining.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "rain"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "H48",
+      "text": "Make it not rain.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": "The weather enum is mutually exclusive; requesting non-rain maps to clear in this evaluation."
+    },
+    {
+      "id": "H49",
+      "text": "Don’t add any bridges.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "U+2019 apostrophe; same negation meaning as ASCII Don't."
+    },
+    {
+      "id": "H50",
+      "text": "Make it snow; clear the world; add a pink house.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "snow"
+        },
+        {
+          "action": "reset"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    }
+  ]
+}

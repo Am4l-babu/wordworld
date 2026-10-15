@@ -1,0 +1,835 @@
+{
+  "name": "WordWorld second fresh 50-command evaluation — 2026-10-15",
+  "method": "New hand-authored diagnostic commands and gold actions frozen before any parser execution on these inputs, after all priority fixes. Author saw implementation and prior results; not independently human-labeled or randomly sampled. No tuning on second-round predictions.",
+  "parser_sha256_before": "2484fbb06e7bd322efdb8fe7b242bdae6ff0239940f897ad72f1d47fd43355b9",
+  "scope": "40 core commands and 10 preassigned broader capability probes. All commands are independent and all requested object types are in vocabulary. Reference probes contain their antecedents in the same command. Existing landmarks assumed; scene geometry not scored.",
+  "gold_policy": "Exact ordered action JSON; apply the documented count cap of 16. Invalid/ambiguous counts intentionally produce no action. Labels are immutable after first prediction.",
+  "uniqueness": "No normalized exact overlaps with either previous 50-command set, Python regression strings, browser smoke test strings, or README command lines.",
+  "development_inputs_sha256": {
+    "tests\\commands.json": "2b4c4eb37c64ea7996fc018f5bf9f67e8dbb86fa0b8512a8bdd04dca5200978b",
+    "tests\\heldout_commands.json": "d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224",
+    "tests\\test_accuracy_fixes.py": "c54e8e5d2327e40308d21773c3f330da75471177de0d46d19effbaa28d3e705a",
+    "tests\\test_api.py": "5c2d7840dcfd5e421d5b4e935bf96763ea6f383e29bedcf3fd5916f736e1ca98",
+    "tests\\test_parser.py": "2b0e97f268bd131c5fbf7cfeaac08c84c541e4c79eb6b343aef2291387acd82e",
+    "tests\\test_regressions.py": "dd20abe95284b09c1211d85a7963e23e65b00dfc2195eeaa889608c63651ffc5",
+    "frontend\\tests\\browser\\smoke.spec.js": "93d41d131c6bcb47af2693cdeeae8a1e86009c0724e4ee8b79185caec16744c3",
+    "README.md": "d41bfecfad46cf840a826a571dc1eb58a681d908f4778c3c4bc213b89a7dc3b4"
+  },
+  "cases": [
+    {
+      "id": "F01",
+      "text": "Please don’t plant a forest next to the castle.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "F02",
+      "text": "Never erase the bridges or the roads.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "F03",
+      "text": "Don‘t build six yellow cabins.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "F04",
+      "text": "Keep the pond and add three pink blossoms.",
+      "category": "protected_mentions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F05",
+      "text": "Protect the cottages; delete two rocks.",
+      "category": "protected_mentions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "rock",
+          "count": 2
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F06",
+      "text": "Leave all mountains alone, then show a lighthouse.",
+      "category": "protected_mentions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F07",
+      "text": "Do not reset the map; insert a road.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "road",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F08",
+      "text": "Don’t add flowers, rocks, or trees; build a blue tower.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F09",
+      "text": "Retain the forest and remove a bridge.",
+      "category": "protected_mentions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "bridge",
+          "count": 1
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F10",
+      "text": "Avoid the river and create a small castle.",
+      "category": "protected_mentions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "The avoid clause makes no scene changes; the following explicit create clause adds only a castle."
+    },
+    {
+      "id": "F11",
+      "text": "Build thirteen white cottages.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 13,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F12",
+      "text": "Plant fourteen green trees near the bridge.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 14,
+          "color": "green",
+          "relation": "near",
+          "target": "bridge"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F13",
+      "text": "Add fifteen pink blossoms.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 15,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F14",
+      "text": "Create a dozen red homes beside the path.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 12,
+          "color": "red",
+          "relation": "near",
+          "target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F15",
+      "text": "Put two pairs of rocks west of the pond.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 4,
+          "color": null,
+          "relation": "left",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F16",
+      "text": "Grow half a dozen trees behind the fortress.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": null,
+          "relation": "above",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F17",
+      "text": "Place sixteen orange flowers inside the castle.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 16,
+          "color": "orange",
+          "relation": "inside",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F18",
+      "text": "Build eighteen huts.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 16,
+          "color": null
+        }
+      ],
+      "label_note": "Apply the documented 16-object per-action cap; a clipping notice should also be present."
+    },
+    {
+      "id": "F19",
+      "text": "Plant three dozen flowers.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 16,
+          "color": null
+        }
+      ],
+      "label_note": "36 requested objects are clipped to the documented cap of 16."
+    },
+    {
+      "id": "F20",
+      "text": "Add twenty‑two stones.",
+      "category": "quantifiers",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 16,
+          "color": null
+        }
+      ],
+      "label_note": "U+2011 nonbreaking hyphen; 22 requested objects are clipped to 16."
+    },
+    {
+      "id": "F21",
+      "text": "North of the bridge, plant three trees.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": null,
+          "relation": "above",
+          "target": "bridge"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F22",
+      "text": "In front of the tower, place five pink flowers.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 5,
+          "color": "pink",
+          "relation": "below",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F23",
+      "text": "Across the stream, build a bridge.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F24",
+      "text": "Within the fortress, put two rocks.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 2,
+          "color": null,
+          "relation": "inside",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F25",
+      "text": "Between the lake and the mountain, create a road.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "road",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "lake",
+          "targets": [
+            "lake",
+            "mountain"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F26",
+      "text": "Between two cottages, plant four trees.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F27",
+      "text": "Close to the castle, build a house and a tower.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F28",
+      "text": "To the right of the lake place three red cabins.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red",
+          "relation": "right",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F29",
+      "text": "Beside the road, do not add any trees.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "F30",
+      "text": "Near the lake, build three cottages and two towers.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F31",
+      "text": "Make it nighttime without snow.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F32",
+      "text": "Make it not snowing.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F33",
+      "text": "Stop snowing and make it morning.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        },
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F34",
+      "text": "Make it sunny; make it rain; stop the rain.",
+      "category": "settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "rain"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F35",
+      "text": "Do not make it midnight; make it daylight.",
+      "category": "setting_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        }
+      ],
+      "label_note": "Daylight denotes day, but is a new lexical setting paraphrase rather than a documented keyword."
+    },
+    {
+      "id": "F36",
+      "text": "Remove zero towers, then add eleven blue flowers.",
+      "category": "mixed_actions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 11,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F37",
+      "text": "Build a house and never remove it.",
+      "category": "negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "Negated removal requires no object resolution or removal action."
+    },
+    {
+      "id": "F38",
+      "text": "Place −2 rocks by the lake.",
+      "category": "invalid_quantities",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "U+2212 minus; negative object counts must not create objects."
+    },
+    {
+      "id": "F39",
+      "text": "Add 1.5 bridges over the river.",
+      "category": "invalid_quantities",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "Fractional counts must be rejected with a notice."
+    },
+    {
+      "id": "F40",
+      "text": "Build two or four cottages.",
+      "category": "invalid_quantities",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "A disjunctive quantity requires clarification rather than guessing one count."
+    },
+    {
+      "id": "F41",
+      "text": "Create a tower and put two trees behind it.",
+      "category": "coreference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null,
+          "relation": "above",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F42",
+      "text": "Plant three flowers and remove one of them.",
+      "category": "coreference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": null
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 1
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F43",
+      "text": "Build a lake and a castle, then add a road between them.",
+      "category": "coreference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "lake",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "castle",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "road",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "lake",
+          "targets": [
+            "lake",
+            "castle"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F44",
+      "text": "Place two red and three yellow houses.",
+      "category": "coordination_ellipsis",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F45",
+      "text": "Plant one pink and one purple flower.",
+      "category": "coordination_ellipsis",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F46",
+      "text": "Add a house with a blue roof.",
+      "category": "postposed_attributes",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F47",
+      "text": "Put a bridge spanning the creek.",
+      "category": "relation_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 1,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": "Spanning paraphrases across; creek is an existing landmark, not a requested new river."
+    },
+    {
+      "id": "F48",
+      "text": "Leave the houses untouched while adding a lake.",
+      "category": "clause_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "lake",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": "The gerund adding introduces a second intended operation after a preservation clause."
+    },
+    {
+      "id": "F49",
+      "text": "To the north of the lake, add a house.",
+      "category": "fronted_relations",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null,
+          "relation": "above",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "F50",
+      "text": "Construct two red cottages next to the pond.",
+      "category": "verb_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "red",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": "Construct is a new creation-verb paraphrase."
+    }
+  ]
+}

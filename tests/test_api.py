@@ -1,0 +1,31 @@
+import asyncio
+from httpx import ASGITransport, AsyncClient
+from backend.main import app
+
+
+def request(method, path, **kwargs):
+    async def send():
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            return await client.request(method, path, **kwargs)
+    return asyncio.run(send())
+
+
+def test_health():
+    response = request("GET", "/api/health")
+    assert response.status_code == 200
+    assert response.json()["ok"] is True
+
+
+def test_between_api_and_explanation():
+    response = request("POST", "/api/parse", json={"text": "Put a bridge between two houses"})
+    assert response.status_code == 200
+    result = response.json()
+    assert result["actions"][0]["targets"] == ["house", "house"]
+    assert result["grounding"] == "rules"
+    assert any(span["role"] == "landmark" for span in result["highlights"])
+
+
+def test_request_validation():
+    for body in [{}, {"text": ""}, {"text": "x" * 1401}]:
+        assert request("POST", "/api/parse", json=body).status_code == 422
+    assert request("POST", "/api/parse", json={"text": "  "}).status_code == 400
