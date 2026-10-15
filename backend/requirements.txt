@@ -1,3 +1,4 @@
-fastapi>=0.115,<1
-uvicorn[standard]>=0.30,<1
-spacy>=3.8,<4
+fastapi==0.143.1
+uvicorn[standard]==0.54.0
+spacy==3.8.16
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
