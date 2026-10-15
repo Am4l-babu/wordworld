@@ -1,0 +1,2263 @@
+{
+  "name": "WordWorld tenth fresh 50-command evaluation — 2026-10-15",
+  "method": "50 newly hand-authored commands and expected actions frozen before first prediction after quarter/of-each-color/mixed-location/future-perfect fixes. Author saw implementation and prior errors; not independently human-labeled or randomly sampled. No tuning on round-ten predictions.",
+  "scope": "40 preassigned core cases and 10 broader probes. Core includes zero/negation, nonintegral/undefined/inconsistent fractions, invalid each colors, missing/conflicting placements and unmapped future-perfect colors. Fractions need a declared total giving whole objects; shared tails apply to one creation clause, resolved before new sources. Per-action cap remains 16. Sprite size, geometry and cross-request reference are not scored.",
+  "evaluation_kind": "frozen new-command evaluation",
+  "matches_frozen_parser": true,
+  "dataset_parser_sha256": "4a6cf43957656cb7a5d814c44046f260e1fbaeba0f3d1b8dcd4f451d4a1bd37a",
+  "dataset_sha256": "9ef33daf26d8e90aaf06df666a76d04d6b2fdcf777e4b805e741ba57b019c79a",
+  "parser_sha256_before": "4a6cf43957656cb7a5d814c44046f260e1fbaeba0f3d1b8dcd4f451d4a1bd37a",
+  "parser_sha256_after": "4a6cf43957656cb7a5d814c44046f260e1fbaeba0f3d1b8dcd4f451d4a1bd37a",
+  "parser_unchanged": true,
+  "pipeline_sha256_before": "ccca65ca61f9189dbb03aebc51d34d7c76fa859a2259f1dc41e5e7d2b6fd345b",
+  "pipeline_sha256_after": "ccca65ca61f9189dbb03aebc51d34d7c76fa859a2259f1dc41e5e7d2b6fd345b",
+  "source_files_sha256": {
+    "backend/main.py": "b2c67f4c9bea1394f5548cc081c83d90c899457bdab138dc9c70e3292ffb1c7f",
+    "backend/parser.py": "4a6cf43957656cb7a5d814c44046f260e1fbaeba0f3d1b8dcd4f451d4a1bd37a",
+    "backend/references.py": "49248372c17ee1688d358bbbba0c0748272423d847fab6e35ca6844baa84c710"
+  },
+  "runtime": {
+    "python": "3.12.7",
+    "spacy": "3.8.16",
+    "en_core_web_sm": "3.8.0",
+    "annotations": "spacy",
+    "grounding": "rules"
+  },
+  "metric_definitions": {
+    "exact_match": "Complete ordered action dictionaries match, including all emitted fields; per command over all 50.",
+    "intent": "Ordered action-name sequence matches; per command over all 50. Does not validate entity or setting value.",
+    "entity_count_color": "Ordered (action, type, count, color) tuples for all typed actions match, per command over all 50. Pure setting/no-op cases contribute empty typed-action lists.",
+    "spatial": "Ordered (type, relation, target, targets) tuples for all typed actions match, on gold-spatial commands only. Extra subjects are penalized.",
+    "settings": "Ordered (key, value) tuples for setting actions match, on gold-setting commands only."
+  },
+  "metrics": {
+    "exact_match": {
+      "correct": 40,
+      "total": 50,
+      "accuracy": 0.8
+    },
+    "intent": {
+      "correct": 40,
+      "total": 50,
+      "accuracy": 0.8
+    },
+    "entity_count_color": {
+      "correct": 40,
+      "total": 50,
+      "accuracy": 0.8
+    },
+    "spatial": {
+      "correct": 11,
+      "total": 11,
+      "accuracy": 1.0
+    },
+    "settings": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    }
+  },
+  "categories": {
+    "quarter_partition": {
+      "correct": 2,
+      "total": 2
+    },
+    "mixed_fractions": {
+      "correct": 2,
+      "total": 2
+    },
+    "quarter_parts_remainder": {
+      "correct": 1,
+      "total": 1
+    },
+    "quarter_them": {
+      "correct": 1,
+      "total": 1
+    },
+    "quarter_post_total": {
+      "correct": 1,
+      "total": 1
+    },
+    "fronted_quarters": {
+      "correct": 1,
+      "total": 1
+    },
+    "zero_quarters": {
+      "correct": 1,
+      "total": 1
+    },
+    "nonintegral_quarters": {
+      "correct": 1,
+      "total": 1
+    },
+    "overfull_quarters": {
+      "correct": 1,
+      "total": 1
+    },
+    "undefined_quarters": {
+      "correct": 1,
+      "total": 1
+    },
+    "of_each_colors": {
+      "correct": 2,
+      "total": 2
+    },
+    "of_each_list": {
+      "correct": 1,
+      "total": 1
+    },
+    "of_each_comma": {
+      "correct": 1,
+      "total": 1
+    },
+    "of_each_spatial": {
+      "correct": 1,
+      "total": 1
+    },
+    "of_each_dozen": {
+      "correct": 1,
+      "total": 1
+    },
+    "of_each_references": {
+      "correct": 1,
+      "total": 1
+    },
+    "unsupported_each_color": {
+      "correct": 1,
+      "total": 1
+    },
+    "conflicting_each_color": {
+      "correct": 1,
+      "total": 1
+    },
+    "of_each_mixed_tail": {
+      "correct": 1,
+      "total": 1
+    },
+    "mixed_shared_location": {
+      "correct": 2,
+      "total": 2
+    },
+    "new_verb_tail_scope": {
+      "correct": 1,
+      "total": 1
+    },
+    "mixed_shared_between": {
+      "correct": 1,
+      "total": 1
+    },
+    "shared_singular_reference": {
+      "correct": 1,
+      "total": 1
+    },
+    "shared_plural_reference": {
+      "correct": 1,
+      "total": 1
+    },
+    "quarter_mixed_location": {
+      "correct": 1,
+      "total": 1
+    },
+    "negated_shared_location": {
+      "correct": 1,
+      "total": 1
+    },
+    "conflicting_shared_location": {
+      "correct": 1,
+      "total": 1
+    },
+    "missing_shared_landmark": {
+      "correct": 1,
+      "total": 1
+    },
+    "future_perfect": {
+      "correct": 1,
+      "total": 1
+    },
+    "future_perfect_adverb": {
+      "correct": 2,
+      "total": 2
+    },
+    "future_perfect_spatial": {
+      "correct": 1,
+      "total": 1
+    },
+    "quarter_future_perfect": {
+      "correct": 1,
+      "total": 1
+    },
+    "future_perfect_reference": {
+      "correct": 1,
+      "total": 1
+    },
+    "future_perfect_negation": {
+      "correct": 1,
+      "total": 1
+    },
+    "future_perfect_unmapped": {
+      "correct": 1,
+      "total": 1
+    },
+    "total_in_part": {
+      "correct": 0,
+      "total": 1
+    },
+    "third_distribution": {
+      "correct": 0,
+      "total": 1
+    },
+    "semicolon_remainder": {
+      "correct": 0,
+      "total": 1
+    },
+    "former_reference": {
+      "correct": 0,
+      "total": 1
+    },
+    "group_multiplication": {
+      "correct": 0,
+      "total": 1
+    },
+    "subordinate_creation": {
+      "correct": 0,
+      "total": 1
+    },
+    "percentage_distribution": {
+      "correct": 0,
+      "total": 1
+    },
+    "trailing_each_count": {
+      "correct": 0,
+      "total": 1
+    },
+    "each_alternate_word_order": {
+      "correct": 0,
+      "total": 1
+    },
+    "whole_object_future_perfect": {
+      "correct": 0,
+      "total": 1
+    }
+  },
+  "scopes": {
+    "core": {
+      "correct": 40,
+      "total": 40
+    },
+    "capability_probe": {
+      "correct": 0,
+      "total": 10
+    }
+  },
+  "outcomes": {
+    "correct": 40,
+    "explicit_abstention": 6,
+    "missing_actions": 4
+  },
+  "cases": [
+    {
+      "id": "Q01",
+      "text": "Create twelve flowers: one quarter pink and three quarters orange.",
+      "category": "quarter_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 9,
+          "color": "orange"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 9,
+          "color": "orange"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q02",
+      "text": "Plant eight trees: two quarters green and half white.",
+      "category": "mixed_fractions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "white"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q03",
+      "text": "Build sixteen homes: one quarter with orange roofs and the rest with purple roofs.",
+      "category": "quarter_parts_remainder",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 12,
+          "color": "purple"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 12,
+          "color": "purple"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q04",
+      "text": "Place twenty flowers: a quarter blue and three quarters yellow.",
+      "category": "quarter_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 5,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 15,
+          "color": "yellow"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 5,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 15,
+          "color": "yellow"
+        }
+      ],
+      "warnings": [
+        "Limited flower quantity to 16."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q05",
+      "text": "Plant four trees: one quarter of them blue and three quarters of them red.",
+      "category": "quarter_them",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "red"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "red"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q06",
+      "text": "Create eight flowers: quarter purple, quarter pink, and half white.",
+      "category": "mixed_fractions",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "white"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q07",
+      "text": "Build houses, a total of twelve: one quarter blue and the remainder green.",
+      "category": "quarter_post_total",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 9,
+          "color": "green"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 9,
+          "color": "green"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q08",
+      "text": "Behind the lake, plant eight trees: a quarter orange and three-quarters white.",
+      "category": "fronted_quarters",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "orange",
+          "relation": "above",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": "white",
+          "relation": "above",
+          "target": "lake"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "orange",
+          "relation": "above",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": "white",
+          "relation": "above",
+          "target": "lake"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q09",
+      "text": "Create zero flowers: one quarter white and three quarters pink.",
+      "category": "zero_quarters",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Skipped a negated or zero-count flower group."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q10",
+      "text": "Build ten houses: one quarter purple and three quarters yellow.",
+      "category": "nonintegral_quarters",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Partition counts do not match the declared total; that object instruction was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q11",
+      "text": "Plant sixteen trees: three quarters blue and half pink.",
+      "category": "overfull_quarters",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Partition counts do not match the declared total; that object instruction was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q12",
+      "text": "Place flowers: one quarter pink and three quarters purple.",
+      "category": "undefined_quarters",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Fraction groups need a declared total giving non-negative whole-object counts and a partition; that instruction was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q13",
+      "text": "Add a flower of each color: purple, white and pink.",
+      "category": "of_each_colors",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q14",
+      "text": "Plant four trees of each colour: yellow and green.",
+      "category": "of_each_colors",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "green"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "green"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q15",
+      "text": "Build exactly two homes of each color: orange, blue, and white.",
+      "category": "of_each_list",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q16",
+      "text": "Draw three flowers of each colour, pink and purple.",
+      "category": "of_each_comma",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "purple"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "purple"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q17",
+      "text": "Place a pair of houses of each color: white and green near the pond.",
+      "category": "of_each_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white",
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "green",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "white",
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "green",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q18",
+      "text": "Plant half a dozen trees of each color: pink and white.",
+      "category": "of_each_dozen",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": "white"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q19",
+      "text": "Create one flower of each color: red and white; remove them.",
+      "category": "of_each_references",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 2
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 2
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q20",
+      "text": "Add two flowers of each color: blue and gray.",
+      "category": "unsupported_each_color",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Of each color needs a distinct supported color list; that instruction was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q21",
+      "text": "Plant two green trees of each color: red and purple.",
+      "category": "conflicting_each_color",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Of each color needs one explicit count without conflicting source colors; that instruction was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q22",
+      "text": "Add two flowers of each color: pink and purple and a house, all near the bridge.",
+      "category": "of_each_mixed_tail",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink",
+          "relation": "near",
+          "target": "bridge"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "purple",
+          "relation": "near",
+          "target": "bridge"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "bridge"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink",
+          "relation": "near",
+          "target": "bridge"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "purple",
+          "relation": "near",
+          "target": "bridge"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "bridge"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q23",
+      "text": "Place a flower and a tower, all behind the castle.",
+      "category": "mixed_shared_location",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "above",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "above",
+          "target": "castle"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "above",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "above",
+          "target": "castle"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q24",
+      "text": "Build two houses and plant three trees, all below the tower.",
+      "category": "new_verb_tail_scope",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": null,
+          "relation": "below",
+          "target": "tower"
+        }
+      ],
+      "label_note": "A new explicit verb begins a new clause; all applies to its sources only.",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": null,
+          "relation": "below",
+          "target": "tower"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q25",
+      "text": "Place two flowers and a rock, all between the house and the castle.",
+      "category": "mixed_shared_between",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "castle"
+          ]
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "castle"
+          ]
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "castle"
+          ]
+        },
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "castle"
+          ]
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q26",
+      "text": "Draw a mountain and two white flowers, all right of the lake.",
+      "category": "mixed_shared_location",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "mountain",
+          "count": 1,
+          "color": null,
+          "relation": "right",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "white",
+          "relation": "right",
+          "target": "lake"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "mountain",
+          "count": 1,
+          "color": null,
+          "relation": "right",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "white",
+          "relation": "right",
+          "target": "lake"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q27",
+      "text": "Build one home; plant two trees and a flower, all near it.",
+      "category": "shared_singular_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "house"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "house"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "house"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "near",
+          "target": "house"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q28",
+      "text": "Build two cottages; add a flower and a tower, all between them.",
+      "category": "shared_plural_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q29",
+      "text": "Build eight houses: one quarter blue and three quarters white and three purple flowers, all near the road.",
+      "category": "quarter_mixed_location",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue",
+          "relation": "near",
+          "target": "road"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 6,
+          "color": "white",
+          "relation": "near",
+          "target": "road"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "purple",
+          "relation": "near",
+          "target": "road"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue",
+          "relation": "near",
+          "target": "road"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 6,
+          "color": "white",
+          "relation": "near",
+          "target": "road"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "purple",
+          "relation": "near",
+          "target": "road"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q30",
+      "text": "Place a tower and two trees, all not near the river.",
+      "category": "negated_shared_location",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "A shared placement needs one unambiguous, positive location and named landmarks; that creation clause was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q31",
+      "text": "Build a house beside the lake and two flowers, all left of the tower.",
+      "category": "conflicting_shared_location",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "A shared placement needs one unambiguous, positive location and named landmarks; that creation clause was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q32",
+      "text": "Draw a rock and a mountain, all near.",
+      "category": "missing_shared_landmark",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "A shared placement needs one unambiguous, positive location and named landmarks; that creation clause was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q33",
+      "text": "Build two houses whose roofs will already have been painted orange.",
+      "category": "future_perfect",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "orange"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q34",
+      "text": "Plant a tree whose foliage will have just been coloured red.",
+      "category": "future_perfect_adverb",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "red"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q35",
+      "text": "Create flowers whose petals will have been freshly coloured yellow.",
+      "category": "future_perfect_adverb",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "yellow"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "yellow"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q36",
+      "text": "Build a house with a roof that shall have been painted white behind the river.",
+      "category": "future_perfect_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white",
+          "relation": "above",
+          "target": "river"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white",
+          "relation": "above",
+          "target": "river"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": true,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q37",
+      "text": "Build four houses: one quarter whose roofs will have been painted pink and three quarters whose roofs will have been painted blue.",
+      "category": "quarter_future_perfect",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q38",
+      "text": "Build two houses whose roofs will have been coloured purple; remove them.",
+      "category": "future_perfect_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "purple"
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 2
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "purple"
+        },
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 2
+        }
+      ],
+      "warnings": [],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q39",
+      "text": "Build a cottage whose roof will not have been painted orange.",
+      "category": "future_perfect_negation",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Unsupported, negated or ambiguous post-noun color; that object instruction was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q40",
+      "text": "Create a castle whose petals will have been painted red.",
+      "category": "future_perfect_unmapped",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "This object color/part has no supported visual mapping; that object instruction was skipped."
+      ],
+      "exact_match": true,
+      "intent_correct": true,
+      "entity_count_color_correct": true,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "correct",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q41",
+      "text": "Build cottages with a total of seven roofs painted red.",
+      "category": "total_in_part",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 7,
+          "color": "red"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Unsupported, negated or ambiguous post-noun color; that object instruction was skipped."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "explicit_abstention",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q42",
+      "text": "Plant twelve trees: one third purple and two thirds green.",
+      "category": "third_distribution",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 8,
+          "color": "green"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 12,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "missing_actions",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q43",
+      "text": "Build eight houses: two blue; the rest yellow.",
+      "category": "semicolon_remainder",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 6,
+          "color": "yellow"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Partition counts do not match the declared total; that object instruction was skipped.",
+        "No supported object or setting found in one clause. Name an object explicitly; pronoun references are not resolved."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "explicit_abstention",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q44",
+      "text": "Add flowers, two white and three pink; create one more of the former.",
+      "category": "former_reference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "warnings": [
+        "No supported object or setting found in one clause. Name an object explicitly; pronoun references are not resolved."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "missing_actions",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q45",
+      "text": "Draw three clusters of four orange flowers.",
+      "category": "group_multiplication",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 12,
+          "color": "orange"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Skipped flower: specify an unambiguous non-negative whole-number quantity."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "explicit_abstention",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q46",
+      "text": "Preserve the castle while building three white cottages.",
+      "category": "subordinate_creation",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Preserved referenced objects; no creation or removal was applied for that clause."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "explicit_abstention",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q47",
+      "text": "Create eight flowers: 25% pink and 75% purple.",
+      "category": "percentage_distribution",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 6,
+          "color": "purple"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 8,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "missing_actions",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q48",
+      "text": "Add flowers in red and blue, three of each.",
+      "category": "trailing_each_count",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "An inherited noun group needs an explicit quantity; that object instruction was skipped.",
+        "No supported object or setting found in one clause. Name an object explicitly; pronoun references are not resolved."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "explicit_abstention",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q49",
+      "text": "Build one pair of cottages in each of blue and green.",
+      "category": "each_alternate_word_order",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "green"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": null
+        }
+      ],
+      "warnings": [],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "missing_actions",
+      "unexpected_remove_types": [],
+      "exception": null
+    },
+    {
+      "id": "Q50",
+      "text": "Build a cottage that will have been painted blue.",
+      "category": "whole_object_future_perfect",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "blue"
+        }
+      ],
+      "label_note": "",
+      "predicted_actions": [],
+      "warnings": [
+        "Unsupported, negated or ambiguous post-noun color; that object instruction was skipped."
+      ],
+      "exact_match": false,
+      "intent_correct": false,
+      "entity_count_color_correct": false,
+      "spatial_correct": null,
+      "settings_correct": null,
+      "outcome": "explicit_abstention",
+      "unexpected_remove_types": [],
+      "exception": null
+    }
+  ]
+}

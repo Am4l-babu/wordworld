@@ -126,7 +126,8 @@ def evaluate(dataset_path=DATASET, output_path=RESULTS, expected_sha256=FROZEN_D
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     for name, metric in report["metrics"].items():
-        print(f"{name}: {metric['correct']}/{metric['total']} = {metric['accuracy']:.1%}")
+        accuracy = f"{metric['accuracy']:.1%}" if metric['accuracy'] is not None else 'N/A'
+        print(f"{name}: {metric['correct']}/{metric['total']} = {accuracy}")
     print("\nScope groups:")
     for name, counts in report["scopes"].items():
         print(f"  {name}: {counts['correct']}/{counts['total']}")

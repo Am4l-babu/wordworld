@@ -44,7 +44,7 @@ Clear the world
 
 **Objects:** houses, trees, lakes, rivers, roads, bridges, flowers, mountains, towers, castles and rocks. **Colors:** red, blue, green, yellow, pink, purple, orange and white. Aliases such as cottage, creek and pond work too.
 
-Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Unclear or conflicting counts produce a notice. Size words describe groups but do not resize sprites.
+Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Quarter groups use exact whole-object arithmetic; `of each color: red and white` expands the stated count for both colors. Mapped part clauses also support `will have been painted`. Unclear or conflicting counts produce a notice. Size words describe groups but do not resize sprites.
 
 </details>
 
@@ -77,21 +77,21 @@ flowchart LR
 
 The live app includes the English spaCy model. `/api/health` reports `parser: "spacy"`; `/api/parse` returns `model: "spacy"`. Without the model, local token annotations are limited. An offline browser preview supports only simple commands; use the Python backend for the NLP demonstration.
 
-Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/shared_fixes_report.md) for concrete failures and complete predictions.
+Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/quarter_fixes_report.md) for concrete failures and complete predictions.
 
 </details>
 
 ### Measured, with the rough edges showing
 
-Current verification and nine diagnostic scores are recorded in the [latest evaluation report](evaluation/shared_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
+Current verification and ten diagnostic scores are recorded in the [latest evaluation report](evaluation/quarter_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**466 Python tests · 16 scene tests · 42 desktop/mobile browser checks · production build passed.**
+**525 Python tests · 16 scene tests · 44 desktop/mobile browser checks · production build passed.**
 
-| Saved sets 1 → 8, retested | New sample 9, first run |
+| Saved sets 1 → 9, retested | New sample 10, first run |
 |---|---|
-| 50/50 · 48/50 · 45/50 · 46/50 · 47/50 · 46/50 · 45/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
+| 50/50 · 48/50 · 45/50 · 46/50 · 47/50 · 46/50 · 45/50 · 44/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
 
-The latest fixes address “stop the storm,” half-and-half quantities, shared locations after commas and future passive color clauses. Halves require an explicit even total; comma locations apply to one same-noun collection. Broader gaps include quarters, “of each color,” mixed-type shared locations and future perfect clauses; the report shows every failure.
+The latest fixes address quarters, “of each color,” mixed-type shared locations and future perfect part-color clauses. Fractions require an explicit total that gives whole objects. Shared comma tails apply to all sources in one creation clause and resolve before new objects enter reference state. Broader gaps include thirds, percentages, alternate each wording and cross-clause collections; the report shows every failure.
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 
@@ -110,7 +110,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The report includes exact dataset hashes, backend fingerprints and commands for all nine evaluations. Parser tests cover action semantics and source spans; scene tests cover placement and references; browser tests cover the API-to-canvas flow on desktop and mobile, editing, saved state, failures and safe README command links.
+The report includes exact dataset hashes, backend fingerprints and commands for all ten evaluations. Parser tests cover action semantics and source spans; scene tests cover placement and references; browser tests cover the API-to-canvas flow on desktop and mobile, editing, saved state, failures and safe README command links.
 
 Set `WORDWORLD_BASE_URL` to a hosted URL to run the same browser suite remotely. To regenerate the preview with the local servers running: `cd frontend; node scripts/capture-readme.mjs`. Then use FFmpeg from the root:
 
