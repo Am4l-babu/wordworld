@@ -12,6 +12,8 @@ export const EXAMPLES = [
   'Put a bridge between two houses',
   'Make it night with rain',
   'Put two pink flowers near the castle',
+  'Paint the houses blue and make them bigger',
+  'Move the castle behind the lake',
 ];
 let unique=0;
 export const makeItem=(type,x,y,color,scale=1)=>({id:`w-${Date.now().toString(36)}-${(++unique).toString(36)}`,type,x,y,color:color||undefined,seed:unique*47,scale});
@@ -67,13 +69,14 @@ function resolveAnchors(items,act,allowedIds){
  return anchors;
 }
 const onIsland=({x,y})=>((x-500)/390)**2+((y-350)/155)**2<=1;
-function overlapScore(items,type,{x,y}){
+// Footprints grow with each object's scale, so an enlarged castle keeps its distance.
+function overlapScore(items,type,{x,y},scale=1){
  return items.reduce((score,it)=>{
-  const min=(sizes[it.type]+sizes[type])/2*.74;
+  const min=(sizes[it.type]*(it.scale||1)+sizes[type]*scale)/2*.74;
   return score+Math.max(0,min-Math.hypot(it.x-x,(it.y-y)*1.15));
  },0);
 }
-function position(items,type,index,count,relation,anchors){
+function position(items,type,index,count,relation,anchors,scale=1){
  if(relation==='between'&&anchors.length===2){
   const [a,b]=anchors,t=(index+1)/(count+1);
   return {x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};
@@ -83,7 +86,7 @@ function position(items,type,index,count,relation,anchors){
  const candidates=[];
  if(anchor){
   const base={left:Math.PI,right:0,above:-Math.PI/2,below:Math.PI/2}[relation];
-  const distance=(sizes[type]+sizes[anchor.type])/2+18;
+  const distance=(sizes[type]*scale+sizes[anchor.type]*(anchor.scale||1))/2+18;
   for(const radius of [1,1.35,1.75,2.2]){
    for(let step=0;step<16;step++){
     const angle=base===undefined?.5+(step+index)*2.399:base+((step+index)%16/15-.5)*1.6;
@@ -97,17 +100,77 @@ function position(items,type,index,count,relation,anchors){
   }
  }
  const valid=candidates.filter(onIsland);
- if(!valid.length&&anchor)return {...position(items,type,index,count,null,[]),unresolved:true};
+ if(!valid.length&&anchor)return {...position(items,type,index,count,null,[],scale),unresolved:true};
  // Dense scenes may still overlap; retain the relation and choose the least crowded spot.
- return valid.reduce((best,point)=>overlapScore(items,type,point)<overlapScore(items,type,best)?point:best,valid[0]||{x:500,y:350});
+ return valid.reduce((best,point)=>overlapScore(items,type,point,scale)<overlapScore(items,type,best,scale)?point:best,valid[0]||{x:500,y:350});
 }
-export function applyActions(items,settings,actions,bindings=[]){
- let nextItems=items.map(x=>({...x})),nextSettings={...settings};let descriptions=[];let missing=[];let notices=[];
- const introduced=new Map(),byAction=new Map(bindings.map(binding=>[binding.action_index,binding]));
+// The color a sprite actually shows: houses draw a red roof when no color is set.
+export const shownColor=o=>o.color||(o.type==='house'?'red':undefined);
+const plural=(type,n)=>`${n} ${type}${n===1?'':'s'}`;
+const STEP={small:35,medium:75,large:150};
+const DIRECTION={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]};
+const DIRECTION_LABEL={left:'left',right:'right',up:'back',down:'forward'};
+const VERB={recolor:'repaint',resize:'resize',move:'move'};
+// Edits act on the most recent matching objects, like removals do.
+function editTargets(items,act,referenceIds){
+ const matching=items.filter(o=>o.type===act.type&&(!referenceIds||referenceIds.has(o.id))&&(!act.filter_color||shownColor(o)===act.filter_color));
+ const n=act.count==='all'?matching.length:clamp(Math.floor(Number(act.count)||0),0,matching.length);
+ return {matching,chosen:n?matching.slice(-n):[]};
+}
+// Walk back toward the start until the point is on the island again.
+function stepOnIsland(item,dx,dy){
+ for(let t=1;t>.1;t-=.1){const point={x:item.x+dx*t,y:item.y+dy*t};if(onIsland(point))return {...point,t}}
+ return {x:item.x,y:item.y,t:0};
+}
+// `context` holds the objects the previous command touched ({type, ids}), oldest first.
+// Bindings refer to them with negative indexes, so "make it blue" edits exactly those objects.
+export function applyActions(items,settings,actions,bindings=[],context=[]){
+ let nextItems=items.map(x=>({...x})),nextSettings={...settings};let descriptions=[];let missing=[];let notices=[];const touched=[];
+ const introduced=new Map(context.map((group,k)=>[-(k+1),group.ids])),byAction=new Map(bindings.map(binding=>[binding.action_index,binding]));
  const boundIds=indices=>new Set(indices.flatMap(index=>introduced.get(index)||[]));
+ const replace=updated=>{const byId=new Map(updated.map(o=>[o.id,o]));nextItems=nextItems.map(o=>byId.get(o.id)||o)};
  for(const [actionIndex,act] of actions.entries()){
   const binding=byAction.get(actionIndex);
   if(act.action==='reset') {nextItems=[];nextSettings={...INITIAL_SETTINGS};descriptions.push('Cleared the world');}
+  else if(['recolor','resize','move'].includes(act.action)&&TYPES.includes(act.type)){
+   const referenceIds=binding?.edit_from?boundIds(binding.edit_from):null;
+   const {matching,chosen}=editTargets(nextItems,act,referenceIds);
+   const label=`${act.filter_color?act.filter_color+' ':''}${act.type}s`;
+   introduced.set(actionIndex,chosen.map(o=>o.id));
+   if(!matching.length){notices.push(referenceIds?`The ${act.type} you referred to is no longer in the world.`:`There are no ${label} to ${VERB[act.action]}.`);continue}
+   if(act.count!=='all'&&chosen.length<Number(act.count))notices.push(`Only ${plural(act.type,chosen.length)} could be found to ${VERB[act.action]}.`);
+   if(act.action==='recolor'){
+    replace(chosen.map(o=>({...o,color:act.color})));
+    descriptions.push(`Painted ${plural(act.type,chosen.length)} ${act.color}`);
+   }else if(act.action==='resize'){
+    const resized=chosen.map(o=>({...o,scale:Math.round(clamp((o.scale||1)*act.scale,.45,1.9)*100)/100}));
+    if(resized.every((o,i)=>o.scale===(chosen[i].scale||1)))notices.push(`The ${act.type} is already as ${act.scale>1?'big':'small'} as it can be.`);
+    replace(resized);
+    descriptions.push(`Made ${plural(act.type,chosen.length)} ${act.scale>1?'bigger':'smaller'}`);
+   }else if(act.direction){
+    const [ux,uy]=DIRECTION[act.direction]||[0,0],step=STEP[act.distance]||STEP.medium;
+    const moved=chosen.map(o=>{const p=stepOnIsland(o,ux*step,uy*step*.6);if(p.t<1)notices.push(`The island edge stopped the ${act.type} early.`);return {...o,x:p.x,y:p.y,grounding:undefined}});
+    replace(moved);
+    descriptions.push(`Moved ${plural(act.type,chosen.length)} ${DIRECTION_LABEL[act.direction]}`);
+   }else{
+    // Landmarks come from everything except the objects being moved.
+    const movingIds=new Set(chosen.map(o=>o.id)),others=nextItems.filter(o=>!movingIds.has(o.id));
+    const anchors=resolveAnchors(others,act,binding?.target_from?boundIds(binding.target_from):null);
+    const required=act.relation==='between'?2:1;
+    if(anchors.length<required){notices.push(`Couldn't find ${act.relation==='between'?`two distinct landmarks (${(act.targets||[act.target,act.target]).join(' and ')})`:`a ${act.target}`} to move next to; nothing moved.`);continue}
+    const placed=[...others],moved=[];
+    chosen.forEach((o,i)=>{
+     const {x,y,unresolved}=position(placed,act.type,i,chosen.length,act.relation,anchors,o.scale||1);
+     if(unresolved){notices.push(`No space on the island ${RELATION_LABEL[act.relation]} the ${act.target}; the ${act.type} stayed put.`);moved.push(o);placed.push(o);return}
+     const next={...o,x,y,grounding:{relation:act.relation,anchorIds:anchors.map(a=>a.id)}};
+     moved.push(next);placed.push(next);
+    });
+    replace(moved);
+    const count=moved.filter((o,i)=>o!==chosen[i]).length;
+    if(count)descriptions.push(`Moved ${plural(act.type,count)} ${RELATION_LABEL[act.relation]||act.relation} ${(act.targets||[act.target]).join(' and ')}`);
+   }
+   touched.push(...chosen.map(o=>o.id));
+  }
   else if(act.action==='setting') {if(['time','weather'].includes(act.key)){nextSettings[act.key]=act.value;descriptions.push(`Changed ${act.key} to ${act.value}`)}}
   else if(act.action==='remove'){
    const referenceIds=binding?.remove_from?boundIds(binding.remove_from):null;
@@ -134,8 +197,21 @@ export function applyActions(items,settings,actions,bindings=[]){
     newIds.push(item.id);
    }
    introduced.set(actionIndex,newIds);
+   touched.push(...newIds);
    descriptions.push(`Added ${n} ${act.type}${n===1?'':'s'}${allGrounded?` ${RELATION_LABEL[act.relation]||act.relation||'near'} ${act.targets?act.targets.join(' and '):act.target}`:''}`);
   }
  }
- return {items:nextItems,settings:nextSettings,descriptions,missing:[...new Set(missing)],notices:[...new Set(notices)]};
+ const remaining=new Set(nextItems.map(o=>o.id));
+ return {items:nextItems,settings:nextSettings,descriptions,missing:[...new Set(missing)],notices:[...new Set(notices)],touched:[...new Set(touched)].filter(id=>remaining.has(id))};
 }
+// Group the focused objects by type, in order, for the parser's cross-request context.
+export function focusGroups(items,ids){
+ const byId=new Map(items.map(o=>[o.id,o])),groups=[];
+ for(const id of ids){
+  const item=byId.get(id);if(!item)continue;
+  const last=groups.at(-1);
+  if(last?.type===item.type)last.ids.push(id);else groups.push({type:item.type,ids:[id]});
+ }
+ return groups.slice(-12);
+}
+export const describeFocus=groups=>groups.map(g=>plural(g.type,g.ids.length)).join(' + ');

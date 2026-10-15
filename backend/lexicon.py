@@ -51,6 +51,24 @@ RELATION_PATTERNS = [
 ADD_PATTERN = r"add|build|create|place|put|plant|grow|make|draw|generate|insert|show|there (?:is|are)|i want|give me"
 REMOVE_PATTERN = r"remove|delete|erase|destroy|cut down|clear away|get rid of"
 RESET_PATTERN = r"reset|clear (?:everything|the world|the map)|start over|new world"
+PAINT_VERBS = r"paint|colou?r|recolou?r|dye|change\s+the\s+colou?r\s+of"
+MOVE_VERBS = r"move|shift|relocate|slide|drag"
+RESIZE_VERBS = r"enlarge|shrink|resize"
+# These verbs also create objects or switch weather; they edit only with a definite target and a new color or size.
+CHANGE_VERBS = r"make|turn|change"
+EDIT_BREAK_PATTERN = rf"{PAINT_VERBS}|{MOVE_VERBS}|{RESIZE_VERBS}|change|turn\s+(?:it|them|the)"
+PAINT_VERBS = r"paint|colou?r|recolou?r|dye|change\s+the\s+colou?r\s+of"
+MOVE_VERBS = r"move|shift|relocate|slide|drag"
+RESIZE_VERBS = r"enlarge|shrink|resize"
+# These verbs also create objects or switch weather; they edit only with a definite target and a new color or size.
+CHANGE_VERBS = r"make|turn|change"
+EDIT_BREAK_PATTERN = rf"{PAINT_VERBS}|{MOVE_VERBS}|{RESIZE_VERBS}|change|turn\s+(?:it|them|the)"
+PAINT_VERBS = r"paint|colou?r|recolou?r|dye|change\s+the\s+colou?r\s+of"
+MOVE_VERBS = r"move|shift|relocate|slide|drag"
+RESIZE_VERBS = r"enlarge|shrink|resize"
+# These verbs also create objects or switch weather; they edit only with a definite target and a new color or size.
+CHANGE_VERBS = r"make|turn|change"
+EDIT_BREAK_PATTERN = rf"{PAINT_VERBS}|{MOVE_VERBS}|{RESIZE_VERBS}|change|turn\s+(?:it|them|the)"
 PRESERVE_PATTERN = r"keep|leave|preserve|retain|protect|avoid"
 OPERATION_RE = re.compile(rf"\b(?P<remove>{REMOVE_PATTERN})\b|\b(?P<reset>{RESET_PATTERN})\b|\b(?P<preserve>{PRESERVE_PATTERN})\b|\b(?P<add>{ADD_PATTERN})\b", re.I)
 WEATHER_SWITCH_PATTERN = r'(?:turn|switch)\s+(?:(?:the\s+)?(?:rain|snow)\s+(?:on|off)|(?:on|off)\s+(?:the\s+)?(?:rain|snow))'
@@ -58,7 +76,7 @@ WEATHER_SWITCH_RE = re.compile(r'\b(?:turn|switch)\s+(?:(?:the\s+)?(?P<before>ra
 WEATHER_STOP_PATTERN = r'(?:stop|end)\s+(?:the\s+)?(?:rain|snow|storm|shower|raining|snowing)'
 WEATHER_STOP_RE = re.compile(r'\b' + WEATHER_STOP_PATTERN + r'\b', re.I)
 CLAUSE_BREAK_RE = re.compile(
-    rf"[;!?,]+|(?<!\d)\.|\.(?!\d)|\b(?:and then|then)\b|\b(?:and|but)\s+(?=(?:(?:do not|don't|never)\s+)?(?:{ADD_PATTERN}|{REMOVE_PATTERN}|{RESET_PATTERN}|{PRESERVE_PATTERN}|{WEATHER_SWITCH_PATTERN}|{WEATHER_STOP_PATTERN})\b)", re.I
+    rf"[;!?,]+|(?<!\d)\.|\.(?!\d)|\b(?:and then|then)\b|\b(?:and|but)\s+(?=(?:(?:do not|don't|never)\s+)?(?:{ADD_PATTERN}|{REMOVE_PATTERN}|{RESET_PATTERN}|{PRESERVE_PATTERN}|{WEATHER_SWITCH_PATTERN}|{WEATHER_STOP_PATTERN}|{EDIT_BREAK_PATTERN})\b)", re.I
 )
 NEGATION_RE = re.compile(r"\b(?:no|not|don't|do not|never|without|can't|cannot|shouldn't|mustn't|won't|wouldn't|couldn't)\b", re.I)
 MATCH_TRANSLATION = str.maketrans({'\u2018': "'", '\u2019': "'", '\u02bc': "'", '\u2212': '-', '\u2010': '-', '\u2011': '-', '\u2013': '-'})

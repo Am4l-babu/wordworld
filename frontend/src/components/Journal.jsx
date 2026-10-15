@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {Sparkles, WandSparkles, RotateCcw, Check, CornerDownLeft, ChevronRight} from 'lucide-react';
 import {EXAMPLES} from '../world';
 
-const EXAMPLE_ICONS = ['🏡', '🌲', '🏰', '🌉', '🌙', '🌷'];
+const EXAMPLE_ICONS = ['🏡', '🌲', '🏰', '🌉', '🌙', '🌷', '🎨', '↔️'];
 
 function Avatar({kind}) {
   if (kind === 'system') return <div className="bot-avatar"><Sparkles size={16}/></div>;

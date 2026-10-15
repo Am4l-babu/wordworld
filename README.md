@@ -38,13 +38,16 @@ Behind the lake, plant a pair of trees
 Build houses, one blue and one green; put a rock between them
 Add two flowers whose petals are purple and three yellow
 Remove one tree and add two pink flowers
+Paint the houses blue and make them bigger
+Build a castle
+Move it next to the lake
 Stop the rain
 Clear the world
 ```
 
 **Objects:** houses, trees, lakes, rivers, roads, bridges, flowers, mountains, towers, castles and rocks. **Colors:** red, blue, green, yellow, pink, purple, orange and white. Aliases such as cottage, creek and pond work too.
 
-Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Quarter groups use exact whole-object arithmetic; `of each color: red and white` expands the stated count for both colors. Mapped part clauses also support `will have been painted`. Unclear or conflicting counts produce a notice. Size words describe groups but do not resize sprites.
+Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Quarter groups use exact whole-object arithmetic; `of each color: red and white` expands the stated count for both colors. Mapped part clauses also support `will have been painted`. Unclear or conflicting counts produce a notice. Size words inside a creation phrase describe groups; `make the houses bigger`, `paint the red house blue` and `move the castle behind the lake` edit objects that already exist.
 
 </details>
 
@@ -53,7 +56,7 @@ Colon and comma partitions replace the default group. An explicit total must agr
 | Imagine | Inspect | Make it yours |
 |---|---|---|
 | Add, remove, place and color objects with short English commands | See phrase highlights, a dependency-arc diagram with plain-English word roles, and action JSON | Select, drag, recolor roofs, leaves and petals, duplicate and delete |
-| Use counted groups, within-request pronouns, spatial relations and weather | Read notices when a request is ambiguous or unsupported | Undo/redo, zoom and pan, keyboard shortcuts, share links, JSON import/export and a dark theme |
+| Use counted groups, spatial relations and weather; repaint, resize and move what exists, and keep talking with “it” and “them” | Read notices when a request is ambiguous or unsupported | Undo/redo, zoom and pan, keyboard shortcuts, share links, JSON import/export and a dark theme |
 
 On phones, the command editor sits above the island with a visible **Create** button, 16px input text and larger touch controls. Tablet and landscape alignment, draft preservation and help dialogs have responsive checks. See the [mobile before/after review](docs/MOBILE_QA.md).
 
@@ -77,7 +80,7 @@ flowchart LR
 
 The live app includes the English spaCy model. `/api/health` reports `parser: "spacy"`; `/api/parse` returns `model: "spacy"`. Without the model, local token annotations are limited. An offline browser preview supports only simple commands; use the Python backend for the NLP demonstration.
 
-Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/reports/quarter_fixes_report.md) for concrete failures and complete predictions.
+Pronouns resolve within one request, with bindings to actual new objects. Across requests, the browser sends what the last command or click touched (types and counts only), so “make it blue” after “build a castle” edits that castle; the composer shows what “it” will mean, and the server keeps no state. Arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/reports/quarter_fixes_report.md) for concrete failures and complete predictions.
 
 </details>
 
@@ -85,13 +88,15 @@ Pronouns resolve within one request, with bindings to actual new objects. Cross-
 
 Current verification and ten diagnostic scores are recorded in the [latest evaluation report](evaluation/reports/quarter_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**532 Python tests · 23 scene tests · 62 desktop/mobile browser checks · production build passed.**
+**559 Python tests · 27 scene tests · 66 desktop/mobile browser checks · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
 
 | Saved sets 1 → 9, retested | New sample 10, first run |
 |---|---|
 | 50/50 · 48/50 · 45/50 · 46/50 · 47/50 · 46/50 · 45/50 · 44/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
 
 The latest fixes address quarters, “of each color,” mixed-type shared locations and future perfect part-color clauses. Fractions require an explicit total that gives whole objects. Shared comma tails apply to all sources in one creation clause and resolve before new objects enter reference state. Broader gaps include thirds, percentages, alternate each wording and cross-clause collections; the report shows every failure.
+
+**Why rules?** A [dependency-parse baseline](evaluation/reports/extractor_comparison_report.md) reads the same actions from spaCy's arcs alone. Frozen before its first run on all 550 labelled commands, it matches **22%** exactly against the rules' **92%** retest and **80%** first-run scores: arcs find verbs, objects and prepositions, but not how a total splits into colored groups, what a pronoun means, or that a kept object is protected. The analysis panel shows both readings of every sentence.
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 
@@ -103,6 +108,7 @@ From the project root, with both servers running for browser checks:
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
 .\.venv\Scripts\python.exe -m tests.evaluate
+.\.venv\Scripts\python.exe -m tests.compare_extractors --check
 cd frontend
 npm test
 npm run build
@@ -151,6 +157,8 @@ Open **http://localhost:5173**. Vite proxies `/api` to port 8000. The pinned bac
 |---|---|
 | `backend/parser.py` | Clause splitting, grounding and original text spans |
 | `backend/lexicon.py`, `backend/phrases.py` | Vocabulary patterns; quantity, relation and color readers |
+| `backend/edits.py` | Repaint, resize and move edits of existing objects |
+| `backend/dependency_baseline.py` | Comparison-only extractor that reads actions from spaCy dependencies |
 | `backend/references.py` | Request-local references |
 | `backend/main.py` | FastAPI health and parse routes |
 | `frontend/src/App.jsx` | Scene state, history, commands and shortcuts |

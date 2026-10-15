@@ -14,7 +14,8 @@ from .phrases import (
     continued_descriptions, coordinated_descriptions, leading_relation,
     post_each_colors, postnoun_attributes, quantity, relation_in,
 )
-from .references import ReferenceContext, UnresolvedReference
+from .edits import read_edit, recolorable
+from .references import ReferenceContext, Referent, UnresolvedReference
 
 try:
     import spacy
@@ -88,7 +89,18 @@ def clauses(text: str):
         yield start, text[start:], continuation
 
 
-def parse(text: str) -> dict[str, Any]:
+# Cross-request references hold at most this many objects (the scene capacity).
+SCENE_LIMIT = 120
+
+
+def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Ground `text` as world actions.
+
+    `context` lists the object groups the previous command affected, oldest first, as
+    the client remembers them ({"type", "count"}). They seed 'it'/'them' so "make it
+    blue" can follow "build a castle"; bindings point at them with negative indexes
+    (-1 for the first group). The server keeps no state between requests.
+    """
     if len(text) > 1400:
         raise ValueError("Please keep commands under 1,400 characters.")
     if not text.strip():
@@ -97,6 +109,8 @@ def parse(text: str) -> dict[str, Any]:
     highlights: list[dict[str, Any]] = []
     warnings: list[str] = []
     references = ReferenceContext()
+    for k, group in enumerate(context or []):
+        references.groups.append(Referent(group["type"], group["count"], -(k + 1)))
     resolutions, bindings = [], []
 
     def mark(start: int, end: int, role: str):
@@ -104,11 +118,14 @@ def parse(text: str) -> dict[str, Any]:
         if highlight not in highlights:
             highlights.append(highlight)
 
+    def mark_reference_span(start, end, groups):
+        mark(start, end, 'reference')
+        resolutions.append({'text': text[start:end], 'start': start, 'end': end,
+                            'objects': [{'type': g.type, 'count': g.count} for g in groups],
+                            'earlier': any(g.action_index < 0 for g in groups)})
+
     def mark_reference(match, offset, groups):
-        mark(offset + match.start(), offset + match.end(), 'reference')
-        resolutions.append({'text': text[offset + match.start():offset + match.end()],
-                            'start': offset + match.start(), 'end': offset + match.end(),
-                            'objects': [{'type': g.type, 'count': g.count} for g in groups]})
+        mark_reference_span(offset + match.start(), offset + match.end(), groups)
 
     def read_landmarks(clause, relation, relation_end, found, first, offset):
         if first >= len(found):
@@ -150,7 +167,83 @@ def parse(text: str) -> dict[str, Any]:
                 targets.append(targets[0])
         return targets, consumed, []
 
+    def apply_edit(edit, clause, offset):
+        """Emit actions for one edit; return where in `clause` it stopped reading."""
+        end = edit["end"]
+        if edit["verb_span"]:
+            mark(offset + edit["verb_span"][0], offset + edit["verb_span"][1], "intent")
+        if edit["negated"]:
+            warnings.append("Skipped a negated edit; no objects were changed for that clause.")
+            return len(clause)
+        if not edit["kind"]:
+            warnings.append(f"Could not tell how to {edit['verb']} those objects; name a color, bigger/smaller, a direction or a place such as 'behind the lake'.")
+            return len(clause)
+        landmarks, landmark_groups = [], []
+        if edit.get("relation"):
+            relation, (relation_start, relation_end) = edit["relation"], edit["relation_span"]
+            mark(offset + relation_start, offset + relation_end, "spatial_relation")
+            found = list(MENTION_RE.finditer(clause, relation_end))
+            landmarks, consumed, landmark_groups = read_landmarks(clause, relation, relation_end, found, 0, offset)
+            if not landmarks or relation == "between" and len(landmarks) != 2:
+                warnings.append("A move needs a named landmark; use 'move the tree behind the lake' or 'between the house and the lake'.")
+                return len(clause)
+            end = found[consumed].end()
+        elif edit.get("value_span") and edit["value_span"] != edit["verb_span"]:
+            mark(offset + edit["value_span"][0], offset + edit["value_span"][1], "color" if edit["kind"] == "recolor" else "change")
+        # Resolve every subject before this clause introduces the edited objects as new referents.
+        subjects = []
+        for target in edit["targets"]:
+            span_start, span_end = target["span"]
+            if target["pronoun"]:
+                try:
+                    groups = references.resolve(target["pronoun"])
+                except UnresolvedReference as exc:
+                    warnings.append(str(exc))
+                    continue
+                mark_reference_span(offset + span_start, offset + span_end, groups)
+                subjects += [(g.type, g.count, [g.action_index], None) for g in groups]
+                continue
+            mark(offset + span_start, offset + span_end, "object")
+            if "number_span" in target:
+                mark(offset + target["number_span"][0], offset + target["number_span"][1], "quantity")
+            if "filter_span" in target:
+                mark(offset + target["filter_span"][0], offset + target["filter_span"][1], "color")
+            if target["count"] is None:
+                warnings.append(f"Skipped {target['type']}: specify an unambiguous whole-number quantity.")
+                continue
+            subjects.append((target["type"], target["count"], None, target["filter"]))
+        first = True
+        for kind, count, sources, color_filter in subjects:
+            if edit["kind"] == "recolor" and not recolorable(kind):
+                warnings.append(f"{kind.capitalize()}s have no color to change; houses, trees and flowers can be repainted.")
+                continue
+            action = {"action": edit["kind"], "type": kind, "count": count if count == "all" else min(count, SCENE_LIMIT)}
+            if edit["kind"] == "recolor":
+                action["color"] = edit["color"]
+            elif edit["kind"] == "resize":
+                action["scale"] = edit["scale"]
+            elif edit.get("relation"):
+                action.update(relation=edit["relation"], target=landmarks[0])
+                if edit["relation"] == "between":
+                    action["targets"] = landmarks
+            else:
+                action.update(direction=edit["direction"], distance=edit["distance"])
+            if color_filter:
+                action["filter_color"] = color_filter
+            binding = {}
+            if sources:
+                binding["edit_from"] = sources
+            if landmark_groups:
+                binding["target_from"] = [g.action_index for g in landmark_groups]
+            if binding:
+                bindings.append({"action_index": len(actions), **binding})
+            references.introduce(kind, count if count != "all" else SCENE_LIMIT, len(actions), new_clause=first)
+            first = False
+            actions.append(action)
+        return end
+
     inherited_intent, inherited_negated = "add", False
+    last_edit = None
     # One code point maps to one code point: original UI spans stay exact.
     for offset, clause, continuation in clauses(text.translate(MATCH_TRANSLATION)):
         introduced_in_clause = False
@@ -164,6 +257,21 @@ def parse(text: str) -> dict[str, Any]:
             inherited_negated = True
         if inherited_negated:
             warnings.append("Skipped a negated instruction; no objects were changed for that clause.")
+            continue
+        edit = read_edit(clause, last_edit if continuation else None)
+        if edit:
+            # "Make the trees purple and the houses red": coordinated edits share one verb.
+            while edit:
+                end = apply_edit(edit, clause, offset)
+                last_edit, clause, offset = edit, clause[end:], offset + end
+                edit = read_edit(clause, last_edit) if clause.strip(" .") else None
+            if clause.strip(" ."):
+                warnings.append(f"Ignored words after the edit: '{clause.strip()}'.")
+            inherited_intent = "edit"
+            continue
+        last_edit = None
+        if continuation and not operation and inherited_intent == "edit":
+            warnings.append("Could not read that part of the edit; name the object and its new color, size or place.")
             continue
         if operation:
             mark(offset + operation.start(), offset + operation.end(), "intent")

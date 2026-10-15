@@ -96,7 +96,7 @@ export default function Explorer({items, selected, apiState, onRetryApi, onSelec
       ? <ObjectList items={items} selected={selected} onSelectType={onSelectType}/>
       : <QuickAdd full={full} onAdd={onAdd}/>}
     <SelectionPanel items={items} chosen={chosen} full={full} onDuplicate={onDuplicate} onDelete={onDelete} onRecolor={onRecolor}/>
-    <div className="tip-card"><span className="tip-icon">💡</span><strong>Little tip!</strong><p>Try describing where things should go: <em>“Add a tree to the left of the house.”</em></p></div>
+    <div className="tip-card"><span className="tip-icon">💡</span><strong>Little tip!</strong><p>Try describing where things should go: <em>“Add a tree to the left of the house.”</em> Then change it: <em>“make it purple.”</em></p></div>
     <ApiStatus state={apiState} onRetry={onRetryApi}/>
   </aside>;
 }
