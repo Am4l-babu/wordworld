@@ -12,10 +12,19 @@
 </div>
 
 <a href="https://wordworld.vercel.app" title="Open the interactive WordWorld playground">
-<img src="docs/assets/world-preview.gif" alt="Real WordWorld recording: the starter island gains blue and red houses, green and purple trees, a bridge, then nighttime rain. Click to play with the live world." width="100%" />
+<img src="docs/assets/world-preview.gif" alt="Real WordWorld recording: the starter island gains blue and red houses, green and purple trees and a bridge; the red houses are repainted yellow and enlarged, then night rain falls. Click to play with the live world." width="100%" />
 </a>
 
 <p align="center"><em>A recording of the real app, powered by the Python parser. Click the island to try it.</em></p>
+
+<details>
+<summary><strong>🌗 See the whole interface in light and dark</strong></summary>
+
+| Light | Dark |
+|---|---|
+| ![WordWorld interface in the light theme with the journal, island, explorer and sentence analysis](docs/assets/ui-light.png) | ![The same interface in the dark theme](docs/assets/ui-dark.png) |
+
+</details>
 
 ### Cast your first sentence
 
@@ -38,13 +47,16 @@ Behind the lake, plant a pair of trees
 Build houses, one blue and one green; put a rock between them
 Add two flowers whose petals are purple and three yellow
 Remove one tree and add two pink flowers
+Paint the houses blue and make them bigger
+Build a castle
+Move it next to the lake
 Stop the rain
 Clear the world
 ```
 
 **Objects:** houses, trees, lakes, rivers, roads, bridges, flowers, mountains, towers, castles and rocks. **Colors:** red, blue, green, yellow, pink, purple, orange and white. Aliases such as cottage, creek and pond work too.
 
-Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Quarter groups use exact whole-object arithmetic; `of each color: red and white` expands the stated count for both colors. Mapped part clauses also support `will have been painted`. Unclear or conflicting counts produce a notice. Size words describe groups but do not resize sprites.
+Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Quarter groups use exact whole-object arithmetic; `of each color: red and white` expands the stated count for both colors. Mapped part clauses also support `will have been painted`. Unclear or conflicting counts produce a notice. Size words inside a creation phrase describe groups; `make the houses bigger`, `paint the red house blue` and `move the castle behind the lake` edit objects that already exist.
 
 </details>
 
@@ -52,12 +64,12 @@ Colon and comma partitions replace the default group. An explicit total must agr
 
 | Imagine | Inspect | Make it yours |
 |---|---|---|
-| Add, remove, place and color objects with short English commands | See phrase highlights, exact text spans, token annotations and action JSON | Select, drag, recolor, duplicate and delete |
-| Use counted groups, within-request pronouns, spatial relations and weather | Read notices when a request is ambiguous or unsupported | Undo/redo, zoom, keyboard movement and JSON export |
+| Add, remove, place and color objects with short English commands | See phrase highlights, a dependency-arc diagram with plain-English word roles, and action JSON | Select, drag, recolor roofs, leaves and petals, duplicate and delete |
+| Use counted groups, spatial relations and weather; repaint, resize and move what exists, and keep talking with “it” and “them” | Read notices when a request is ambiguous or unsupported | Undo/redo, zoom and pan, keyboard shortcuts, share links, JSON import/export and a dark theme |
 
 On phones, the command editor sits above the island with a visible **Create** button, 16px input text and larger touch controls. Tablet and landscape alignment, draft preservation and help dialogs have responsive checks. See the [mobile before/after review](docs/MOBILE_QA.md).
 
-The world autosaves in your browser. There is no account or cloud scene storage. Missing landmarks and crowded placement are explained in the UI; scenes hold up to 120 objects.
+The world autosaves in your browser. There is no account or cloud scene storage; **Share & save → Copy share link** puts the whole island in the URL, and opening one keeps your own island one undo away. Missing landmarks and crowded placement are explained in the UI; scenes hold up to 120 objects.
 
 <details>
 <summary><strong>🔎 Look inside the language engine</strong></summary>
@@ -77,21 +89,25 @@ flowchart LR
 
 The live app includes the English spaCy model. `/api/health` reports `parser: "spacy"`; `/api/parse` returns `model: "spacy"`. Without the model, local token annotations are limited. An offline browser preview supports only simple commands; use the Python backend for the NLP demonstration.
 
-Pronouns resolve within one request, with bindings to actual new objects. Cross-request context, arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/quarter_fixes_report.md) for concrete failures and complete predictions.
+Pronouns resolve within one request, with bindings to actual new objects. Across requests, the browser sends what the last command or click touched (types and counts only), so “make it blue” after “build a castle” edits that castle; the composer shows what “it” will mean, and the server keeps no state. Arbitrary narratives, named/color-filtered landmarks and spatially filtered removals remain limited. See the [latest diagnostic report](evaluation/reports/quarter_fixes_report.md) for concrete failures and complete predictions.
 
 </details>
 
 ### Measured, with the rough edges showing
 
-Current verification and ten diagnostic scores are recorded in the [latest evaluation report](evaluation/quarter_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
+Current verification and ten diagnostic scores are recorded in the [latest evaluation report](evaluation/reports/quarter_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**525 Python tests · 16 scene tests · 44 desktop/mobile browser checks · production build passed.**
+**627 Python tests · 27 scene tests · 68 desktop/mobile browser checks · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
+
+Round eleven froze 50 new commands covering edits, cross-request references and fractions before the parser saw them: **44/50 first run, 40/40 core**, then 50/50 after fixes with no regressions elsewhere ([report](evaluation/reports/edits_fixes_report.md)).
 
 | Saved sets 1 → 9, retested | New sample 10, first run |
 |---|---|
 | 50/50 · 48/50 · 45/50 · 46/50 · 47/50 · 46/50 · 45/50 · 44/50 · 44/50 | **40/50 (80%)** — 40/40 core, 0/10 broader probes |
 
 The latest fixes address quarters, “of each color,” mixed-type shared locations and future perfect part-color clauses. Fractions require an explicit total that gives whole objects. Shared comma tails apply to all sources in one creation clause and resolve before new objects enter reference state. Broader gaps include thirds, percentages, alternate each wording and cross-clause collections; the report shows every failure.
+
+**Why rules?** A [dependency-parse baseline](evaluation/reports/extractor_comparison_report.md) reads the same actions from spaCy's arcs alone. Frozen before its first run, it matches **23%** of 600 labelled commands exactly, against the rules' **93%** retest and **80%** first-run scores: arcs find verbs, objects and prepositions, but not how a total splits into colored groups, what a pronoun means, or that a kept object is protected. The analysis panel shows both readings of every sentence.
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 
@@ -103,6 +119,7 @@ From the project root, with both servers running for browser checks:
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
 .\.venv\Scripts\python.exe -m tests.evaluate
+.\.venv\Scripts\python.exe -m tests.compare_extractors --check
 cd frontend
 npm test
 npm run build
@@ -149,13 +166,18 @@ Open **http://localhost:5173**. Vite proxies `/api` to port 8000. The pinned bac
 
 | Path | Purpose |
 |---|---|
-| `backend/parser.py` | Grounding grammar and original text spans |
+| `backend/parser.py` | Clause splitting, grounding and original text spans |
+| `backend/lexicon.py`, `backend/phrases.py` | Vocabulary patterns; quantity, relation and color readers |
+| `backend/edits.py` | Repaint, resize and move edits of existing objects |
+| `backend/dependency_baseline.py` | Comparison-only extractor that reads actions from spaCy dependencies |
 | `backend/references.py` | Request-local references |
 | `backend/main.py` | FastAPI health and parse routes |
-| `frontend/src/App.jsx` | Command editor, history and explanation |
+| `frontend/src/App.jsx` | Scene state, history, commands and shortcuts |
+| `frontend/src/components/` | Panels, dialogs, share menu and dependency arcs |
+| `frontend/src/share.js`, `view.js`, `theme.js` | Share links, zoom/pan camera, light/dark theme |
 | `frontend/src/Scene.jsx` | Original SVG sprites and interactive canvas |
 | `frontend/src/world.js` | Actions, references and placement geometry |
-| `tests/`, `evaluation/` | Regression tests, frozen labels and predictions |
+| `tests/`, `evaluation/` | Regression tests, frozen labels; [evaluation index](evaluation/README.md) of reports and predictions |
 
 Vercel hosts the **whole interactive app**, including FastAPI, using the root `vercel.json` Services configuration. `/api/*`, `/docs` and `/openapi.json` reach Python; other requests reach Vite’s build. The frontend needs no API secret. The repository remains private. CLI deployment is available; automatic Git deployments require the Vercel GitHub integration to have repository access.
 

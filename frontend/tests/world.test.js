@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {applyActions,makeItem,INITIAL_SETTINGS} from '../src/world.js';
+import {applyActions,makeItem,cleanScene,focusGroups,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
 import {fallbackParser} from '../src/previewParser.js';
 
 test('reference removal preserves preexisting objects of the same type',()=>{
@@ -84,4 +84,79 @@ test('offline preview never guesses negation, spatial commands, or removal',()=>
  for(const text of ["Don't add trees",'Put a bridge between two houses','Remove trees','Add a tree and a lake'])assert.deepEqual(fallbackParser(text).actions,[]);
  assert.equal(fallbackParser('Add two red houses').actions[0].count,2);
  assert.equal(fallbackParser('No rain').actions[0].value,'clear');
+});
+
+test('imported scenes keep only drawable objects with fresh ids and remapped guides',()=>{
+ const scene=cleanScene({items:[
+  {id:'a',type:'house',x:300,y:320,color:'blue'},
+  {id:'b',type:'tree',x:360,y:330,color:'chartreuse',grounding:{relation:'near',anchorIds:['a']}},
+  {id:'c',type:'dragon',x:1,y:1},{id:'d',type:'rock',x:'oops',y:2},
+  {id:'e',type:'flower',x:9999,y:-50,grounding:{relation:'near',anchorIds:['missing']}},
+ ],settings:{time:'night',weather:'hail'}});
+ assert.deepEqual(scene.items.map(o=>o.type),['house','tree','flower']);
+ assert.equal(scene.items[0].color,'blue');
+ assert.equal(scene.items[1].color,undefined);
+ assert.deepEqual(scene.items[1].grounding,{relation:'near',anchorIds:[scene.items[0].id]});
+ assert.equal(scene.items[2].grounding,undefined);
+ assert.deepEqual([scene.items[2].x,scene.items[2].y],[1000,0]);
+ assert.notEqual(scene.items[0].id,'a');
+ assert.deepEqual(scene.settings,{time:'night',weather:'clear'});
+});
+test('non-scene files are rejected and oversized scenes are capped',()=>{
+ for(const bad of [null,42,'x',{},{items:'nope'}])assert.equal(cleanScene(bad),null);
+ const many=cleanScene({items:Array.from({length:200},(_,i)=>({type:'rock',x:i,y:i}))});
+ assert.equal(many.items.length,MAX_ITEMS);
+ assert.equal(new Set(many.items.map(o=>o.id)).size,MAX_ITEMS);
+});
+test('removing a type that is absent explains why nothing changed',()=>{
+ const result=apply([makeItem('house',300,350)],[{action:'remove',type:'castle',count:1}]);
+ assert.equal(result.items.length,1);
+ assert.deepEqual(result.notices,['There are no castles in the world to remove.']);
+});
+
+test('edits repaint, resize and move only the most recent matching objects',()=>{
+ const red=makeItem('house',300,320,'red'),plain=makeItem('house',400,330),lake=makeItem('lake',650,300);
+ let r=apply([red,plain,lake],[{action:'recolor',type:'house',count:1,color:'blue'}]);
+ assert.deepEqual(r.items.map(o=>o.color),['red','blue',undefined]);
+ assert.deepEqual(r.touched,[plain.id]);
+ r=apply([red,plain,lake],[{action:'recolor',type:'house',count:'all',color:'pink',filter_color:'red'}]);
+ assert.deepEqual(r.items.map(o=>o.color),['pink','pink',undefined]);
+ r=apply([red,plain],[{action:'resize',type:'house',count:'all',scale:1.25}]);
+ assert.deepEqual(r.items.map(o=>o.scale),[1.25,1.25]);
+ r=apply([makeItem('house',300,320,null,1.85)],[{action:'resize',type:'house',count:1,scale:1.25}]);
+ assert.equal(r.items[0].scale,1.9);
+ assert.deepEqual(r.notices,[]);
+ r=apply(r.items,[{action:'resize',type:'house',count:1,scale:1.25}]);
+ assert.deepEqual(r.notices,['The house is already as big as it can be.']);
+ r=apply([red,lake],[{action:'move',type:'house',count:1,relation:'left',target:'lake'}]);
+ const moved=r.items[0];
+ assert.ok(moved.x<lake.x);
+ assert.deepEqual(moved.grounding,{relation:'left',anchorIds:[lake.id]});
+ r=apply([red],[{action:'move',type:'house',count:1,direction:'right',distance:'medium'}]);
+ assert.deepEqual([r.items[0].x,r.items[0].y],[375,320]);
+});
+test('edits explain missing objects and never move without a landmark',()=>{
+ let r=apply([makeItem('tree',300,320)],[{action:'recolor',type:'house',count:1,color:'blue'}]);
+ assert.deepEqual(r.notices,['There are no houses to repaint.']);
+ const house=makeItem('house',300,320);
+ r=apply([house],[{action:'move',type:'house',count:1,relation:'near',target:'lake'}]);
+ assert.deepEqual([r.items[0].x,r.items[0].y],[300,320]);
+ assert.match(r.notices[0],/Couldn't find a lake/);
+ r=apply([makeItem('house',880,350)],[{action:'move',type:'house',count:1,direction:'right',distance:'large'}]);
+ assert.ok(r.items[0].x>=880&&((r.items[0].x-500)/390)**2+((r.items[0].y-350)/155)**2<=1);
+});
+test('context bindings let "it" edit exactly the objects the last command touched',()=>{
+ const older=makeItem('castle',300,320),newer=makeItem('house',400,320),target=makeItem('house',500,320);
+ const r=applyActions([older,newer,target],INITIAL_SETTINGS,[{action:'recolor',type:'house',count:1,color:'blue'}],[{action_index:0,edit_from:[-1]}],[{type:'house',ids:[newer.id]}]);
+ assert.deepEqual(r.items.map(o=>o.color),[undefined,'blue',undefined]);
+ const gone=applyActions([older],INITIAL_SETTINGS,[{action:'recolor',type:'house',count:1,color:'blue'}],[{action_index:0,edit_from:[-1]}],[{type:'house',ids:['deleted']}]);
+ assert.match(gone.notices[0],/no longer in the world/);
+ assert.deepEqual(focusGroups([older,newer,target],[newer.id,target.id,older.id,'missing']),[{type:'house',ids:[newer.id,target.id]},{type:'castle',ids:[older.id]}]);
+});
+test('a move with no room reports that the object stayed put without claiming it moved',()=>{
+ const lake=makeItem('lake',500,197),castle=makeItem('castle',500,450);
+ const r=apply([lake,castle],[{action:'move',type:'castle',count:1,relation:'above',target:'lake'}]);
+ assert.deepEqual([r.items[1].x,r.items[1].y],[500,450]);
+ assert.deepEqual(r.descriptions,[]);
+ assert.match(r.notices[0],/stayed put/);
 });

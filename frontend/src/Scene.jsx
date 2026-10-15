@@ -1,6 +1,6 @@
-import React, {useRef} from 'react';
-
-const COLORS={red:'#ed786f',blue:'#74a6ea',yellow:'#f5bc59',pink:'#eaa2bc',purple:'#a78bd8',green:'#80bea1',orange:'#f4a565',white:'#f7efe5'};
+import React, {useEffect, useRef, useState} from 'react';
+import {PALETTE as COLORS,RELATION_LABEL} from './world';
+import {DEFAULT_VIEW,viewBox,panBy,zoomAt} from './view';
 const hash=(n)=>((n*2654435761)>>>0)/4294967295;
 const ground='url(#grass)';
 
@@ -90,24 +90,52 @@ function Rock(){return <g><ellipse cy="5" rx="34" ry="10" fill="#385c4e" opacity
 const SPRITES={house:House,tree:Tree,lake:Lake,road:Road,river:River,bridge:Bridge,flower:Flower,mountain:Mountain,tower:Tower,castle:Castle,rock:Rock};
 const sizes={house:1,tree:.82,lake:1,road:1,river:1,bridge:.9,flower:.82,mountain:.94,tower:.95,castle:1,rock:.8};
 const backLayers=['road','river','lake'];
-function SceneObject({item,selected,onSelect,onStartDrag,onKeyMove}){const Component=SPRITES[item.type]||Rock;return <g transform={`translate(${item.x} ${item.y}) scale(${(sizes[item.type]||1)*(item.scale||1)})`} className={'scene-object '+(selected?'selected':'')} onPointerDown={e=>{e.stopPropagation();onStartDrag(e,item.id)}} onClick={e=>{e.stopPropagation();onSelect(item.id)}} onKeyDown={e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();onSelect(item.id)}else if(e.key.startsWith('Arrow')){e.preventDefault();onKeyMove(item,e.key,e.shiftKey?20:8)}}} role="button" tabIndex="0" aria-pressed={selected} aria-label={`Select ${item.type}`}>
+function SceneObject({item,selected,onSelect,onStartDrag,onKeyMove}){const Component=SPRITES[item.type]||Rock;return <g transform={`translate(${item.x} ${item.y}) scale(${(sizes[item.type]||1)*(item.scale||1)})`} className={'scene-object '+(selected?'selected':'')} onPointerDown={e=>{e.stopPropagation();onStartDrag(e,item.id)}} onClick={e=>{e.stopPropagation();onSelect(item.id)}} onKeyDown={e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();onSelect(item.id)}else if(e.key==='Escape'){onSelect(null)}else if(e.key.startsWith('Arrow')){e.preventDefault();onKeyMove(item,e.key,e.shiftKey?20:8)}}} role="button" tabIndex="0" aria-pressed={selected} aria-label={`Select ${item.type}`}>
   {selected&&<ellipse cx="0" cy="10" rx={item.type==='lake'?108:58} ry="29" fill="none" stroke="#8a61ed" strokeWidth="3" strokeDasharray="8 5" className="selection-ring"/>}
   <Component color={item.color} seed={item.seed||2}/>
   {selected&&<g><rect x="-43" y="-140" width="86" height="25" rx="12" fill="#fffdf4" stroke="#d7d1ef"/><text x="0" y="-123" fill="#62527e" textAnchor="middle" fontSize="12" fontWeight="700" fontFamily="Fredoka">{item.type}</text></g>}
  </g>}
 function toSvgPoint(svg,clientX,clientY){const pt=svg.createSVGPoint();pt.x=clientX;pt.y=clientY;return pt.matrixTransform(svg.getScreenCTM().inverse())}
-export default function Scene({items,settings,selected,onSelect,onMove,onDragBegin,zoom=1,showGuides=true}){
- const svgRef=useRef(null), dragging=useRef(null);const w=1000/zoom,h=645/zoom;
+export default function Scene({items,settings,selected,onSelect,onMove,onDragBegin,view=DEFAULT_VIEW,onView,showGuides=true}){
+ const svgRef=useRef(null), dragging=useRef(null), lastKeyMove=useRef({id:null,at:0}), panning=useRef(null), suppressClick=useRef(false);
+ const [isPanning,setPanning]=useState(false);
+ // Two-finger pinch zooms around the midpoint; it works over objects too and cancels their drag.
+ const touches=useRef(new Map()),pinch=useRef(null);
+ function touchDown(e){
+  if(e.pointerType!=='touch')return;
+  touches.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(touches.current.size!==2||!onView)return;
+  const [a,b]=[...touches.current.values()],svg=svgRef.current,matrix=svg.getScreenCTM().inverse(),pt=svg.createSVGPoint();
+  pt.x=(a.x+b.x)/2;pt.y=(a.y+b.y)/2;
+  pinch.current={distance:Math.hypot(a.x-b.x,a.y-b.y)||1,view,mid:pt.matrixTransform(matrix)};
+  dragging.current=null;panning.current=null;suppressClick.current=true;
+ }
+ function touchMove(e){
+  if(!touches.current.has(e.pointerId))return false;
+  touches.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(!pinch.current||touches.current.size<2)return false;
+  const [a,b]=[...touches.current.values()],start=pinch.current;
+  onView(zoomAt(start.view,start.view.zoom*Math.hypot(a.x-b.x,a.y-b.y)/start.distance,start.mid));
+  return true;
+ }
+ function touchUp(e){touches.current.delete(e.pointerId);if(touches.current.size<2)pinch.current=null}
+ const latest=useRef({view,onView});latest.current={view,onView};
+ // Ctrl/⌘ + wheel zooms around the cursor; a plain wheel keeps scrolling the page.
+ useEffect(()=>{const svg=svgRef.current;function wheel(e){if(!(e.ctrlKey||e.metaKey)||!latest.current.onView)return;e.preventDefault();const {view,onView}=latest.current;onView(zoomAt(view,view.zoom+(e.deltaY<0?.1:-.1),toSvgPoint(svg,e.clientX,e.clientY)))}svg.addEventListener('wheel',wheel,{passive:false});return()=>svg.removeEventListener('wheel',wheel)},[]);
  const ordered=[...items].sort((a,b)=>(backLayers.includes(a.type)?-1000+a.y:a.y)-(backLayers.includes(b.type)?-1000+b.y:b.y));
  const isNight=settings.time==='night';
  const chosen=items.find(item=>item.id===selected);
  const anchors=chosen?.grounding?.anchorIds.map(id=>items.find(item=>item.id===id)).filter(Boolean)||[];
  const showPlacement=showGuides&&chosen?.grounding&&anchors.length===chosen.grounding.anchorIds.length;
- function keyMove(item,key,step){onSelect(item.id);onDragBegin?.();onMove(item.id,Math.max(77,Math.min(925,item.x+(key==='ArrowRight'?step:key==='ArrowLeft'?-step:0))),Math.max(110,Math.min(525,item.y+(key==='ArrowDown'?step:key==='ArrowUp'?-step:0))))}
+ // A burst of arrow presses on one object is a single undo step.
+ function keyMove(item,key,step){onSelect(item.id);const now=Date.now(),last=lastKeyMove.current;if(last.id!==item.id||now-last.at>800)onDragBegin?.();lastKeyMove.current={id:item.id,at:now};onMove(item.id,Math.max(77,Math.min(925,item.x+(key==='ArrowRight'?step:key==='ArrowLeft'?-step:0))),Math.max(110,Math.min(525,item.y+(key==='ArrowDown'?step:key==='ArrowUp'?-step:0))))}
  function startDrag(e,id){let obj=items.find(i=>i.id===id);if(!obj)return;const pt=toSvgPoint(svgRef.current,e.clientX,e.clientY);dragging.current={id,dx:obj.x-pt.x,dy:obj.y-pt.y,started:false,startX:pt.x,startY:pt.y};e.currentTarget.setPointerCapture(e.pointerId);onSelect(id)}
- function move(e){if(!dragging.current)return;let pt=toSvgPoint(svgRef.current,e.clientX,e.clientY);if(!dragging.current.started){if(Math.hypot(pt.x-dragging.current.startX,pt.y-dragging.current.startY)<3)return;dragging.current.started=true;onDragBegin?.();}onMove(dragging.current.id,Math.max(77,Math.min(925,pt.x+dragging.current.dx)),Math.max(110,Math.min(525,pt.y+dragging.current.dy)))}
- function stop(){dragging.current=null}
- return <svg ref={svgRef} className={'world-svg '+(isNight?'night':'')} viewBox={`${500-w/2} ${323-h/2} ${w} ${h}`} preserveAspectRatio="xMidYMid meet" onPointerMove={move} onPointerUp={stop} onPointerCancel={stop} onClick={()=>onSelect(null)} role="group" aria-label="Interactive illustrated world. Select objects with Enter; move with arrow keys or drag.">
+ // Dragging empty space pans when zoomed in. The matrix is frozen at the start so the
+ // moving viewBox does not feed back into the pointer math.
+ function startPan(e){if(view.zoom<=1||!onView||e.button>0)return;const svg=svgRef.current,matrix=svg.getScreenCTM().inverse(),toWorld=(x,y)=>{const pt=svg.createSVGPoint();pt.x=x;pt.y=y;return pt.matrixTransform(matrix)};panning.current={toWorld,origin:toWorld(e.clientX,e.clientY),view,client:[e.clientX,e.clientY]};e.currentTarget.setPointerCapture(e.pointerId);setPanning(true)}
+ function move(e){if(touchMove(e))return;if(panning.current){const pan=panning.current,pt=pan.toWorld(e.clientX,e.clientY);if(Math.hypot(e.clientX-pan.client[0],e.clientY-pan.client[1])>3)suppressClick.current=true;onView(panBy(pan.view,pan.origin.x-pt.x,pan.origin.y-pt.y));return}if(!dragging.current)return;let pt=toSvgPoint(svgRef.current,e.clientX,e.clientY);if(!dragging.current.started){if(Math.hypot(pt.x-dragging.current.startX,pt.y-dragging.current.startY)<3)return;dragging.current.started=true;onDragBegin?.();}onMove(dragging.current.id,Math.max(77,Math.min(925,pt.x+dragging.current.dx)),Math.max(110,Math.min(525,pt.y+dragging.current.dy)))}
+ function stop(){dragging.current=null;panning.current=null;setPanning(false)}
+ return <svg ref={svgRef} className={'world-svg'+(isNight?' night':'')+(view.zoom>1?' pannable':'')+(isPanning?' panning':'')} viewBox={viewBox(view)} preserveAspectRatio="xMidYMid meet" onPointerDownCapture={touchDown} onPointerDown={startPan} onPointerMove={move} onPointerUp={stop} onPointerCancel={stop} onPointerUpCapture={touchUp} onPointerCancelCapture={touchUp} onClick={()=>{if(suppressClick.current){suppressClick.current=false;return}onSelect(null)}} role="group" aria-label="Interactive illustrated world. Select objects with Enter; move with arrow keys or drag.">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stopColor={isNight?'#28305f':'#e3f8ff'}/><stop offset="1" stopColor={isNight?'#7371ad':'#f5fae9'}/></linearGradient>
     <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#cfeb9c"/><stop offset="1" stopColor="#8fce83"/></linearGradient>
@@ -129,7 +157,7 @@ export default function Scene({items,settings,selected,onSelect,onMove,onDragBeg
   {ordered.map(item=><SceneObject key={item.id} item={item} selected={selected===item.id} onSelect={onSelect} onStartDrag={startDrag} onKeyMove={keyMove}/>)}
   {showPlacement&&<g className="placement-guide" pointerEvents="none" role="group" aria-label={`Placement guide: ${chosen.grounding.relation}`}>
    {anchors.map(anchor=><g key={anchor.id}><line x1={anchor.x} y1={anchor.y} x2={chosen.x} y2={chosen.y} stroke="#7551ba" strokeWidth="2.5" strokeDasharray="6 5"/><circle cx={anchor.x} cy={anchor.y} r="8" fill="#fffdf4" stroke="#7551ba" strokeWidth="2.5"/></g>)}
-   <g transform={`translate(${chosen.x},${chosen.y+36})`}><rect x="-46" y="-13" width="92" height="23" rx="10" fill="#fffdf4" stroke="#d7d1ef"/><text textAnchor="middle" y="3" fill="#62527e" fontSize="12" fontWeight="700">{chosen.grounding.relation}</text></g>
+   <g transform={`translate(${chosen.x},${chosen.y+36})`}><rect x="-52" y="-13" width="104" height="23" rx="10" fill="#fffdf4" stroke="#d7d1ef"/><text textAnchor="middle" y="3" fill="#62527e" fontSize="12" fontWeight="700">{RELATION_LABEL[chosen.grounding.relation]||chosen.grounding.relation}</text></g>
   </g>}
   {settings.weather==='rain'&&<g className="rain" pointerEvents="none" stroke="#82addc" strokeWidth="3" strokeLinecap="round" opacity=".75">{Array.from({length:70},(_,i)=><path key={i} d={`M${hash(i+5)*950+20} ${hash(i+555)*575} l-8 23`} style={{animationDelay:`-${hash(i+20)*1.6}s`}}/>)}</g>}
   {settings.weather==='snow'&&<g fill="#fff" pointerEvents="none">{Array.from({length:80},(_,i)=><circle key={i} cx={hash(i+5)*950+20} cy={hash(i+555)*590} r={2+hash(i+456)*3} className="snowflake" style={{animationDelay:`-${hash(i+200)*5}s`}}/>)}</g>}

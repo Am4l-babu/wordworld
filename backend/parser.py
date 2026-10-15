@@ -3,7 +3,19 @@ from __future__ import annotations
 
 import re
 from typing import Any
-from .references import ReferenceContext, UnresolvedReference
+
+from .lexicon import (
+    ALIASES, CLAUSE_BREAK_RE, COLORS, COLOR_RE, COUNT_WORDS, ENTITY_RE,
+    MATCH_TRANSLATION, MAX_PER_COMMAND, MENTION_RE, NEGATION_RE, NUMBER_RE,
+    OPERATION_RE, PRONOUN_RE, SINGULAR_NOUNS, WEATHER_STOP_RE, WEATHER_SWITCH_RE,
+    WORD_TO_TYPE,
+)
+from .phrases import (
+    continued_descriptions, coordinated_descriptions, leading_relation,
+    post_each_colors, postnoun_attributes, quantity, relation_in,
+)
+from .edits import read_edit, recolorable
+from .references import ReferenceContext, Referent, UnresolvedReference
 
 try:
     import spacy
@@ -19,65 +31,6 @@ if spacy is not None:
     except OSError:
         NLP = spacy.blank("en")
         NLP_STATUS = "spacy-tokenizer"
-
-ALIASES = {
-    "house": ["house", "houses", "home", "homes", "cottage", "cottages", "hut", "huts", "cabin", "cabins", "village", "villages", "town", "towns"],
-    "tree": ["tree", "trees", "forest", "forests", "woods", "woodland", "woodlands"],
-    "lake": ["lake", "lakes", "pond", "ponds"],
-    "river": ["river", "rivers", "stream", "streams", "creek", "creeks"],
-    "bridge": ["bridge", "bridges"],
-    "road": ["road", "roads", "path", "paths", "trail", "trails", "street", "streets"],
-    "flower": ["flower", "flowers", "garden", "gardens", "blossom", "blossoms"],
-    "mountain": ["mountain", "mountains", "hill", "hills", "peak", "peaks"],
-    "tower": ["tower", "towers", "lighthouse", "lighthouses"],
-    "castle": ["castle", "castles", "fortress", "fortresses"],
-    "rock": ["rock", "rocks", "stone", "stones", "boulder", "boulders"],
-}
-WORD_TO_TYPE = {word: kind for kind, words in ALIASES.items() for word in words}
-ENTITY_RE = re.compile(r"\b(" + "|".join(sorted(map(re.escape, WORD_TO_TYPE), key=len, reverse=True)) + r")\b", re.I)
-PRONOUN_RE = re.compile(r"\b(?:it|them)\b", re.I)
-MENTION_RE = re.compile(ENTITY_RE.pattern + r"|\b(?:it|them)\b", re.I)
-NUMBER_VALUES = dict(zip(
-    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety".split(),
-    list(range(20)) + list(range(20, 100, 10)),
-))
-COUNT_WORDS = {**NUMBER_VALUES, "a": 1, "an": 1, "couple": 2, "few": 3, "several": 4}
-UNITS = "one|two|three|four|five|six|seven|eight|nine"
-BASE_NUMBER = rf"(?:(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ](?:{UNITS}))?|{'|'.join(list(NUMBER_VALUES)[:20])})"
-CARDINAL = rf"(?:(?:{BASE_NUMBER})\s+(?:hundred|thousand)(?:\s+(?:and\s+)?{BASE_NUMBER})?|hundred|thousand|{BASE_NUMBER})"
-NUMERAL = rf"(?:[+-]?\d+(?:\.\d+)?|{CARDINAL})"
-NUMBER_RE = re.compile(
-    rf"(?<!\w)(?:(?P<half>half\s+(?:a\s+)?dozen)|(?:(?P<multiplier>{NUMERAL}|a|an)\s+)?(?P<group>dozens?|pairs?|couples?)|(?P<number>{NUMERAL})|(?P<approx>few|several)|(?P<article>a|an))\b", re.I
-)
-UNKNOWN_QUANTITY_WORDS = {'many', 'some', 'lots', 'numerous', 'million', 'billion', 'quarter'}
-UNKNOWN_QUANTITY_RE = re.compile(r"\b(?:" + '|'.join(sorted(UNKNOWN_QUANTITY_WORDS)) + r")\b", re.I)
-COLORS = ["red", "blue", "yellow", "pink", "purple", "green", "orange", "white"]
-COLOR_RE = re.compile(r"\b(" + "|".join(COLORS) + r")\b", re.I)
-RELATION_PATTERNS = [
-    ("left", r"\b(?:to the left of|left of|west of)\b"),
-    ("right", r"\b(?:to the right of|right of|east of)\b"),
-    ("above", r"\b(?:above|behind|north of|at the back of)\b"),
-    ("below", r"\b(?:below|in front of|south of)\b"),
-    ("near", r"\b(?:beside|next to|near|by|close to|around the edge of|around|along)\b"),
-    ("between", r"\bbetween\b"),
-    ("across", r"\b(?:across|over|spanning|crossing)\b"),
-    ("inside", r"\b(?:inside|within|in the middle of|in the center of)\b"),
-]
-ADD_PATTERN = r"add|build|create|place|put|plant|grow|make|draw|generate|insert|show|there (?:is|are)|i want|give me"
-REMOVE_PATTERN = r"remove|delete|erase|destroy|cut down|clear away|get rid of"
-RESET_PATTERN = r"reset|clear (?:everything|the world|the map)|start over|new world"
-PRESERVE_PATTERN = r"keep|leave|preserve|retain|protect|avoid"
-OPERATION_RE = re.compile(rf"\b(?P<remove>{REMOVE_PATTERN})\b|\b(?P<reset>{RESET_PATTERN})\b|\b(?P<preserve>{PRESERVE_PATTERN})\b|\b(?P<add>{ADD_PATTERN})\b", re.I)
-WEATHER_SWITCH_PATTERN = r'(?:turn|switch)\s+(?:(?:the\s+)?(?:rain|snow)\s+(?:on|off)|(?:on|off)\s+(?:the\s+)?(?:rain|snow))'
-WEATHER_SWITCH_RE = re.compile(r'\b(?:turn|switch)\s+(?:(?:the\s+)?(?P<before>rain|snow)\s+(?P<after_state>on|off)|(?P<state>on|off)\s+(?:the\s+)?(?P<after>rain|snow))\b', re.I)
-WEATHER_STOP_PATTERN = r'(?:stop|end)\s+(?:the\s+)?(?:rain|snow|storm|shower|raining|snowing)'
-WEATHER_STOP_RE = re.compile(r'\b' + WEATHER_STOP_PATTERN + r'\b', re.I)
-CLAUSE_BREAK_RE = re.compile(
-    rf"[;!?,]+|(?<!\d)\.|\.(?!\d)|\b(?:and then|then)\b|\b(?:and|but)\s+(?=(?:(?:do not|don't|never)\s+)?(?:{ADD_PATTERN}|{REMOVE_PATTERN}|{RESET_PATTERN}|{PRESERVE_PATTERN}|{WEATHER_SWITCH_PATTERN}|{WEATHER_STOP_PATTERN})\b)", re.I
-)
-NEGATION_RE = re.compile(r"\b(?:no|not|don't|do not|never|without|can't|cannot|shouldn't|mustn't|won't|wouldn't|couldn't)\b", re.I)
-MATCH_TRANSLATION = str.maketrans({'\u2018': "'", '\u2019': "'", '\u02bc': "'", '\u2212': '-', '\u2010': '-', '\u2011': '-', '\u2013': '-'})
-MAX_PER_COMMAND = 16
 
 
 def tokenize(text: str) -> list[dict[str, Any]]:
@@ -136,335 +89,18 @@ def clauses(text: str):
         yield start, text[start:], continuation
 
 
-def number_value(raw: str) -> int | None:
-    if re.fullmatch(r"[+-]?\d+(?:\.\d+)?", raw):
-        return int(raw) if '.' not in raw and int(raw) >= 0 else None
-    value, total = 0, 0
-    for word in raw.lower().replace('-', ' ').split():
-        if word == 'and':
-            continue
-        if word == 'hundred':
-            value = (value or 1) * 100
-        elif word == 'thousand':
-            total += (value or 1) * 1000
-            value = 0
-        else:
-            value += COUNT_WORDS[word]
-    return total + value
+# Cross-request references hold at most this many objects (the scene capacity).
+SCENE_LIMIT = 120
 
 
-def quantity(prefix: str, entity: str) -> tuple[int | None, re.Match | None]:
-    # A numeral must belong to this noun phrase; it cannot cross another noun.
-    matches = list(NUMBER_RE.finditer(prefix))
-    meaningful = [m for m in matches if not m.group('article')]
-    match = (meaningful or matches)[-1] if matches else None
-    defaults = {"village": 4, "villages": 4, "town": 4, "towns": 4, "forest": 6, "forests": 6, "woods": 6, "woodland": 6, "woodlands": 6, "garden": 5, "gardens": 5}
-    if (UNKNOWN_QUANTITY_RE.search(prefix)
-            or re.search(r'\bexactly\b', prefix, re.I) and any(m.group('approx') for m in matches)
-            or len(meaningful) > 1):
-        return None, match
-    if match and len(prefix[match.end():].split()) <= 4:
-        if match.group('half'):
-            return 6, match
-        if match.group('group'):
-            multiplier = number_value((match.group('multiplier') or 'one').lower())
-            unit = 12 if match.group('group').lower().startswith('dozen') else 2
-            return multiplier * unit if multiplier is not None else None, match
-        if match.group('number'):
-            return number_value(match.group('number').lower()), match
-        if match.group('approx'):
-            return COUNT_WORDS[match.group('approx').lower()], match
-        return defaults.get(entity.lower(), 1), match
-    return defaults.get(entity.lower(), 1), None
+def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Ground `text` as world actions.
 
-
-def relation_in(text: str):
-    candidates = [(m.start(), -len(m.group()), name, m)
-                  for name, pattern in RELATION_PATTERNS
-                  if (m := re.search(pattern, text, re.I))]
-    if not candidates:
-        return None, None
-    _, _, name, match = min(candidates, key=lambda item: item[:2])
-    return name, match
-
-
-def leading_relation(text: str):
-    relation, match = relation_in(text)
-    if match and re.fullmatch(r"\s*(?:please\s*)?(?:to\s+(?:the\s+)?)?", text[:match.start()], re.I):
-        return relation, match
-    return None, None
-
-
-def coordinated_descriptions(prefix: str, entity: str):
-    """Expand separately counted descriptions, preserving numeric conjunctions."""
-    each = distributive_description(prefix, WORD_TO_TYPE[entity.lower()])
-    if each:
-        if prefix[each['end']:].strip():
-            raise ValueError('An each-color list must stay within one noun phrase; that instruction was skipped.')
-        return [{'count':each['count'], 'color':color.group().lower(), 'number':each['number'],
-                 'color_match':color, 'offset':0, 'negated':each['negated']} for color in each['colors']]
-    numbers = list(NUMBER_RE.finditer(prefix))
-    separators = [m for m in re.finditer(r',|\band\b', prefix, re.I)
-                  if not any(number.start() <= m.start() < number.end() for number in numbers)]
-    if not separators:
-        return None
-    boundaries = [(0, separators[0].start())]
-    boundaries += [(a.end(), b.start()) for a, b in zip(separators, separators[1:])]
-    boundaries += [(separators[-1].end(), len(prefix))]
-    variants = []
-    for start, end in boundaries:
-        fragment = prefix[start:end]
-        if not fragment.strip():
-            continue
-        colors = list(COLOR_RE.finditer(fragment))
-        count, number = quantity(fragment, entity)
-        if len(colors) > 1 or number is None or count is None:
-            # A leading conjunction after a previous noun is not ellipsis.
-            if len([1 for a, b in boundaries if prefix[a:b].strip()]) < 2:
-                return None
-            raise ValueError('Coordinated descriptions need an explicit, unambiguous quantity for each group.')
-        variants.append({'count': count, 'color': colors[0].group().lower() if colors else None,
-                         'number': number, 'color_match': colors[0] if colors else None, 'offset': start,
-                         'negated': bool(NEGATION_RE.search(fragment))})
-    return variants if len(variants) > 1 else None
-
-
-PASSIVE_ADVERBS = r'(?:(?:already|recently|just|newly|previously|freshly)\s+){0,2}'
-POST_COLOR_RE = re.compile(
-    r'\s*,?\s*(?:'
-    r'(?:(?:that|which)\s+)?(?:is|are)\s+(?P<predicate>' + '|'.join(COLORS) + r')\b|'
-    r'(?:with|having|(?:that|which)\s+(?:has|have))\s+(?:(?:a|an|the)\s+)?(?P<before>' + '|'.join(COLORS) + r')\s+(?P<part_before>roofs?|leaves|foliage|petals?)\b|'
-    r'(?:whose|with|having|(?:that|which)\s+(?:has|have))\s+(?:(?:a|an|the)\s+)?(?P<part_after>roofs?|leaves|foliage|petals?)\s+'
-    r'(?:(?:(?:that|which)\s+)?(?:is|are)\s+' + PASSIVE_ADVERBS + r'(?:(?:painted|colou?red)\s+)?|(?:(?:that|which)\s+)?(?:will|shall)\s+' + PASSIVE_ADVERBS + r'(?:be|have\s+' + PASSIVE_ADVERBS + r'been)\s+' + PASSIVE_ADVERBS + r'(?:painted|colou?red)\s+|(?:(?:that|which)\s+)?(?:has|have|had)\s+' + PASSIVE_ADVERBS + r'been\s+' + PASSIVE_ADVERBS + r'(?:painted|colou?red)\s+|(?:painted|colou?red)\s+)'
-    r'(?P<after>' + '|'.join(COLORS) + r')\b|'
-    r'(?:in\s+)?(?P<bare>' + '|'.join(COLORS) + r')\b)', re.I)
-COLOR_PARTS = {'house': {'roof', 'roofs'}, 'tree': {'leaves', 'foliage'}, 'flower': {'petal', 'petals'}}
-POST_QUANTITY_RE = re.compile(r'\s*,?\s*(?P<phrase>[\w+.-]+(?:\s+[\w+.-]+){0,7}?)\s+(?:of\s+them|in\s+(?:total|all)|total|altogether)\b', re.I)
-TOTAL_OF_PREFIX_RE = re.compile(r'\s*[, :]?\s*(?:(?:not|no|never|without)\s+)?(?:a|the)\s+total\s+of\s+', re.I)
-POST_QUANTITY_WORDS = set(COUNT_WORDS) | {'exactly','dozen','dozens','pair','pairs','couples','half','of','hundred','thousand','and','or','to','not'} | UNKNOWN_QUANTITY_WORDS
-
-
-def postnoun_attributes(suffix: str, kind: str):
-    """Read only adjacent, explicit attributes; return offsets into the suffix.
-
-    Quantities require an appositive marker (of them/in total/altogether).
-    Colors map to the existing house-roof/tree-foliage/flower-petal field.
-    Never scan through a relation, another subject, or an unsupported phrase.
+    `context` lists the object groups the previous command affected, oldest first, as
+    the client remembers them ({"type", "count"}). They seed 'it'/'them' so "make it
+    blue" can follow "build a castle"; bindings point at them with negative indexes
+    (-1 for the first group). The server keeps no state between requests.
     """
-    result = {'end': 0, 'count': None, 'has_quantity': False, 'number': None, 'number_offset': 0, 'colors': [], 'error': None}
-    while True:
-        start = result['end']
-        total_of = TOTAL_OF_PREFIX_RE.match(suffix, start)
-        if total_of:
-            qualifier = re.match(r'(?:exactly\s+)?', suffix[total_of.end():], re.I)
-            number_start = total_of.end() + qualifier.end()
-            number = NUMBER_RE.match(suffix, number_start)
-            end = number.end() if number else number_start
-            count, _ = quantity(suffix[number_start:end], kind)
-            if not number or NEGATION_RE.search(suffix[start:total_of.end()]):
-                count = None
-            alternative = re.match(r'\s+(?:or|to)\s+', suffix[end:], re.I)
-            if alternative:
-                second = NUMBER_RE.match(suffix, end + alternative.end())
-                end = second.end() if second else end + alternative.end()
-                count = None
-            if result['has_quantity']:
-                result['error'] = 'Multiple post-noun quantities are ambiguous; that object instruction was skipped.'
-            result.update(count=count, has_quantity=True, number=number, number_offset=0, end=end)
-            continue
-        post_quantity = POST_QUANTITY_RE.match(suffix, start)
-        if post_quantity and not re.match(r'and\b',post_quantity.group('phrase'),re.I) and all(re.fullmatch(r'[+-]?\d+(?:\.\d+)?', word) or all(part in POST_QUANTITY_WORDS for part in word.split('-')) for word in post_quantity.group('phrase').lower().split()):
-            phrase = post_quantity.group('phrase')
-            count, number = quantity(phrase, kind)
-            if NEGATION_RE.search(phrase) or not number:
-                count = None
-            if result['has_quantity']:
-                result['error'] = 'Multiple post-noun quantities are ambiguous; that object instruction was skipped.'
-            result.update(count=count, has_quantity=True, number=number,
-                          number_offset=post_quantity.start('phrase'), end=post_quantity.end())
-            continue
-        color = POST_COLOR_RE.match(suffix, start)
-        if color:
-            field = next(name for name in ('predicate', 'before', 'after', 'bare') if color.group(name))
-            part = color.group('part_before') or color.group('part_after')
-            if kind not in COLOR_PARTS or part and part.lower() not in COLOR_PARTS[kind]:
-                result['error'] = 'This object color/part has no supported visual mapping; that object instruction was skipped.'
-            result['colors'].append((color.group(field).lower(), color.start(field), color.end(field)))
-            result['end'] = color.end()
-            continue
-        # Reject an explicit but unsupported color attribute instead of
-        # silently applying its first color or dropping a negation.
-        rest = suffix[start:]
-        _, relation = relation_in(rest)
-        boundary = relation.start() if relation else len(rest)
-        next_noun = ENTITY_RE.search(rest)
-        if next_noun:
-            boundary = min(boundary, next_noun.start())
-        attribute = rest[:boundary]
-        explicit_attribute = re.match(r'\s*,?\s*(?:with|without|having|whose|that|which|is|are|not)\b', attribute, re.I)
-        conflicting_color = result['colors'] and not next_noun and re.match(r'\s*(?:and|or)\s+(?:' + '|'.join(COLORS) + r')\b', attribute, re.I)
-        if (explicit_attribute and not next_noun or conflicting_color) and COLOR_RE.search(attribute):
-            result['error'] = 'Unsupported, negated or ambiguous post-noun color; that object instruction was skipped.'
-        break
-    if len({color for color, _, _ in result['colors']}) > 1:
-        result['error'] = 'Conflicting post-noun colors; that object instruction was skipped.'
-    return result
-
-
-GROUP_SIZES = {'small','large','little','tiny','cozy','big','tall','short'}
-GROUP_MODIFIER_RE = re.compile(r'\s+(' + '|'.join(sorted(GROUP_SIZES | set(COLORS))) + r')\b', re.I)
-
-
-def post_each_colors(suffix: str, kind: str):
-    """Read an adjacent of-each-color list without scanning through another noun."""
-    marker = re.match(r'\s+of\s+each\s+colou?r\b\s*[:,]?\s*', suffix, re.I)
-    if not marker:
-        return None
-    word = r'(?:' + '|'.join(COLORS) + r')\b'
-    listing = re.match(word + r'(?:\s*(?:,\s*(?:and\s+)?|and\s+)' + word + r')+', suffix[marker.end():], re.I)
-    end = marker.end() + listing.end() if listing else marker.end()
-    error = None
-    colors = list(COLOR_RE.finditer(suffix,marker.end(),end))
-    if not listing or kind not in COLOR_PARTS or len({c.group().lower() for c in colors}) != len(colors):
-        error = 'Of each color needs a distinct supported color list; that instruction was skipped.'
-    tail = re.match(r'\s*(?:or|to)\b|\s*(?:,\s*|and\s+)(?P<next>\w+)', suffix[end:], re.I)
-    if tail and (not tail.group('next') or not NUMBER_RE.fullmatch(tail.group('next')) and not ENTITY_RE.fullmatch(tail.group('next'))):
-        error = 'Of each color has an ambiguous or unsupported list; that instruction was skipped.'
-    return {'end':end, 'colors':colors, 'error':error}
-
-
-def distributive_description(fragment: str, kind: str):
-    """A single explicit quantity distributes over an adjacent color list."""
-    prefix = re.match(r'\s*(?:(?:not|no|never|without)\s+)?(?:exactly\s+)?', fragment, re.I)
-    number = NUMBER_RE.match(fragment, prefix.end())
-    if number is None and re.match(r'(?:\w+\s+)?each\b', fragment[prefix.end():], re.I):
-        raise ValueError('Each needs an explicit whole-number quantity; that instruction was skipped.')
-    each = re.match(r'\s+each\b\s*(?:of\s+)?', fragment[number.end():], re.I) if number else None
-    if not each:
-        return None
-    start = number.end() + each.end()
-    color_word = r'(?:' + '|'.join(COLORS) + r')\b'
-    listing = re.match(color_word + r'(?:\s*(?:,\s*(?:and\s+)?|and\s+)' + color_word + r')+', fragment[start:], re.I)
-    count, _ = quantity(fragment[:number.end()], kind)
-    if not listing or count is None or kind not in COLOR_PARTS:
-        raise ValueError('Each needs a valid whole-number count and an explicit supported color list; that instruction was skipped.')
-    end = start + listing.end()
-    if re.match(r'\s*(?:or|to)\b|\s*(?:,\s*|and\s+)(?:black|brown|gray|grey|cyan)\b', fragment[end:], re.I):
-        raise ValueError('An each-color list is ambiguous or unsupported; that instruction was skipped.')
-    return {'count':count, 'number':number, 'colors':list(COLOR_RE.finditer(fragment,start,end)),
-            'end':end, 'negated':bool(NEGATION_RE.search(fragment[:number.start()]))}
-
-
-def continued_descriptions(suffix: str, kind: str):
-    """Adjacent count groups can reuse a noun through ones or a relative clause.
-
-    This is noun-type ellipsis for new creations, not an ID reference to old
-    objects. Stop before an explicit new noun, verb or placement constraint.
-    Returned annotations retain offsets into the unchanged suffix.
-    """
-    result = {'end': 0, 'descriptions': [], 'highlights': [], 'error': None,
-              'first_comma': False, 'first_colon': False, 'first_form': None}
-    while connector := re.match(r'\s*(?:[,:]\s*(?:and\s+)?|and\s+)', suffix[result['end']:], re.I):
-        start = result['end'] + connector.end()
-        try:
-            each = distributive_description(suffix[start:], kind)
-        except ValueError as exc:
-            result.update(end=start, error=str(exc))
-            break
-        if each:
-            if not result['descriptions']:
-                result.update(first_comma=connector.group().lstrip().startswith((',', ':')),
-                              first_colon=connector.group().lstrip().startswith(':'), first_form='distributive')
-            result['descriptions'] += [{'count':each['count'], 'color':c.group().lower(),
-                                        'negated':each['negated'], 'remainder':False} for c in each['colors']]
-            result['highlights'].append((start + each['number'].start(), start + each['number'].end(), 'quantity'))
-            result['highlights'] += [(start+c.start(),start+c.end(),'color') for c in each['colors']]
-            result['end'] = start + each['end']
-            continue
-        inferred = re.match(r'(?:(?:not|no|never|without)\s+)?(?:the\s+(?:rest|remainder)|(?:the\s+)?remaining\s+ones?)\b', suffix[start:], re.I)
-        fraction = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?P<half>(?:a\s+)?half\b(?!\s+(?:a\s+)?dozen))|(?:(?P<quarters>' + NUMERAL + r'|a)[ -]+)?quarters?\b)(?:\s+of\s+them\b)?', suffix[start:], re.I)
-        ratio = None
-        if fraction:
-            numerator = fraction.group('quarters') or 'one'
-            ratio = (1,2) if fraction.group('half') else (1 if numerator.lower()=='a' else number_value(numerator.lower()),4)
-        qualifier = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?:the\s+)?remaining\s+)?(?:exactly\s+)?', suffix[start:], re.I)
-        number_start = start + qualifier.end()
-        number = NUMBER_RE.match(suffix, number_start) if not inferred and not fraction else None
-        if number is None and not inferred and not fraction:
-            # Explicit inherited wording without a count is not a new noun.
-            unfinished = re.match(
-                r'(?:large|small|big|tiny|little)\s+ones\b|(?:that|which|whose)\b|(?:'
-                + '|'.join(COLORS) + r')\b(?=\s*(?:and\b|,|$))', suffix[start:], re.I)
-            if unfinished:
-                result.update(end=start + unfinished.end(), error='An inherited noun group needs an explicit quantity; that object instruction was skipped.')
-            break
-        cursor = start + (inferred or fraction).end() if inferred or fraction else number.end()
-        of = re.match(r'\s+of\b', suffix[cursor:], re.I)
-        if of and number and (number.group('group') or number.group('half')):
-            cursor += of.end()
-        colors = []
-        while modifier := GROUP_MODIFIER_RE.match(suffix, cursor):
-            if modifier.group(1).lower() in COLORS:
-                colors.append((modifier.group(1).lower(), modifier.start(1), modifier.end(1)))
-            cursor = modifier.end()
-        space = re.match(r'\s*', suffix[cursor:])
-        if ENTITY_RE.match(suffix, cursor + space.end()):
-            break  # An explicit next noun is handled by the main mention loop.
-        ellipsis = re.match(r'\s+ones?\b', suffix[cursor:], re.I)
-        attribute_start = cursor + ellipsis.end() if ellipsis else cursor
-        attributes = postnoun_attributes(suffix[attribute_start:], kind)
-        end = attribute_start + attributes['end']
-        if ellipsis or inferred or fraction:
-            form = 'ones'
-        elif attributes['colors']:
-            form = 'relative' if re.match(r'\s*(?:that|which|whose)\b', suffix[cursor:], re.I) else 'part'
-        elif colors:
-            form = 'predicate'
-        else:
-            # Detect malformed inherited clauses without looking through
-            # another explicit noun and accidentally creating its landmark.
-            marker = re.match(r'\s*(?:that|which|whose|with|ones?)\b', suffix[cursor:], re.I)
-            invalid = re.match(r'\s*(?:or|and|to)\s+[^,;]*?\bones\b', suffix[cursor:], re.I)
-            if marker or invalid or attributes['error']:
-                stop = cursor + (marker or invalid).end() if marker or invalid else cursor
-                result.update(end=stop, error='An inherited group needs an unambiguous count and a supported description; that object instruction was skipped.')
-            break
-        count, _ = quantity(suffix[start:number.end()], kind) if number else (None, None)
-        if count is None and not inferred and not fraction or len(colors) > 1:
-            result.update(end=end, error='An inherited noun group needs explicit, unambiguous counts and colors; that object instruction was skipped.')
-            break
-        color = colors[0][0] if colors else None
-        if attributes['error'] or attributes['has_quantity'] and attributes['count'] != count or attributes['colors'] and color and color != attributes['colors'][-1][0]:
-            result.update(end=end, error=attributes['error'] or 'Conflicting attributes in an inherited noun group; that object instruction was skipped.')
-            break
-        if re.match(r'\s*(?:or|to)\b|\s*and\s+(?:' + '|'.join(COLORS) + r')\b', suffix[end:], re.I):
-            result.update(end=end, error='An inherited group has ambiguous colors; that object instruction was skipped.')
-            break
-        if attributes['colors']:
-            color = attributes['colors'][-1][0]
-        negated = bool(NEGATION_RE.search(suffix[start:number.start() if number else cursor]))
-        remainder = inferred or (re.search(r'\bremaining\b', suffix[start:number.start()], re.I) if number else None)
-        if not result['descriptions']:
-            result['first_comma'] = connector.group().lstrip().startswith((',', ':'))
-            result['first_colon'] = connector.group().lstrip().startswith(':')
-            result['first_form'] = form
-        result['descriptions'].append({'count':count, 'color':color, 'negated':negated, 'remainder':bool(remainder), 'fraction':ratio})
-        if remainder:
-            result['highlights'].append((start + remainder.start(), start + remainder.end(), 'quantity'))
-        if number:
-            result['highlights'].append((number.start(), number.end(), 'quantity'))
-        if fraction:
-            result['highlights'].append((start + fraction.start(), start + fraction.end(), 'quantity'))
-        result['highlights'] += [(a, b, 'color') for _, a, b in colors]
-        result['highlights'] += [(attribute_start + a, attribute_start + b, 'color') for _, a, b in attributes['colors']]
-        if ellipsis:
-            word = re.search(r'\bones?\b', ellipsis.group(), re.I)
-            result['highlights'].append((cursor + word.start(), cursor + word.end(), 'object'))
-        result['end'] = end
-    return result
-
-
-def parse(text: str) -> dict[str, Any]:
     if len(text) > 1400:
         raise ValueError("Please keep commands under 1,400 characters.")
     if not text.strip():
@@ -473,6 +109,8 @@ def parse(text: str) -> dict[str, Any]:
     highlights: list[dict[str, Any]] = []
     warnings: list[str] = []
     references = ReferenceContext()
+    for k, group in enumerate(context or []):
+        references.groups.append(Referent(group["type"], group["count"], -(k + 1)))
     resolutions, bindings = [], []
 
     def mark(start: int, end: int, role: str):
@@ -480,11 +118,14 @@ def parse(text: str) -> dict[str, Any]:
         if highlight not in highlights:
             highlights.append(highlight)
 
+    def mark_reference_span(start, end, groups):
+        mark(start, end, 'reference')
+        resolutions.append({'text': text[start:end], 'start': start, 'end': end,
+                            'objects': [{'type': g.type, 'count': g.count} for g in groups],
+                            'earlier': any(g.action_index < 0 for g in groups)})
+
     def mark_reference(match, offset, groups):
-        mark(offset + match.start(), offset + match.end(), 'reference')
-        resolutions.append({'text': text[offset + match.start():offset + match.end()],
-                            'start': offset + match.start(), 'end': offset + match.end(),
-                            'objects': [{'type': g.type, 'count': g.count} for g in groups]})
+        mark_reference_span(offset + match.start(), offset + match.end(), groups)
 
     def read_landmarks(clause, relation, relation_end, found, first, offset):
         if first >= len(found):
@@ -526,7 +167,83 @@ def parse(text: str) -> dict[str, Any]:
                 targets.append(targets[0])
         return targets, consumed, []
 
+    def apply_edit(edit, clause, offset):
+        """Emit actions for one edit; return where in `clause` it stopped reading."""
+        end = edit["end"]
+        if edit["verb_span"]:
+            mark(offset + edit["verb_span"][0], offset + edit["verb_span"][1], "intent")
+        if edit["negated"]:
+            warnings.append("Skipped a negated edit; no objects were changed for that clause.")
+            return len(clause)
+        if not edit["kind"]:
+            warnings.append(f"Could not tell how to {edit['verb']} those objects; name a color, bigger/smaller, a direction or a place such as 'behind the lake'.")
+            return len(clause)
+        landmarks, landmark_groups = [], []
+        if edit.get("relation"):
+            relation, (relation_start, relation_end) = edit["relation"], edit["relation_span"]
+            mark(offset + relation_start, offset + relation_end, "spatial_relation")
+            found = list(MENTION_RE.finditer(clause, relation_end))
+            landmarks, consumed, landmark_groups = read_landmarks(clause, relation, relation_end, found, 0, offset)
+            if not landmarks or relation == "between" and len(landmarks) != 2:
+                warnings.append("A move needs a named landmark; use 'move the tree behind the lake' or 'between the house and the lake'.")
+                return len(clause)
+            end = found[consumed].end()
+        elif edit.get("value_span") and edit["value_span"] != edit["verb_span"]:
+            mark(offset + edit["value_span"][0], offset + edit["value_span"][1], "color" if edit["kind"] == "recolor" else "change")
+        # Resolve every subject before this clause introduces the edited objects as new referents.
+        subjects = []
+        for target in edit["targets"]:
+            span_start, span_end = target["span"]
+            if target["pronoun"]:
+                try:
+                    groups = references.resolve(target["pronoun"])
+                except UnresolvedReference as exc:
+                    warnings.append(str(exc))
+                    continue
+                mark_reference_span(offset + span_start, offset + span_end, groups)
+                subjects += [(g.type, g.count, [g.action_index], None) for g in groups]
+                continue
+            mark(offset + span_start, offset + span_end, "object")
+            if "number_span" in target:
+                mark(offset + target["number_span"][0], offset + target["number_span"][1], "quantity")
+            if "filter_span" in target:
+                mark(offset + target["filter_span"][0], offset + target["filter_span"][1], "color")
+            if target["count"] is None:
+                warnings.append(f"Skipped {target['type']}: specify an unambiguous whole-number quantity.")
+                continue
+            subjects.append((target["type"], target["count"], None, target["filter"]))
+        first = True
+        for kind, count, sources, color_filter in subjects:
+            if edit["kind"] == "recolor" and not recolorable(kind):
+                warnings.append(f"{kind.capitalize()}s have no color to change; houses, trees and flowers can be repainted.")
+                continue
+            action = {"action": edit["kind"], "type": kind, "count": count if count == "all" else min(count, SCENE_LIMIT)}
+            if edit["kind"] == "recolor":
+                action["color"] = edit["color"]
+            elif edit["kind"] == "resize":
+                action["scale"] = edit["scale"]
+            elif edit.get("relation"):
+                action.update(relation=edit["relation"], target=landmarks[0])
+                if edit["relation"] == "between":
+                    action["targets"] = landmarks
+            else:
+                action.update(direction=edit["direction"], distance=edit["distance"])
+            if color_filter:
+                action["filter_color"] = color_filter
+            binding = {}
+            if sources:
+                binding["edit_from"] = sources
+            if landmark_groups:
+                binding["target_from"] = [g.action_index for g in landmark_groups]
+            if binding:
+                bindings.append({"action_index": len(actions), **binding})
+            references.introduce(kind, count if count != "all" else SCENE_LIMIT, len(actions), new_clause=first)
+            first = False
+            actions.append(action)
+        return end
+
     inherited_intent, inherited_negated = "add", False
+    last_edit = None
     # One code point maps to one code point: original UI spans stay exact.
     for offset, clause, continuation in clauses(text.translate(MATCH_TRANSLATION)):
         introduced_in_clause = False
@@ -540,6 +257,21 @@ def parse(text: str) -> dict[str, Any]:
             inherited_negated = True
         if inherited_negated:
             warnings.append("Skipped a negated instruction; no objects were changed for that clause.")
+            continue
+        edit = read_edit(clause, last_edit if continuation else None)
+        if edit:
+            # "Make the trees purple and the houses red": coordinated edits share one verb.
+            while edit:
+                end = apply_edit(edit, clause, offset)
+                last_edit, clause, offset = edit, clause[end:], offset + end
+                edit = read_edit(clause, last_edit) if clause.strip(" .") else None
+            if clause.strip(" ."):
+                warnings.append(f"Ignored words after the edit: '{clause.strip()}'.")
+            inherited_intent = "edit"
+            continue
+        last_edit = None
+        if continuation and not operation and inherited_intent == "edit":
+            warnings.append("Could not read that part of the edit; name the object and its new color, size or place.")
             continue
         if operation:
             mark(offset + operation.start(), offset + operation.end(), "intent")
@@ -736,7 +468,7 @@ def parse(text: str) -> dict[str, Any]:
                 if variants is not None or NEGATION_RE.search(prefix):
                     attribute_error = 'A negated or already coordinated source cannot supply a counted partition; that instruction was skipped.'
                 elif declared_total and count != group_total:
-                    attribute_error = 'Partition counts do not match the declared total; that object instruction was skipped.'
+                    attribute_error = attribute_error or 'Partition counts do not match the declared total; that object instruction was skipped.'
                 if color or post_colors:
                     shared_color = post_colors[-1][0] if post_colors else color.group().lower()
                     if any(d['color'] not in {None, shared_color} for d in continued['descriptions']):
@@ -820,7 +552,11 @@ def parse(text: str) -> dict[str, Any]:
             elif intent == 'remove' and (variants is not None or continued['descriptions']):
                 warnings.append('Coordinated removal descriptions are not supported; specify an object type and quantity.')
             elif intent == "remove":
-                amount = min(count, MAX_PER_COMMAND) if number or attributes['has_quantity'] else 'all'
+                # "Remove the house" names one object; plurals, collectives
+                # ("the village") and every/each/all quantifiers mean all.
+                singular = (entity.group().lower() in SINGULAR_NOUNS
+                            and not re.search(r'\b(?:all|every|each)\b', prefix, re.I))
+                amount = min(count, MAX_PER_COMMAND) if number or attributes['has_quantity'] else 1 if singular else 'all'
                 actions.append({"action": "remove", "type": kind, "count": amount})
                 references.consume(kind, amount)
             else:
@@ -860,7 +596,7 @@ def parse(text: str) -> dict[str, Any]:
                         i += 1
 
         if not entities and not time and not re.search(r"\b(?:rain|snow|weather|raining|snowing|rainy|snowy|winter|storm|shower)\b", clause, re.I):
-            warnings.append("No supported object or setting found in one clause. Name an object explicitly; pronoun references are not resolved.")
+            warnings.append("No supported object or setting found in one clause. Name an object such as a house, tree or lake, or ask for night, rain or snow.")
 
     for ellipsis in re.finditer(r'\bones\b', text, re.I):
         if not any(h['role'] == 'object' and h['start'] == ellipsis.start() for h in highlights):

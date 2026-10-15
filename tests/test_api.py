@@ -29,3 +29,18 @@ def test_request_validation():
     for body in [{}, {"text": ""}, {"text": "x" * 1401}]:
         assert request("POST", "/api/parse", json=body).status_code == 422
     assert request("POST", "/api/parse", json={"text": "  "}).status_code == 400
+
+
+def test_unknown_api_route_is_not_served_the_frontend():
+    response = request("GET", "/api/does-not-exist")
+    assert response.status_code == 404
+    assert response.headers["content-type"].startswith("application/json")
+
+
+def test_parse_returns_a_labelled_dependency_baseline_and_corpus_scores():
+    result = request("POST", "/api/parse", json={"text": "Build two red houses next to the lake"}).json()
+    assert result["grounding"] == "rules"
+    if result["model"] == "spacy":
+        assert result["baseline"] == [{"action": "add", "type": "house", "count": 2, "color": "red", "relation": "near", "target": "lake"}]
+    scores = request("GET", "/api/extractors").json()
+    assert scores["commands"] >= 550 and set(scores) >= {"rules", "baseline", "agreement", "rules_first_run_exact"}
