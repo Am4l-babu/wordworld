@@ -218,3 +218,33 @@ test('counted partitions create no default object and passive roofs, totals and 
  await expect(count(page)).toContainText('37 total');
  await page.locator('.main-panel').screenshot({path:`../.runtime/partition-fixes-${test.info().project.name}.png`});
 });
+
+test('README command links prefill safely and colon/remainder/total commands reach the scene',async({page})=>{
+ const command='Build five houses: two blue and the remaining three red.';
+ await page.goto('/?command='+encodeURIComponent(command));
+ await expect(page.getByLabel('Describe your imagination')).toHaveValue(command);
+ await expect(count(page)).toContainText('22 total');
+ await submit(page,command);
+ await expect(count(page)).toContainText('27 total');
+ const houses=scene(page).getByRole('button',{name:'Select house',exact:true});
+ await expect(houses).toHaveCount(7);
+ await expect(houses.locator('path[fill="#74a6ea"]')).toHaveCount(2);
+ await expect(houses.locator('path[fill="#ed786f"]')).toHaveCount(4);
+ await expect(page.locator('.grounded-command .span-quantity')).toHaveText(['five','two','remaining','three']);
+ await submit(page,'Plant trees, a total of five: two green and the remaining three purple.');
+ await expect(count(page)).toContainText('32 total');
+ await expect(scene(page).getByRole('button',{name:'Select tree',exact:true})).toHaveCount(14);
+ await expect(page.getByLabel('Parser notices')).toHaveCount(0);
+ await page.locator('.main-panel').screenshot({path:`../.runtime/colon-fixes-${test.info().project.name}.png`});
+});
+
+test('shared links never execute markup or partially load oversized commands',async({page})=>{
+ const command='<img src=x onerror="window.sharedCommandExecuted=true">';
+ await page.goto('/?command='+encodeURIComponent(command));
+ await expect(page.getByLabel('Describe your imagination')).toHaveValue(command);
+ await expect(count(page)).toContainText('22 total');
+ expect(await page.evaluate(()=>window.sharedCommandExecuted)).toBeUndefined();
+ await page.goto('/?command='+encodeURIComponent('x'.repeat(1401)));
+ await expect(page.getByLabel('Describe your imagination')).toHaveValue('');
+ await expect(count(page)).toContainText('22 total');
+});

@@ -1,0 +1,933 @@
+{
+  "name": "WordWorld seventh fresh 50-command evaluation — 2026-10-15",
+  "method": "50 newly hand-authored commands and expected actions frozen before first prediction after colon/total-of/remainder fixes. Author saw implementation and prior errors; not independently human-labeled or randomly sampled. No tuning on round-seven predictions.",
+  "scope": "40 preassigned core cases and 10 broader probes. Core includes zero/negated groups, invalid/ambiguous quantities and inconsistent/undefined remainders. Explicit remaining counts must be final and sum to the declared total. Size rendering, geometry and cross-request reference are not scored.",
+  "gold_policy": "Exact ordered action dictionaries with aliases and the existing 16-per-action cap. Probe gold represents natural intended English even outside implemented syntax. Each request starts with empty reference state; counted groups feed bounded removals and two-object references.",
+  "parser_sha256_before": "4f0be484acd37ca613d92d8547a1dcc5d86d7de5dccc5fb09f9565fdee686fa5",
+  "pipeline_sha256_before": "ada5d384fb6d8a17421095a0481d41b2fc3f143d4670b67d5fa82dfc6f8758aa",
+  "source_files_sha256": {
+    "backend/main.py": "b2c67f4c9bea1394f5548cc081c83d90c899457bdab138dc9c70e3292ffb1c7f",
+    "backend/parser.py": "4f0be484acd37ca613d92d8547a1dcc5d86d7de5dccc5fb09f9565fdee686fa5",
+    "backend/references.py": "49248372c17ee1688d358bbbba0c0748272423d847fab6e35ca6844baa84c710"
+  },
+  "uniqueness": "No normalized exact overlaps with all seven earlier datasets, Python test string literals, browser smoke and capture literals, README/archive lines or decoded command links at freeze time. Similar grammar is intentional; semantic independence is not claimed.",
+  "development_inputs_sha256": {
+    "tests\\commands.json": "2b4c4eb37c64ea7996fc018f5bf9f67e8dbb86fa0b8512a8bdd04dca5200978b",
+    "tests\\heldout_commands.json": "d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224",
+    "tests\\fresh_commands_v2.json": "050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b",
+    "tests\\fresh_commands_v3.json": "bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927",
+    "tests\\fresh_commands_v4.json": "83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd",
+    "tests\\fresh_commands_v5.json": "e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e",
+    "tests\\fresh_commands_v6.json": "b4c823eafa84322f3c164fcaa0080bf5ed4f94f61d374c8dcd2145c74fed3703",
+    "tests\\test_accuracy_fixes.py": "c54e8e5d2327e40308d21773c3f330da75471177de0d46d19effbaa28d3e705a",
+    "tests\\test_api.py": "5c2d7840dcfd5e421d5b4e935bf96763ea6f383e29bedcf3fd5916f736e1ca98",
+    "tests\\test_colon_fixes.py": "2dbced6f482ebc8433b288f70ab8474d2c3fa9820819ee7335f56eb1e2833379",
+    "tests\\test_ellipsis_fixes.py": "ccc344840d2aa1f427ee49350d0225e5f1c7532982f572ef44ecde67a068bc4a",
+    "tests\\test_parser.py": "2b0e97f268bd131c5fbf7cfeaac08c84c541e4c79eb6b343aef2291387acd82e",
+    "tests\\test_partition_fixes.py": "84ff629afb806763135cef14371fc5cdce5a3525b6dddd9a6194d8fbae71f16e",
+    "tests\\test_postnoun_fixes.py": "bcb665be4f8a7c7af223b3a4a7fc9be28ef173bb43678f7f221f0c519fc97cf6",
+    "tests\\test_reference_fixes.py": "72e12f3e748bed6135f4dc5ca188921e427e01409521b385d098ca20c9d60bad",
+    "tests\\test_regressions.py": "dd20abe95284b09c1211d85a7963e23e65b00dfc2195eeaa889608c63651ffc5",
+    "frontend\\tests\\browser\\smoke.spec.js": "67700d0c18367427d78e661cb80936914ef93078becb5ab13433684a91497a34",
+    "frontend\\scripts\\capture-readme.mjs": "052d732e8be3a11c151dcd835ae85e818f6f6573fd18ef4d1ebef212e8b8fe1e",
+    "README.md": "6f07573800fc287a95bb4efdc79ff55e8726aa1f6f6accb6194cba9511a777dc",
+    "docs\\DEVELOPMENT.md": "517fe1d259bb9c58a8e59b2ff81d57e81b8abea4e4f2357dd2f6db4e44574e0b"
+  },
+  "cases": [
+    {
+      "id": "M01",
+      "text": "Create seven cottages: three orange and four white.",
+      "category": "colon_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "orange"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M02",
+      "text": "Plant flowers: two purple, three pink, and one yellow.",
+      "category": "colon_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M03",
+      "text": "Draw four trees: one with blue leaves and three with green leaves.",
+      "category": "colon_parts",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M04",
+      "text": "Build six homes: two whose roofs are pink and four whose roofs are yellow.",
+      "category": "colon_relatives",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M05",
+      "text": "Place five blue flowers: two small ones and three large ones.",
+      "category": "shared_color",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M06",
+      "text": "Build four houses with white roofs: one small one and three large ones.",
+      "category": "post_color_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M07",
+      "text": "Plant three trees: zero yellow and three purple.",
+      "category": "partition_zero",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M08",
+      "text": "Place trees: not two white and four green.",
+      "category": "partition_negation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 4,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M09",
+      "text": "Draw three flowers: one orange and two pink beside the pond.",
+      "category": "colon_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "orange",
+          "relation": "near",
+          "target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M10",
+      "text": "To the left of the castle, build four houses: one white and three yellow.",
+      "category": "fronted_colon",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "white",
+          "relation": "left",
+          "target": "castle"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "yellow",
+          "relation": "left",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M11",
+      "text": "Create trees, a total of eight.",
+      "category": "total_of",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 8,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M12",
+      "text": "Place bridges, a total of exactly two across the creek.",
+      "category": "total_of_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "bridge",
+          "count": 2,
+          "color": null,
+          "relation": "across",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M13",
+      "text": "Build cottages, the total of three.",
+      "category": "total_of",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M14",
+      "text": "Draw rocks: a total of a dozen.",
+      "category": "total_of",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 12,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M15",
+      "text": "Add mountains, a total of half a dozen behind the tower.",
+      "category": "total_of_spatial",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "mountain",
+          "count": 6,
+          "color": null,
+          "relation": "above",
+          "target": "tower"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M16",
+      "text": "Create flowers, a total of two pairs.",
+      "category": "total_of",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M17",
+      "text": "Place roads, a total of nineteen.",
+      "category": "total_cap",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "road",
+          "count": 16,
+          "color": null
+        }
+      ],
+      "label_note": "Existing 16-per-action cap."
+    },
+    {
+      "id": "M18",
+      "text": "Draw towers, a total of zero.",
+      "category": "total_zero",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M19",
+      "text": "Place castles, a total of -2.",
+      "category": "invalid_total",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M20",
+      "text": "Build homes, a total of 2.5.",
+      "category": "invalid_total",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M21",
+      "text": "Plant flowers, a total of four or seven.",
+      "category": "ambiguous_total",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M22",
+      "text": "Add rocks, never a total of six.",
+      "category": "negated_total",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M23",
+      "text": "Create flowers, a total of six: two yellow and four orange.",
+      "category": "total_colon",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M24",
+      "text": "Build houses, a total of seven: four red and the remaining three white.",
+      "category": "total_remainder",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M25",
+      "text": "Plant eight trees, three purple and the remaining five green.",
+      "category": "comma_remainder",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 5,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M26",
+      "text": "Create six flowers: one red, two yellow, and the remaining three pink.",
+      "category": "multi_remainder",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M27",
+      "text": "Build four cottages: one with a green roof and remaining three with orange roofs.",
+      "category": "remainder_parts",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "green"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M28",
+      "text": "Plant three blue trees: one small one and the remaining two large ones.",
+      "category": "remainder_shared",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M29",
+      "text": "Add two white flowers: two small ones and remaining zero large ones.",
+      "category": "remainder_zero",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M30",
+      "text": "Near the river, place five houses: one purple and the remaining four blue.",
+      "category": "fronted_remainder",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "purple",
+          "relation": "near",
+          "target": "river"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 4,
+          "color": "blue",
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M31",
+      "text": "Build houses, a total of two: one red and the remaining one pink; put a tower between them.",
+      "category": "remainder_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tower",
+          "count": 1,
+          "color": null,
+          "relation": "between",
+          "target": "house",
+          "targets": [
+            "house",
+            "house"
+          ]
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M32",
+      "text": "Create four trees: one white and remaining three blue; remove two of them; remove them.",
+      "category": "remainder_removal",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "blue"
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 2
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 2
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M33",
+      "text": "Clear the world; place flowers, a total of three: one yellow and the remaining two purple; remove them.",
+      "category": "reset_reference",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "reset"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "purple"
+        },
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": 3
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M34",
+      "text": "Keep the castle; draw rocks, a total of four; make it snow.",
+      "category": "preservation_settings",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "rock",
+          "count": 4,
+          "color": null
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "snow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M35",
+      "text": "Do not build six cottages: two red and the remaining four blue; plant a flower.",
+      "category": "negated_partition",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M36",
+      "text": "Build seven houses: two pink and the remaining four white.",
+      "category": "mismatch_remainder",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M37",
+      "text": "Plant flowers: two yellow and the remaining three green.",
+      "category": "undefined_remainder",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M38",
+      "text": "Create five trees: remaining two green and three orange.",
+      "category": "nonfinal_remainder",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M39",
+      "text": "Build four houses: one red and remaining one blue and remaining two green.",
+      "category": "duplicate_remainder",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M40",
+      "text": "Place three houses: four large ones.",
+      "category": "mismatch_ones",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "M41",
+      "text": "Plant seven trees: two purple and the rest green.",
+      "category": "inferred_remainder",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "purple"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 5,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M42",
+      "text": "Build houses with a total of five roofs painted blue.",
+      "category": "total_preposition",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 5,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M43",
+      "text": "Place six flowers: three each of pink and white.",
+      "category": "distributive_quantity",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M44",
+      "text": "Create four cottages: one red; the remaining three blue.",
+      "category": "semicolon_partition",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M45",
+      "text": "Add a cottage whose roof has recently been coloured orange.",
+      "category": "passive_adverb",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "orange"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M46",
+      "text": "Plant four trees: one green and three blue, all beside the river.",
+      "category": "comma_shared_tail",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": "green",
+          "relation": "near",
+          "target": "river"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "blue",
+          "relation": "near",
+          "target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M47",
+      "text": "Build cottages, two yellow and one pink; add another of the latter.",
+      "category": "latter_reference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "yellow"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 1,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M48",
+      "text": "Create three rows of two purple trees.",
+      "category": "group_multiplication",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 6,
+          "color": "purple"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M49",
+      "text": "Keep the lake unchanged while planting three pink flowers.",
+      "category": "subordinate_creation",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": "pink"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "M50",
+      "text": "Bring back daylight and turn off the rain.",
+      "category": "settings_paraphrase",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "day"
+        },
+        {
+          "action": "setting",
+          "key": "weather",
+          "value": "clear"
+        }
+      ],
+      "label_note": ""
+    }
+  ]
+}

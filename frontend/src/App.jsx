@@ -8,6 +8,7 @@ import {TYPES,TYPE_EMOJI,EXAMPLES,initialItems,INITIAL_SETTINGS,snapshot,makeIte
 const STORAGE='wordworld-scene-v1';
 const intro={text:'Welcome to your little corner of imagination. Tell me what to create!',kind:'welcome'};
 function getSaved(){try{let obj=JSON.parse(localStorage.getItem(STORAGE));if(Array.isArray(obj.items)&&obj.settings)return obj}catch{}return {items:initialItems(),settings:{...INITIAL_SETTINGS}}}
+function getSharedCommand(){const command=new URLSearchParams(window.location.search).get('command')||'';return command.length<=1400?command.trim():''}
 const typeLabel=(t)=>t.replaceAll('_',' ');
 const verbs=['Build','Place','Add','Create','Plant','Remove','Draw','Make'];
 function IntroIllustration(){return <div className="greeting-icon"><WandSparkles size={23} strokeWidth={2.5}/></div>}
@@ -15,7 +16,7 @@ function App(){
  const [saved] = useState(getSaved);
  const [items,setItems]=useState(saved.items),[settings,setSettings]=useState(saved.settings);
  const [selected,setSelected]=useState(null),[zoom,setZoom]=useState(1),[showGuides,setShowGuides]=useState(true);
- const [prompt,setPrompt]=useState(''),[busy,setBusy]=useState(false);
+ const [prompt,setPrompt]=useState(getSharedCommand),[busy,setBusy]=useState(false);
  const [messages,setMessages]=useState([intro]),[parsed,setParsed]=useState(null);
  const [history,setHistory]=useState([]),[future,setFuture]=useState([]);
  const [activeTab,setActiveTab]=useState('objects'),[analysisOpen,setAnalysisOpen]=useState(true);
