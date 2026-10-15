@@ -68,8 +68,10 @@ REMOVE_PATTERN = r"remove|delete|erase|destroy|cut down|clear away|get rid of"
 RESET_PATTERN = r"reset|clear (?:everything|the world|the map)|start over|new world"
 PRESERVE_PATTERN = r"keep|leave|preserve|retain|protect|avoid"
 OPERATION_RE = re.compile(rf"\b(?P<remove>{REMOVE_PATTERN})\b|\b(?P<reset>{RESET_PATTERN})\b|\b(?P<preserve>{PRESERVE_PATTERN})\b|\b(?P<add>{ADD_PATTERN})\b", re.I)
+WEATHER_SWITCH_PATTERN = r'(?:turn|switch)\s+(?:(?:the\s+)?(?:rain|snow)\s+(?:on|off)|(?:on|off)\s+(?:the\s+)?(?:rain|snow))'
+WEATHER_SWITCH_RE = re.compile(r'\b(?:turn|switch)\s+(?:(?:the\s+)?(?P<before>rain|snow)\s+(?P<after_state>on|off)|(?P<state>on|off)\s+(?:the\s+)?(?P<after>rain|snow))\b', re.I)
 CLAUSE_BREAK_RE = re.compile(
-    rf"[;!?,]+|(?<!\d)\.|\.(?!\d)|\b(?:and then|then)\b|\b(?:and|but)\s+(?=(?:(?:do not|don't|never)\s+)?(?:{ADD_PATTERN}|{REMOVE_PATTERN}|{RESET_PATTERN}|{PRESERVE_PATTERN})\b)", re.I
+    rf"[;!?,]+|(?<!\d)\.|\.(?!\d)|\b(?:and then|then)\b|\b(?:and|but)\s+(?=(?:(?:do not|don't|never)\s+)?(?:{ADD_PATTERN}|{REMOVE_PATTERN}|{RESET_PATTERN}|{PRESERVE_PATTERN}|{WEATHER_SWITCH_PATTERN})\b)", re.I
 )
 NEGATION_RE = re.compile(r"\b(?:no|not|don't|do not|never|without|can't|cannot|shouldn't|mustn't|won't|wouldn't|couldn't)\b", re.I)
 MATCH_TRANSLATION = str.maketrans({'\u2018': "'", '\u2019': "'", '\u02bc': "'", '\u2212': '-', '\u2010': '-', '\u2011': '-', '\u2013': '-'})
@@ -104,6 +106,14 @@ def clauses(text: str):
                 continue
         nouns = list(ENTITY_RE.finditer(prefix))
         if separator.group().startswith(',') and nouns:
+            # Commas inside one distributive color list are not new clauses.
+            noun = nouns[-1]
+            kind = WORD_TO_TYPE[noun.group().lower()]
+            source_attributes = postnoun_attributes(text[noun.end():], kind)
+            group_start = noun.end() + source_attributes['end']
+            source_groups = continued_descriptions(text[group_start:], kind)
+            if group_start + source_groups['end'] > separator.start():
+                continue
             # Appositive attributes belong to the preceding noun, including
             # the 'them' in a quantity, rather than a new command/reference.
             attributes = postnoun_attributes(text[separator.start():], WORD_TO_TYPE[nouns[-1].group().lower()])
@@ -179,6 +189,12 @@ def leading_relation(text: str):
 
 def coordinated_descriptions(prefix: str, entity: str):
     """Expand separately counted descriptions, preserving numeric conjunctions."""
+    each = distributive_description(prefix, WORD_TO_TYPE[entity.lower()])
+    if each:
+        if prefix[each['end']:].strip():
+            raise ValueError('An each-color list must stay within one noun phrase; that instruction was skipped.')
+        return [{'count':each['count'], 'color':color.group().lower(), 'number':each['number'],
+                 'color_match':color, 'offset':0, 'negated':each['negated']} for color in each['colors']]
     numbers = list(NUMBER_RE.finditer(prefix))
     separators = [m for m in re.finditer(r',|\band\b', prefix, re.I)
                   if not any(number.start() <= m.start() < number.end() for number in numbers)]
@@ -205,12 +221,13 @@ def coordinated_descriptions(prefix: str, entity: str):
     return variants if len(variants) > 1 else None
 
 
+PASSIVE_ADVERBS = r'(?:(?:already|recently|just|newly|previously|freshly)\s+){0,2}'
 POST_COLOR_RE = re.compile(
     r'\s*,?\s*(?:'
     r'(?:(?:that|which)\s+)?(?:is|are)\s+(?P<predicate>' + '|'.join(COLORS) + r')\b|'
     r'(?:with|having|(?:that|which)\s+(?:has|have))\s+(?:(?:a|an|the)\s+)?(?P<before>' + '|'.join(COLORS) + r')\s+(?P<part_before>roofs?|leaves|foliage|petals?)\b|'
     r'(?:whose|with|having|(?:that|which)\s+(?:has|have))\s+(?:(?:a|an|the)\s+)?(?P<part_after>roofs?|leaves|foliage|petals?)\s+'
-    r'(?:(?:(?:that|which)\s+)?(?:is|are)\s+(?:(?:painted|colou?red)\s+)?|(?:(?:that|which)\s+)?(?:has|have|had)\s+been\s+(?:painted|colou?red)\s+|(?:painted|colou?red)\s+)'
+    r'(?:(?:(?:that|which)\s+)?(?:is|are)\s+' + PASSIVE_ADVERBS + r'(?:(?:painted|colou?red)\s+)?|(?:(?:that|which)\s+)?(?:has|have|had)\s+' + PASSIVE_ADVERBS + r'been\s+' + PASSIVE_ADVERBS + r'(?:painted|colou?red)\s+|(?:painted|colou?red)\s+)'
     r'(?P<after>' + '|'.join(COLORS) + r')\b|'
     r'(?:in\s+)?(?P<bare>' + '|'.join(COLORS) + r')\b)', re.I)
 COLOR_PARTS = {'house': {'roof', 'roofs'}, 'tree': {'leaves', 'foliage'}, 'flower': {'petal', 'petals'}}
@@ -290,6 +307,28 @@ GROUP_SIZES = {'small','large','little','tiny','cozy','big','tall','short'}
 GROUP_MODIFIER_RE = re.compile(r'\s+(' + '|'.join(sorted(GROUP_SIZES | set(COLORS))) + r')\b', re.I)
 
 
+def distributive_description(fragment: str, kind: str):
+    """A single explicit quantity distributes over an adjacent color list."""
+    prefix = re.match(r'\s*(?:(?:not|no|never|without)\s+)?(?:exactly\s+)?', fragment, re.I)
+    number = NUMBER_RE.match(fragment, prefix.end())
+    if number is None and re.match(r'(?:\w+\s+)?each\b', fragment[prefix.end():], re.I):
+        raise ValueError('Each needs an explicit whole-number quantity; that instruction was skipped.')
+    each = re.match(r'\s+each\b\s*(?:of\s+)?', fragment[number.end():], re.I) if number else None
+    if not each:
+        return None
+    start = number.end() + each.end()
+    color_word = r'(?:' + '|'.join(COLORS) + r')\b'
+    listing = re.match(color_word + r'(?:\s*(?:,\s*(?:and\s+)?|and\s+)' + color_word + r')+', fragment[start:], re.I)
+    count, _ = quantity(fragment[:number.end()], kind)
+    if not listing or count is None or kind not in COLOR_PARTS:
+        raise ValueError('Each needs a valid whole-number count and an explicit supported color list; that instruction was skipped.')
+    end = start + listing.end()
+    if re.match(r'\s*(?:or|to)\b|\s*(?:,\s*|and\s+)(?:black|brown|gray|grey|cyan)\b', fragment[end:], re.I):
+        raise ValueError('An each-color list is ambiguous or unsupported; that instruction was skipped.')
+    return {'count':count, 'number':number, 'colors':list(COLOR_RE.finditer(fragment,start,end)),
+            'end':end, 'negated':bool(NEGATION_RE.search(fragment[:number.start()]))}
+
+
 def continued_descriptions(suffix: str, kind: str):
     """Adjacent count groups can reuse a noun through ones or a relative clause.
 
@@ -301,10 +340,26 @@ def continued_descriptions(suffix: str, kind: str):
               'first_comma': False, 'first_colon': False, 'first_form': None}
     while connector := re.match(r'\s*(?:[,:]\s*(?:and\s+)?|and\s+)', suffix[result['end']:], re.I):
         start = result['end'] + connector.end()
+        try:
+            each = distributive_description(suffix[start:], kind)
+        except ValueError as exc:
+            result.update(end=start, error=str(exc))
+            break
+        if each:
+            if not result['descriptions']:
+                result.update(first_comma=connector.group().lstrip().startswith((',', ':')),
+                              first_colon=connector.group().lstrip().startswith(':'), first_form='distributive')
+            result['descriptions'] += [{'count':each['count'], 'color':c.group().lower(),
+                                        'negated':each['negated'], 'remainder':False} for c in each['colors']]
+            result['highlights'].append((start + each['number'].start(), start + each['number'].end(), 'quantity'))
+            result['highlights'] += [(start+c.start(),start+c.end(),'color') for c in each['colors']]
+            result['end'] = start + each['end']
+            continue
+        inferred = re.match(r'(?:(?:not|no|never|without)\s+)?(?:the\s+(?:rest|remainder)|(?:the\s+)?remaining\s+ones?)\b', suffix[start:], re.I)
         qualifier = re.match(r'(?:(?:not|no|never|without)\s+)?(?:(?:the\s+)?remaining\s+)?(?:exactly\s+)?', suffix[start:], re.I)
         number_start = start + qualifier.end()
-        number = NUMBER_RE.match(suffix, number_start)
-        if number is None:
+        number = NUMBER_RE.match(suffix, number_start) if not inferred else None
+        if number is None and not inferred:
             # Explicit inherited wording without a count is not a new noun.
             unfinished = re.match(
                 r'(?:large|small|big|tiny|little)\s+ones\b|(?:that|which|whose)\b|(?:'
@@ -312,9 +367,9 @@ def continued_descriptions(suffix: str, kind: str):
             if unfinished:
                 result.update(end=start + unfinished.end(), error='An inherited noun group needs an explicit quantity; that object instruction was skipped.')
             break
-        cursor = number.end()
+        cursor = start + inferred.end() if inferred else number.end()
         of = re.match(r'\s+of\b', suffix[cursor:], re.I)
-        if of and (number.group('group') or number.group('half')):
+        if of and number and (number.group('group') or number.group('half')):
             cursor += of.end()
         colors = []
         while modifier := GROUP_MODIFIER_RE.match(suffix, cursor):
@@ -328,7 +383,7 @@ def continued_descriptions(suffix: str, kind: str):
         attribute_start = cursor + ellipsis.end() if ellipsis else cursor
         attributes = postnoun_attributes(suffix[attribute_start:], kind)
         end = attribute_start + attributes['end']
-        if ellipsis:
+        if ellipsis or inferred:
             form = 'ones'
         elif attributes['colors']:
             form = 'relative' if re.match(r'\s*(?:that|which|whose)\b', suffix[cursor:], re.I) else 'part'
@@ -343,8 +398,8 @@ def continued_descriptions(suffix: str, kind: str):
                 stop = cursor + (marker or invalid).end() if marker or invalid else cursor
                 result.update(end=stop, error='An inherited group needs an unambiguous count and a supported description; that object instruction was skipped.')
             break
-        count, _ = quantity(suffix[start:number.end()], kind)
-        if count is None or len(colors) > 1:
+        count, _ = quantity(suffix[start:number.end()], kind) if number else (None, None)
+        if count is None and not inferred or len(colors) > 1:
             result.update(end=end, error='An inherited noun group needs explicit, unambiguous counts and colors; that object instruction was skipped.')
             break
         color = colors[0][0] if colors else None
@@ -356,8 +411,8 @@ def continued_descriptions(suffix: str, kind: str):
             break
         if attributes['colors']:
             color = attributes['colors'][-1][0]
-        negated = bool(NEGATION_RE.search(suffix[start:number.start()]))
-        remainder = re.search(r'\bremaining\b', suffix[start:number.start()], re.I)
+        negated = bool(NEGATION_RE.search(suffix[start:number.start() if number else cursor]))
+        remainder = inferred or re.search(r'\bremaining\b', suffix[start:number.start()], re.I)
         if not result['descriptions']:
             result['first_comma'] = connector.group().lstrip().startswith((',', ':'))
             result['first_colon'] = connector.group().lstrip().startswith(':')
@@ -365,7 +420,8 @@ def continued_descriptions(suffix: str, kind: str):
         result['descriptions'].append({'count':count, 'color':color, 'negated':negated, 'remainder':bool(remainder)})
         if remainder:
             result['highlights'].append((start + remainder.start(), start + remainder.end(), 'quantity'))
-        result['highlights'].append((number.start(), number.end(), 'quantity'))
+        if number:
+            result['highlights'].append((number.start(), number.end(), 'quantity'))
         result['highlights'] += [(a, b, 'color') for _, a, b in colors]
         result['highlights'] += [(attribute_start + a, attribute_start + b, 'color') for _, a, b in attributes['colors']]
         if ellipsis:
@@ -387,7 +443,9 @@ def parse(text: str) -> dict[str, Any]:
     resolutions, bindings = [], []
 
     def mark(start: int, end: int, role: str):
-        highlights.append({"text": text[start:end], "start": start, "end": end, "role": role})
+        highlight = {"text": text[start:end], "start": start, "end": end, "role": role}
+        if highlight not in highlights:
+            highlights.append(highlight)
 
     def mark_reference(match, offset, groups):
         mark(offset + match.start(), offset + match.end(), 'reference')
@@ -467,12 +525,21 @@ def parse(text: str) -> dict[str, Any]:
             continue
 
         # Choose clear-weather phrases before their embedded rain/snow words.
-        time = re.search(r"\b(night|nighttime|moonlight|after dark|midnight|dark sky|day|daytime|sunny|sunshine|morning|sunlight)\b", clause, re.I)
+        time = re.search(r"\b(night|nighttime|moonlight|after dark|midnight|dark sky|day|daytime|daylight|sunny|sunshine|morning|sunlight)\b", clause, re.I)
         if time and not NEGATION_RE.search(clause[:time.start()]):
             value = "night" if time.group().lower() in {"night", "nighttime", "moonlight", "after dark", "midnight", "dark sky"} else "day"
             actions.append({"action": "setting", "key": "time", "value": value})
             mark(offset + time.start(), offset + time.end(), "setting")
-        for value, pattern in [
+        weather_switch = WEATHER_SWITCH_RE.search(clause)
+        if weather_switch:
+            if NEGATION_RE.search(clause[:weather_switch.start()]):
+                warnings.append('Skipped a negated weather switch; weather was unchanged.')
+            else:
+                state = (weather_switch.group('state') or weather_switch.group('after_state')).lower()
+                value = 'clear' if state == 'off' else (weather_switch.group('before') or weather_switch.group('after')).lower()
+                actions.append({'action':'setting', 'key':'weather', 'value':value})
+                mark(offset+weather_switch.start(),offset+weather_switch.end(),'setting')
+        for value, pattern in [] if weather_switch else [
             ("clear", r"\b(?:clear weather|stop (?:raining|snowing)|stop the (?:rain|snow)|(?:no|not|without) (?:rain|rainy|raining|snow|snowy|snowing))\b"),
             ("rain", r"\b(?:rain|rainy|raining|shower|storm)\b"),
             ("snow", r"\b(?:snow|snowy|snowing|winter)\b"),
@@ -581,14 +648,21 @@ def parse(text: str) -> dict[str, Any]:
             # Appositive descriptions replace a bare noun's implicit default.
             # With an explicit total, relative/part/predicate descriptions
             # partition that total. Count agreement also disambiguates ones.
-            group_total = sum(d['count'] for d in continued['descriptions'] if not d['negated'])
+            group_total = sum(d['count'] for d in continued['descriptions'] if not d['negated'] and d['count'] is not None)
             declared_total = bool(attributes['has_quantity'] or number and (
                 not number.group('article') or quantity('', entity.group())[0] == 1))
             partition = bool(continued['descriptions'] and continued['first_comma'] and (not post_colors or continued['first_colon']) and (
-                not declared_total or continued['first_form'] != 'ones' or group_total == count or continued['first_colon']))
+                not declared_total or continued['first_form'] != 'ones' or group_total == count or continued['first_colon'] or any(d.get('remainder') for d in continued['descriptions'])))
             remainders = [j for j,d in enumerate(continued['descriptions']) if d.get('remainder')]
             if remainders and (not partition or not declared_total or remainders != [len(continued['descriptions'])-1]):
                 attribute_error = 'A remaining group needs a declared total and must be the final partition group; that instruction was skipped.'
+            inferred_groups = [d for d in continued['descriptions'] if d['count'] is None]
+            if inferred_groups:
+                if attribute_error or count is None or count < group_total or inferred_groups[0]['negated']:
+                    attribute_error = attribute_error or 'Cannot infer a non-negative remainder from that total; that instruction was skipped.'
+                else:
+                    inferred_groups[0]['count'] = count - group_total
+                    group_total = count
             if partition:
                 if variants is not None or NEGATION_RE.search(prefix):
                     attribute_error = 'A negated or already coordinated source cannot supply a counted partition; that instruction was skipped.'
