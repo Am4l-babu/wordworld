@@ -5,8 +5,9 @@ from pathlib import Path
 
 from tests.evaluate_heldout import pipeline_fingerprint
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
+ROOT = Path(__file__).resolve().parents[2]
+HERE = ROOT/'evaluation'/'results'
+REPORTS = ROOT/'evaluation'/'reports'
 first_before = json.loads((HERE/'heldout_retest.json').read_text(encoding='utf-8'))
 second_before = json.loads((HERE/'fresh_results_v2.json').read_text(encoding='utf-8'))
 first = json.loads((HERE/'heldout_retest_v3.json').read_text(encoding='utf-8'))
@@ -85,14 +86,14 @@ for c in fresh['cases']:
 lines += [
     '## Reproduce', '', 'From the project root:', '', '```powershell',
     '.\\.venv\\Scripts\\python.exe -m pytest -q tests',
-    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest_v3.json',
-    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/fresh_v2_retest_v3.json',
-    f".\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 {fresh['dataset_sha256']} --output evaluation/fresh_results_v3.json",
-    '.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.write_reference_report', '```', '',
+    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest_v3.json',
+    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/results/fresh_v2_retest_v3.json',
+    f".\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 {fresh['dataset_sha256']} --output evaluation/results/fresh_results_v3.json",
+    '.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.scripts.write_reference_report', '```', '',
     'From `frontend/`, with FastAPI and Vite running: `npm test`, `npm run test:e2e`, `npm run build`.', '',
     '- Third frozen labels: `tests/fresh_commands_v3.json`.',
-    '- Third predictions, notices and per-case correctness: `evaluation/fresh_results_v3.json`.',
-    '- Earlier-set retests: `evaluation/heldout_retest_v3.json`, `evaluation/fresh_v2_retest_v3.json`.',
+    '- Third predictions, notices and per-case correctness: `evaluation/results/fresh_results_v3.json`.',
+    '- Earlier-set retests: `evaluation/results/heldout_retest_v3.json`, `evaluation/results/fresh_v2_retest_v3.json`.',
     '- Main regressions: `tests/test_reference_fixes.py`, `frontend/tests/world.test.js`, `frontend/tests/browser/smoke.spec.js`.', '',
     f"Parser SHA256: `{fresh['parser_sha256_before']}`.",
     f"Backend pipeline SHA256: `{fresh['pipeline_sha256_before']}`.",
@@ -100,6 +101,6 @@ lines += [
     'All backend Python source hashes, including the new reference module, were captured before and after each evaluation. The evaluator refuses changed labels/pipeline for a fresh run and protects historical baseline results. Once third-set errors guide future development, it becomes a regression/comparison set and a new sample is needed for another fresh-command claim.', '',
 ]
 assert sum(not c['exact_match'] and not c['warnings'] for c in fresh['cases']) == 4
-out=HERE/'reference_fixes_report.md'
+out=REPORTS/'reference_fixes_report.md'
 out.write_text('\n'.join(lines),encoding='utf-8')
 print(out)

@@ -405,17 +405,17 @@ From the project root:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest_v3.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/fresh_v2_retest_v3.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --output evaluation/fresh_results_v3.json
-.\.venv\Scripts\python.exe -X utf8 -m evaluation.write_reference_report
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest_v3.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/results/fresh_v2_retest_v3.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --output evaluation/results/fresh_results_v3.json
+.\.venv\Scripts\python.exe -X utf8 -m evaluation.scripts.write_reference_report
 ```
 
 From `frontend/`, with FastAPI and Vite running: `npm test`, `npm run test:e2e`, `npm run build`.
 
 - Third frozen labels: `tests/fresh_commands_v3.json`.
-- Third predictions, notices and per-case correctness: `evaluation/fresh_results_v3.json`.
-- Earlier-set retests: `evaluation/heldout_retest_v3.json`, `evaluation/fresh_v2_retest_v3.json`.
+- Third predictions, notices and per-case correctness: `evaluation/results/fresh_results_v3.json`.
+- Earlier-set retests: `evaluation/results/heldout_retest_v3.json`, `evaluation/results/fresh_v2_retest_v3.json`.
 - Main regressions: `tests/test_reference_fixes.py`, `frontend/tests/world.test.js`, `frontend/tests/browser/smoke.spec.js`.
 
 Parser SHA256: `ebd28a8e790143913c5d52db10af0de1b02e5db3dd42841c48f83e5f9dee7ec0`.

@@ -5,8 +5,9 @@ from pathlib import Path
 
 from tests.evaluate_heldout import pipeline_fingerprint
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
+ROOT = Path(__file__).resolve().parents[2]
+HERE = ROOT/'evaluation'/'results'
+REPORTS = ROOT/'evaluation'/'reports'
 read = lambda name: json.loads((HERE/name).read_text(encoding='utf-8'))
 before = [read(n) for n in ['heldout_retest_v4.json','fresh_v2_retest_v4.json','fresh_v3_retest_v4.json','fresh_results_v4.json']]
 current = [read(n) for n in ['heldout_retest_v5.json','fresh_v2_retest_v5.json','fresh_v3_retest_v5.json','fresh_v4_retest_v5.json']]
@@ -94,19 +95,19 @@ for title, report in [('Fresh fifth-set failures',fresh)] + [(f'Saved set {i} re
 lines += ['## Reproduce', '', 'From the project root:', '', '```powershell',
     '.\\.venv\\Scripts\\python.exe -m pytest -q tests',
     '.\\.venv\\Scripts\\python.exe -m tests.evaluate',
-    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest_v5.json']
+    '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest_v5.json']
 for i, report in list(enumerate(current,1))[1:] + [(5,fresh)]:
-    output = f'evaluation/fresh_v{i}_retest_v5.json' if i < 5 else 'evaluation/fresh_results_v5.json'
+    output = f'evaluation/fresh_v{i}_retest_v5.json' if i < 5 else 'evaluation/results/fresh_results_v5.json'
     lines.append(f'.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v{i}.json --dataset-sha256 {report["dataset_sha256"]} '+('--allow-parser-change ' if i < 5 else '')+f'--output {output}')
-lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.write_ellipsis_report', '```', '',
+lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.scripts.write_ellipsis_report', '```', '',
     'From `frontend/`, with FastAPI and Vite running: `npm test`, `npm run test:e2e`, `npm run build`.', '',
-    'Frozen labels: `tests/fresh_commands_v5.json`. Predictions/notices/metrics: `evaluation/fresh_results_v5.json`. Regressions: `tests/test_ellipsis_fixes.py`, `frontend/tests/browser/smoke.spec.js`.', '',
+    'Frozen labels: `tests/fresh_commands_v5.json`. Predictions/notices/metrics: `evaluation/results/fresh_results_v5.json`. Regressions: `tests/test_ellipsis_fixes.py`, `frontend/tests/browser/smoke.spec.js`.', '',
     f"Parser SHA256: `{fresh['parser_sha256_before']}`.",
     f"Backend pipeline SHA256: `{pipeline}`.",
     f"Fifth dataset SHA256: `{fresh['dataset_sha256']}`.", '',
     'All five evaluations verified the same backend source fingerprint before and after prediction. Frozen input hashes and gold labels are preserved. After these new errors inform future development, reruns need separate comparison outputs and a newly frozen sample for another fresh-command claim.', '',
 ]
 assert sum(not c['exact_match'] and not c['warnings'] for c in fresh['cases']) == 4
-out = HERE/'ellipsis_fixes_report.md'
+out = REPORTS/'ellipsis_fixes_report.md'
 out.write_text('\n'.join(lines),encoding='utf-8')
 print(out)

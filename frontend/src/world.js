@@ -1,4 +1,9 @@
 export const TYPES = ['house','tree','lake','river','bridge','road','flower','mountain','tower','castle','rock'];
+export const PALETTE={red:'#ed786f',blue:'#74a6ea',yellow:'#f5bc59',pink:'#eaa2bc',purple:'#a78bd8',green:'#80bea1',orange:'#f4a565',white:'#f7efe5'};
+// Sprites whose fill reflects a color: house roofs, tree leaves and flower petals.
+export const COLOR_PART={house:'Roof color',tree:'Leaf color',flower:'Petal color'};
+export const MAX_ITEMS=120;
+export const RELATION_LABEL={above:'behind',below:'in front of',left:'left of',right:'right of',near:'near',between:'between',inside:'inside',across:'across'};
 export const TYPE_EMOJI = {house:'🏡',tree:'🌳',lake:'💧',river:'🌊',bridge:'🌉',road:'〰️',flower:'🌷',mountain:'🏔️',tower:'🗼',castle:'🏰',rock:'🪨'};
 export const EXAMPLES = [
   'Build three little houses beside the lake',
@@ -36,6 +41,21 @@ export const snapshot = (items,settings)=>({items:items.map(x=>({...x})),setting
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const random=(n)=>{let r=Math.sin(n*78.233+14.79)*43758.5453;return r-Math.floor(r)};
 const sizes={house:84,tree:65,lake:155,road:180,river:160,bridge:86,flower:17,mountain:110,tower:80,castle:155,rock:53};
+// Saved and imported scenes come from outside the app: keep only drawable objects,
+// give them fresh unique ids and keep placement guides only when every landmark survives.
+export function cleanScene(obj){
+ if(!obj||typeof obj!=='object'||!Array.isArray(obj.items))return null;
+ const ids=new Map();
+ const entries=obj.items.filter(it=>it&&TYPES.includes(it.type)&&Number.isFinite(it.x)&&Number.isFinite(it.y)).slice(0,MAX_ITEMS).map(it=>{
+  const item=makeItem(it.type,clamp(it.x,0,1000),clamp(it.y,0,645),PALETTE[it.color]?it.color:undefined,Number.isFinite(it.scale)?clamp(it.scale,.3,2):1);
+  if(Number.isFinite(it.seed))item.seed=it.seed;
+  if(typeof it.id==='string')ids.set(it.id,item.id);
+  return {item,grounding:it.grounding};
+ });
+ for(const {item,grounding:g} of entries)if(g&&RELATION_LABEL[g.relation]&&Array.isArray(g.anchorIds)&&g.anchorIds.length&&g.anchorIds.every(id=>ids.has(id)))item.grounding={relation:g.relation,anchorIds:g.anchorIds.map(id=>ids.get(id))};
+ const s=obj.settings&&typeof obj.settings==='object'?obj.settings:{};
+ return {items:entries.map(e=>e.item),settings:{time:s.time==='night'?'night':'day',weather:['rain','snow'].includes(s.weather)?s.weather:'clear'}};
+}
 // Resolve once per action, so adding trees near trees cannot change its own anchor.
 function resolveAnchors(items,act,allowedIds){
  const types=act.relation==='between'?act.targets||[act.target,act.target]:act.target?[act.target]:[];
@@ -94,9 +114,10 @@ export function applyActions(items,settings,actions,bindings=[]){
    const matching=nextItems.filter(o=>o.type===act.type&&(!referenceIds||referenceIds.has(o.id)));
    const n=act.count==='all'?matching.length:clamp(Math.floor(Number(act.count)||0),0,matching.length);
    const removed=new Set(n?matching.slice(-n).map(it=>it.id):[]);nextItems=nextItems.filter(it=>!removed.has(it.id));descriptions.push(`Removed ${n} ${act.type}${n===1?'':'s'}`);
+   if(!matching.length&&!referenceIds)notices.push(`There are no ${act.type}s in the world to remove.`);
    if(referenceIds&&n<Number(act.count))notices.push('Some referenced objects were not added or are no longer available; existing unrelated objects were preserved.');
   }else if(act.action==='add'&&TYPES.includes(act.type)){
-   const n=clamp(Math.floor(Number(act.count)||0),0,Math.min(16,Math.max(0,120-nextItems.length)));
+   const n=clamp(Math.floor(Number(act.count)||0),0,Math.min(16,Math.max(0,MAX_ITEMS-nextItems.length)));
    if(n<Number(act.count))notices.push('Scene capacity limited the number of new objects.');
    const referenceIds=binding?.target_from?boundIds(binding.target_from):null;
    const anchors=resolveAnchors(nextItems,act,referenceIds);
@@ -113,7 +134,7 @@ export function applyActions(items,settings,actions,bindings=[]){
     newIds.push(item.id);
    }
    introduced.set(actionIndex,newIds);
-   descriptions.push(`Added ${n} ${act.type}${n===1?'':'s'}${allGrounded?` ${act.relation||'near'} ${act.targets?act.targets.join(' and '):act.target}`:''}`);
+   descriptions.push(`Added ${n} ${act.type}${n===1?'':'s'}${allGrounded?` ${RELATION_LABEL[act.relation]||act.relation||'near'} ${act.targets?act.targets.join(' and '):act.target}`:''}`);
   }
  }
  return {items:nextItems,settings:nextSettings,descriptions,missing:[...new Set(missing)],notices:[...new Set(notices)]};

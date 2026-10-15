@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {applyActions,makeItem,INITIAL_SETTINGS} from '../src/world.js';
+import {applyActions,makeItem,cleanScene,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
 import {fallbackParser} from '../src/previewParser.js';
 
 test('reference removal preserves preexisting objects of the same type',()=>{
@@ -84,4 +84,32 @@ test('offline preview never guesses negation, spatial commands, or removal',()=>
  for(const text of ["Don't add trees",'Put a bridge between two houses','Remove trees','Add a tree and a lake'])assert.deepEqual(fallbackParser(text).actions,[]);
  assert.equal(fallbackParser('Add two red houses').actions[0].count,2);
  assert.equal(fallbackParser('No rain').actions[0].value,'clear');
+});
+
+test('imported scenes keep only drawable objects with fresh ids and remapped guides',()=>{
+ const scene=cleanScene({items:[
+  {id:'a',type:'house',x:300,y:320,color:'blue'},
+  {id:'b',type:'tree',x:360,y:330,color:'chartreuse',grounding:{relation:'near',anchorIds:['a']}},
+  {id:'c',type:'dragon',x:1,y:1},{id:'d',type:'rock',x:'oops',y:2},
+  {id:'e',type:'flower',x:9999,y:-50,grounding:{relation:'near',anchorIds:['missing']}},
+ ],settings:{time:'night',weather:'hail'}});
+ assert.deepEqual(scene.items.map(o=>o.type),['house','tree','flower']);
+ assert.equal(scene.items[0].color,'blue');
+ assert.equal(scene.items[1].color,undefined);
+ assert.deepEqual(scene.items[1].grounding,{relation:'near',anchorIds:[scene.items[0].id]});
+ assert.equal(scene.items[2].grounding,undefined);
+ assert.deepEqual([scene.items[2].x,scene.items[2].y],[1000,0]);
+ assert.notEqual(scene.items[0].id,'a');
+ assert.deepEqual(scene.settings,{time:'night',weather:'clear'});
+});
+test('non-scene files are rejected and oversized scenes are capped',()=>{
+ for(const bad of [null,42,'x',{},{items:'nope'}])assert.equal(cleanScene(bad),null);
+ const many=cleanScene({items:Array.from({length:200},(_,i)=>({type:'rock',x:i,y:i}))});
+ assert.equal(many.items.length,MAX_ITEMS);
+ assert.equal(new Set(many.items.map(o=>o.id)).size,MAX_ITEMS);
+});
+test('removing a type that is absent explains why nothing changed',()=>{
+ const result=apply([makeItem('house',300,350)],[{action:'remove',type:'castle',count:1}]);
+ assert.equal(result.items.length,1);
+ assert.deepEqual(result.notices,['There are no castles in the world to remove.']);
 });

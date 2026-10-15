@@ -31,6 +31,8 @@ if dist.is_dir():
 
     @app.get("/{full_path:path}")
     def frontend(full_path: str):
+        if full_path == "api" or full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Unknown API route.")
         target = (dist / full_path).resolve()
         if target.is_file() and dist in target.parents:
             return FileResponse(target)

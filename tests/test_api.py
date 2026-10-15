@@ -29,3 +29,9 @@ def test_request_validation():
     for body in [{}, {"text": ""}, {"text": "x" * 1401}]:
         assert request("POST", "/api/parse", json=body).status_code == 422
     assert request("POST", "/api/parse", json={"text": "  "}).status_code == 400
+
+
+def test_unknown_api_route_is_not_served_the_frontend():
+    response = request("GET", "/api/does-not-exist")
+    assert response.status_code == 404
+    assert response.headers["content-type"].startswith("application/json")

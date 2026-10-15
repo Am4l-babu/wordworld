@@ -481,18 +481,18 @@ From the project root:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --output evaluation/fresh_results_v2.json
-.\.venv\Scripts\python.exe -X utf8 evaluation/write_priority_report.py
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --output evaluation/results/fresh_results_v2.json
+.\.venv\Scripts\python.exe -X utf8 evaluation/scripts/write_priority_report.py
 ```
 
 From `frontend/`, with API and Vite running: `npm test`, `npm run test:e2e`, and `npm run build`.
 
 - Original frozen labels: `tests/heldout_commands.json` (unchanged).
-- Original predictions: `evaluation/heldout_results.json` (unchanged).
-- First-set retest: `evaluation/heldout_retest.json`.
+- Original predictions: `evaluation/results/heldout_results.json` (unchanged).
+- First-set retest: `evaluation/results/heldout_retest.json`.
 - New frozen labels and development-input hashes: `tests/fresh_commands_v2.json`.
-- New predictions/notices: `evaluation/fresh_results_v2.json`.
+- New predictions/notices: `evaluation/results/fresh_results_v2.json`.
 - Regression coverage: `tests/test_accuracy_fixes.py` and `frontend/tests/browser/smoke.spec.js`.
 
 Final parser SHA256: `2484fbb06e7bd322efdb8fe7b242bdae6ff0239940f897ad72f1d47fd43355b9`.

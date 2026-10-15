@@ -4,8 +4,9 @@ import json
 from pathlib import Path
 from tests.evaluate_heldout import pipeline_fingerprint
 
-ROOT = Path(__file__).resolve().parents[1]
-HERE = ROOT/'evaluation'
+ROOT = Path(__file__).resolve().parents[2]
+HERE = ROOT/'evaluation'/'results'
+REPORTS = ROOT/'evaluation'/'reports'
 read = lambda n: json.loads((HERE/n).read_text(encoding='utf-8'))
 before = [read('heldout_retest_v5.json')] + [read(f'fresh_v{i}_retest_v5.json') for i in range(2,5)] + [read('fresh_results_v5.json')]
 current = [read('heldout_retest_v6.json')] + [read(f'fresh_v{i}_retest_v6.json') for i in range(2,6)]
@@ -85,18 +86,18 @@ for title,r in [('Sixth-set failures',fresh)] + [(f'Saved set {i} remaining fail
 lines += ['## Reproduce','','From the root:','','```powershell',
  '.\\.venv\\Scripts\\python.exe -m pytest -q tests',
  '.\\.venv\\Scripts\\python.exe -m tests.evaluate',
- '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest_v6.json']
+ '.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest_v6.json']
 for i,r in list(enumerate(current,1))[1:]+[(6,fresh)]:
-    output=f'evaluation/fresh_v{i}_retest_v6.json' if i<6 else 'evaluation/fresh_results_v6.json'
+    output=f'evaluation/fresh_v{i}_retest_v6.json' if i<6 else 'evaluation/results/fresh_results_v6.json'
     lines.append(f'.\\.venv\\Scripts\\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v{i}.json --dataset-sha256 {r["dataset_sha256"]} '+('--allow-parser-change ' if i<6 else '')+f'--output {output}')
-lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.write_partition_report','```','',
+lines += ['.\\.venv\\Scripts\\python.exe -X utf8 -m evaluation.scripts.write_partition_report','```','',
  'From `frontend/`: `npm test`, `npm run test:e2e` (local servers running), `npm run build`.','',
- 'Labels: `tests/fresh_commands_v6.json`. Predictions/notices: `evaluation/fresh_results_v6.json`. Regressions: `tests/test_partition_fixes.py`, `frontend/tests/browser/smoke.spec.js`.','',
+ 'Labels: `tests/fresh_commands_v6.json`. Predictions/notices: `evaluation/results/fresh_results_v6.json`. Regressions: `tests/test_partition_fixes.py`, `frontend/tests/browser/smoke.spec.js`.','',
  f"Parser SHA256: `{fresh['parser_sha256_before']}`.",
  f"Backend pipeline SHA256: `{pipeline}`.",
  f"Sixth dataset SHA256: `{fresh['dataset_sha256']}`.",'',
  'All six evaluations verified the same backend fingerprint before and after prediction. Once this sample informs future rule changes, use separate retest outputs and a new frozen sample for another fresh-command claim.','']
 assert sum(not c['exact_match'] and not c['warnings'] for c in fresh['cases']) == 3
-out=HERE/'partition_fixes_report.md'
+out=REPORTS/'partition_fixes_report.md'
 out.write_text('\n'.join(lines),encoding='utf-8')
 print(out)

@@ -624,16 +624,16 @@ From the project root:
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests
 .\.venv\Scripts\python.exe -m tests.evaluate
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/heldout_retest_v4.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/fresh_v2_retest_v4.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/fresh_v3_retest_v4.json
-.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --output evaluation/fresh_results_v4.json
-.\.venv\Scripts\python.exe -X utf8 -m evaluation.write_postnoun_report
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --allow-parser-change --output evaluation/results/heldout_retest_v4.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v2.json --dataset-sha256 050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b --allow-parser-change --output evaluation/results/fresh_v2_retest_v4.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v3.json --dataset-sha256 bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927 --allow-parser-change --output evaluation/results/fresh_v3_retest_v4.json
+.\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout --dataset tests/fresh_commands_v4.json --dataset-sha256 83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd --output evaluation/results/fresh_results_v4.json
+.\.venv\Scripts\python.exe -X utf8 -m evaluation.scripts.write_postnoun_report
 ```
 
 From `frontend/`, with the local servers running: `npm test`, `npm run test:e2e`, `npm run build`.
 
-Labels: `tests/fresh_commands_v4.json`. Complete predictions/notices: `evaluation/fresh_results_v4.json`. Three retests: `evaluation/heldout_retest_v4.json`, `evaluation/fresh_v2_retest_v4.json`, `evaluation/fresh_v3_retest_v4.json`. Regression source: `tests/test_postnoun_fixes.py` and `frontend/tests/browser/smoke.spec.js`.
+Labels: `tests/fresh_commands_v4.json`. Complete predictions/notices: `evaluation/results/fresh_results_v4.json`. Three retests: `evaluation/results/heldout_retest_v4.json`, `evaluation/results/fresh_v2_retest_v4.json`, `evaluation/results/fresh_v3_retest_v4.json`. Regression source: `tests/test_postnoun_fixes.py` and `frontend/tests/browser/smoke.spec.js`.
 
 Parser SHA256: `a3af0d0696f9da20ab3a2863f8851f3f299a20919b9590a341ad7789dbc946e0`.
 Backend pipeline SHA256: `60cd2a4974ba8c51b54b4a71b66818ef06be55abada1b75609174aebc8bfbd32`.

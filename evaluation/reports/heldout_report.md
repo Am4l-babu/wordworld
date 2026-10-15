@@ -695,13 +695,13 @@ From the project root, with the installed environment:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 -m tests.evaluate_heldout
-.\.venv\Scripts\python.exe -X utf8 evaluation\write_heldout_report.py
+.\.venv\Scripts\python.exe -X utf8 evaluation\scripts\write_heldout_report.py
 ```
 
 The runner refuses changed gold labels or a parser whose source differs from the baseline captured before evaluation. Expected language errors remain in the result JSON; the script completes successfully when the evaluation itself ran. It does not silently rewrite the gold set or add these examples to the development tests.
 
 - Dataset: `tests/heldout_commands.json`
-- Full predictions and notices: `evaluation/heldout_results.json`
+- Full predictions and notices: `evaluation/results/heldout_results.json`
 - Prediction-free dataset construction: `tests/create_heldout_set.py`
 - Runner: `tests/evaluate_heldout.py`
 
