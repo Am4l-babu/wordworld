@@ -111,11 +111,36 @@ const STEP={small:35,medium:75,large:150};
 const DIRECTION={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]};
 const DIRECTION_LABEL={left:'left',right:'right',up:'back',down:'forward'};
 const VERB={recolor:'repaint',resize:'resize',move:'move'};
-// Edits act on the most recent matching objects, like removals do.
+// "the trees near the lake": does `item` sit in the named relation to any landmark? The tests mirror
+// where placement puts objects (the same cone and squash), so what you add "left of" a house is found
+// by a later "left of the house" filter.
+export function inPlace(item,anchors,relation){
+ return anchors.some(anchor=>{
+  if(anchor.id===item.id)return false;
+  const dx=item.x-anchor.x,dy=item.y-anchor.y,distance=Math.hypot(dx,dy*1.15);
+  const reach=(sizes[item.type]*(item.scale||1)+sizes[anchor.type]*(anchor.scale||1))/2;
+  if(relation==='near')return distance<=reach+80;
+  if(relation==='inside')return distance<=sizes[anchor.type]*(anchor.scale||1)/2;
+  const base={left:Math.PI,right:0,above:-Math.PI/2,below:Math.PI/2}[relation];
+  if(base===undefined)return false;
+  let turn=Math.abs(Math.atan2(dy/.67,dx)-base);
+  if(turn>Math.PI)turn=2*Math.PI-turn;
+  return turn<=.9;  // anywhere on that side, within the same cone placement uses
+ });
+}
+// Objects an action may touch: its type, any referenced ids, color and place filters. Edits and
+// removals both act on the most recent matches.
+function candidates(items,act,referenceIds){
+ const anchors=act.filter_relation?items.filter(o=>o.type===act.filter_target):null;
+ const matching=items.filter(o=>o.type===act.type&&(!referenceIds||referenceIds.has(o.id))&&(!act.filter_color||shownColor(o)===act.filter_color)
+  &&(!anchors||inPlace(o,anchors,act.filter_relation)));
+ return {matching,noAnchor:Boolean(anchors&&!anchors.length)};
+}
+const describeFilter=act=>act.filter_relation?` ${RELATION_LABEL[act.filter_relation]||act.filter_relation} the ${act.filter_target}`:'';
 function editTargets(items,act,referenceIds){
- const matching=items.filter(o=>o.type===act.type&&(!referenceIds||referenceIds.has(o.id))&&(!act.filter_color||shownColor(o)===act.filter_color));
+ const {matching,noAnchor}=candidates(items,act,referenceIds);
  const n=act.count==='all'?matching.length:clamp(Math.floor(Number(act.count)||0),0,matching.length);
- return {matching,chosen:n?matching.slice(-n):[]};
+ return {matching,noAnchor,chosen:n?matching.slice(-n):[]};
 }
 // Walk back toward the start until the point is on the island again.
 function stepOnIsland(item,dx,dy){
@@ -134,9 +159,10 @@ export function applyActions(items,settings,actions,bindings=[],context=[]){
   if(act.action==='reset') {nextItems=[];nextSettings={...INITIAL_SETTINGS};descriptions.push('Cleared the world');}
   else if(['recolor','resize','move'].includes(act.action)&&TYPES.includes(act.type)){
    const referenceIds=binding?.edit_from?boundIds(binding.edit_from):null;
-   const {matching,chosen}=editTargets(nextItems,act,referenceIds);
-   const label=`${act.filter_color?act.filter_color+' ':''}${act.type}s`;
+   const {matching,noAnchor,chosen}=editTargets(nextItems,act,referenceIds);
+   const label=`${act.filter_color?act.filter_color+' ':''}${act.type}s${describeFilter(act)}`;
    introduced.set(actionIndex,chosen.map(o=>o.id));
+   if(noAnchor){notices.push(`There is no ${act.filter_target} to measure from, so no ${act.type}s were ${VERB[act.action]==='repaint'?'repainted':VERB[act.action]+'d'}.`);continue}
    if(!matching.length){notices.push(referenceIds?`The ${act.type} you referred to is no longer in the world.`:`There are no ${label} to ${VERB[act.action]}.`);continue}
    if(act.count!=='all'&&chosen.length<Number(act.count))notices.push(`Only ${plural(act.type,chosen.length)} could be found to ${VERB[act.action]}.`);
    if(act.action==='recolor'){
@@ -174,10 +200,12 @@ export function applyActions(items,settings,actions,bindings=[],context=[]){
   else if(act.action==='setting') {if(['time','weather'].includes(act.key)){nextSettings[act.key]=act.value;descriptions.push(`Changed ${act.key} to ${act.value}`)}}
   else if(act.action==='remove'){
    const referenceIds=binding?.remove_from?boundIds(binding.remove_from):null;
-   const matching=nextItems.filter(o=>o.type===act.type&&(!referenceIds||referenceIds.has(o.id)));
+   const {matching,noAnchor}=candidates(nextItems,act,referenceIds);
    const n=act.count==='all'?matching.length:clamp(Math.floor(Number(act.count)||0),0,matching.length);
-   const removed=new Set(n?matching.slice(-n).map(it=>it.id):[]);nextItems=nextItems.filter(it=>!removed.has(it.id));descriptions.push(`Removed ${n} ${act.type}${n===1?'':'s'}`);
-   if(!matching.length&&!referenceIds)notices.push(`There are no ${act.type}s in the world to remove.`);
+   const removed=new Set(n?matching.slice(-n).map(it=>it.id):[]);nextItems=nextItems.filter(it=>!removed.has(it.id));
+   if(noAnchor)notices.push(`There is no ${act.filter_target} to measure from, so nothing was removed.`);
+   else descriptions.push(`Removed ${n} ${act.type}${n===1?'':'s'}${describeFilter(act)}`);
+   if(!matching.length&&!referenceIds&&!noAnchor)notices.push(act.filter_relation?`There are no ${act.type}s${describeFilter(act)} to remove.`:`There are no ${act.type}s in the world to remove.`);
    if(referenceIds&&n<Number(act.count))notices.push('Some referenced objects were not added or are no longer available; existing unrelated objects were preserved.');
   }else if(act.action==='add'&&TYPES.includes(act.type)){
    const n=clamp(Math.floor(Number(act.count)||0),0,Math.min(16,Math.max(0,MAX_ITEMS-nextItems.length)));

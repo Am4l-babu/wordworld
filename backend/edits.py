@@ -18,7 +18,7 @@ _COLOR = "|".join(COLORS)
 _LEAD = r"^\s*(?:(?:please|and|then|now|also|next|so|can\s+you|could\s+you)\s+)*"
 _DET = (rf"(?P<det>all\s+(?:of\s+)?(?:the\s+)?|every\s+|each\s+(?:of\s+the\s+)?|both\s+(?:of\s+the\s+)?|(?:the\s+)?(?P<num>{NUMERAL})\s+(?:of\s+the\s+)?"
         rf"|the\s+|that\s+|this\s+|these\s+|those\s+|my\s+)?")
-NP_RE = re.compile(rf"\s*(?:(?P<pronoun>it|them)|{_DET}(?:(?P<filter>{_COLOR})\s+)?(?P<noun>{_NOUN}))\b", re.I)
+NP_RE = re.compile(rf"\s*(?:(?:(?P<pronoun_count>{NUMERAL}|both|all)\s+of\s+)?(?P<pronoun>it|them)|{_DET}(?:(?P<filter>{_COLOR})\s+)?(?P<noun>{_NOUN}))\b", re.I)
 HEAD_RE = re.compile(rf"{_LEAD}(?P<neg>(?:do\s+not|don'?t|never)\s+)?(?P<verb>{PAINT_VERBS}|{MOVE_VERBS}|{RESIZE_VERBS}|{CHANGE_VERBS}|give)\b", re.I)
 # "give the cottage a red roof": a color for the part the sprite draws.
 PART_COLOR_RE = re.compile(rf"\s*(?:an?\s+)?(?:(?:bright|light|dark|pale)\s+)?(?P<color>{_COLOR})\s+(?:roofs?|leaves|foliage|petals?|colou?r)\b", re.I)
@@ -44,7 +44,9 @@ def _scale(word: str, amount: str | None) -> float:
 def _target(match: re.Match, base: int) -> dict:
     span = (base + match.start("pronoun"), base + match.end("pronoun")) if match.group("pronoun") else (base + match.start("noun"), base + match.end("noun"))
     if match.group("pronoun"):
-        return {"pronoun": match.group("pronoun").lower(), "span": span, "definite": True}
+        part = (match.group("pronoun_count") or "").lower()
+        subset = 2 if part == "both" else None if part in {"", "all"} else number_value(part)
+        return {"pronoun": match.group("pronoun").lower(), "span": span, "definite": True, "subset": subset, "exact": part == "both"}
     noun = match.group("noun").lower()
     det = (match.group("det") or "").lower().strip()
     if match.group("num"):
@@ -64,6 +66,23 @@ def _target(match: re.Match, base: int) -> dict:
     if match.group("filter"):
         target["filter_span"] = (base + match.start("filter"), base + match.end("filter"))
     return target
+
+
+# Relations a location filter can test against a scene; between/across have no single anchor to test.
+FILTER_RELATIONS = {"near", "left", "right", "above", "below", "inside"}
+LANDMARK_RE = re.compile(rf"\s*(?:the\s+|that\s+|this\s+|a\s+|an\s+)?(?P<noun>{_NOUN})\b", re.I)
+
+
+def read_location_filter(clause: str, cursor: int):
+    """Read "near the lake" after a target. Returns (filter dict, end) or (None, cursor)."""
+    relation, match = leading_relation(clause[cursor:])
+    if not relation or relation not in FILTER_RELATIONS:
+        return None, cursor
+    landmark = LANDMARK_RE.match(clause, cursor + match.end())
+    if not landmark:
+        return None, cursor
+    return ({"relation": relation, "relation_span": (cursor + match.start(), cursor + match.end()),
+             "target": WORD_TO_TYPE[landmark.group("noun").lower()], "target_span": (landmark.start("noun"), landmark.end("noun"))}, landmark.end())
 
 
 def _read_targets(clause: str, start: int):
@@ -95,10 +114,19 @@ def read_edit(clause: str, inherited: dict | None = None) -> dict | None:
     else:
         return None
     targets, cursor = _read_targets(clause, start)
-    rest = clause[cursor:]
-    edit = {"verb": verb, "verb_span": verb_span, "negated": negated, "targets": targets}
     family = ("paint" if re.fullmatch(PAINT_VERBS, verb) else "move" if re.fullmatch(MOVE_VERBS, verb)
               else "resize" if re.fullmatch(RESIZE_VERBS, verb) else "give" if verb == "give" else "change")
+    # "paint the trees near the lake red": the place narrows which objects are meant. For "move" the
+    # first place is the destination, so it is a filter only when a destination follows it.
+    if targets and not targets[-1]["pronoun"]:
+        location, after = read_location_filter(clause, cursor)
+        if location:
+            tail = clause[after:]
+            destination, _ = leading_relation(tail[MOVE_AMOUNT_RE.match(tail).end():])
+            if family != "move" or destination:
+                targets[-1]["location"], cursor = location, after
+    rest = clause[cursor:]
+    edit = {"verb": verb, "verb_span": verb_span, "negated": negated, "targets": targets}
     if family == "give":
         color = PART_COLOR_RE.match(rest)
         if not color or not all(t["definite"] for t in targets):
@@ -124,6 +152,11 @@ def read_edit(clause: str, inherited: dict | None = None) -> dict | None:
         return None  # "make two houses", "make it night", "turn the rain off": not an edit
     else:
         edit.update(kind=None, end=cursor)
+    if edit.get("kind") in {"recolor", "resize"} and targets and not targets[-1]["pronoun"] and "location" not in targets[-1]:
+        # "paint the trees red near the lake": the place may follow the new value.
+        location, after = read_location_filter(clause, edit["end"])
+        if location:
+            targets[-1]["location"], edit["end"] = location, after
     if family == "change" and not all(t["definite"] for t in targets):
         return None  # "make two houses blue" may be a creation; leave it to the creation grammar
     if not targets:

@@ -31,7 +31,8 @@ function HighlightedCommand({parsed, onPickSpan}) {
 const DIRECTION_LABEL = {left: 'left', right: 'right', up: 'back', down: 'forward'};
 
 function actionLabel(a) {
-  const who = `${a.count === 'all' ? 'all' : a.count} ${a.filter_color ? a.filter_color + ' ' : ''}${plural(a.type, a.count)}`;
+  const place = a.filter_relation ? ` ${RELATION_LABEL[a.filter_relation] || a.filter_relation} ${a.filter_target}` : '';
+  const who = `${a.count === 'all' ? 'all' : a.count} ${a.filter_color ? a.filter_color + ' ' : ''}${plural(a.type, a.count)}${place}`;
   const main = a.action === 'add' ? `+ ${a.count} ${a.color ? a.color + ' ' : ''}${plural(a.type, a.count)}`
     : a.action === 'remove' ? `− ${who}`
     : a.action === 'recolor' ? `🎨 ${who} → ${a.color}`

@@ -1,54 +1,54 @@
 {
-  "commands": 600,
+  "commands": 650,
   "rules": {
     "exact_match": {
-      "correct": 557,
-      "total": 600,
-      "accuracy": 0.9283
+      "correct": 608,
+      "total": 650,
+      "accuracy": 0.9354
     },
     "intent": {
-      "correct": 559,
-      "total": 600,
-      "accuracy": 0.9317
+      "correct": 611,
+      "total": 650,
+      "accuracy": 0.94
     },
     "entity_count_color": {
-      "correct": 560,
-      "total": 600,
-      "accuracy": 0.9333
+      "correct": 611,
+      "total": 650,
+      "accuracy": 0.94
     },
     "spatial": {
-      "correct": 147,
-      "total": 153,
-      "accuracy": 0.9608
+      "correct": 154,
+      "total": 160,
+      "accuracy": 0.9625
     }
   },
   "baseline": {
     "exact_match": {
-      "correct": 138,
-      "total": 600,
-      "accuracy": 0.23
+      "correct": 146,
+      "total": 650,
+      "accuracy": 0.2246
     },
     "intent": {
-      "correct": 260,
-      "total": 600,
-      "accuracy": 0.4333
+      "correct": 293,
+      "total": 650,
+      "accuracy": 0.4508
     },
     "entity_count_color": {
-      "correct": 194,
-      "total": 600,
-      "accuracy": 0.3233
+      "correct": 227,
+      "total": 650,
+      "accuracy": 0.3492
     },
     "spatial": {
-      "correct": 41,
-      "total": 153,
-      "accuracy": 0.268
+      "correct": 46,
+      "total": 160,
+      "accuracy": 0.2875
     }
   },
-  "agreement": 0.2667,
+  "agreement": 0.26,
   "rules_first_run_exact": {
-    "correct": 442,
-    "total": 550,
-    "sets": 11
+    "correct": 483,
+    "total": 600,
+    "sets": 12
   },
   "baseline_sha256": "a3fa82150bd5cfac2fd41b0f84d7f25ab733867942376e6d0082c428e9eb529c",
   "note": "Rule scores are retests on sets used during development; first-run rule scores are listed separately. The baseline was frozen before its first run on these sets."

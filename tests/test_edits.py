@@ -81,3 +81,44 @@ def test_api_validates_context():
     assert ok.status_code == 200 and ok.json()["actions"][0]["action"] == "recolor"
     for context in [[{"type": "dragon", "count": 1}], [{"type": "house", "count": 0}], [{"type": "house", "count": 1}] * 13]:
         assert request("POST", "/api/parse", json={"text": "make it blue", "context": context}).status_code == 422
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("Paint the trees near the lake red", {"action": "recolor", "type": "tree", "count": "all", "color": "red", "filter_relation": "near", "filter_target": "lake"}),
+    ("Make the houses behind the castle bigger", {"action": "resize", "type": "house", "count": "all", "scale": 1.25, "filter_relation": "above", "filter_target": "castle"}),
+    ("Paint the red houses to the left of the lake blue", {"action": "recolor", "type": "house", "count": "all", "color": "blue", "filter_color": "red", "filter_relation": "left", "filter_target": "lake"}),
+    ("Move the trees near the lake behind the castle", {"action": "move", "type": "tree", "count": "all", "relation": "above", "target": "castle", "filter_relation": "near", "filter_target": "lake"}),
+    ("Remove the trees near the lake", {"action": "remove", "type": "tree", "count": "all", "filter_relation": "near", "filter_target": "lake"}),
+    ("Delete two flowers behind the castle", {"action": "remove", "type": "flower", "count": 2, "filter_relation": "above", "filter_target": "castle"}),
+    ("Get rid of the rock inside the lake", {"action": "remove", "type": "rock", "count": 1, "filter_relation": "inside", "filter_target": "lake"}),
+])
+def test_location_filters_narrow_which_objects_are_meant(text, expected):
+    assert actions(text) == [expected]
+
+
+def test_location_filter_attaches_to_the_nearest_noun_only():
+    result = actions("Paint the tree near the castle green and the flowers near the lake white")
+    assert [(a["type"], a["filter_target"], a["color"]) for a in result] == [("tree", "castle", "green"), ("flower", "lake", "white")]
+
+
+def test_a_move_destination_is_not_mistaken_for_a_filter():
+    assert actions("Move the castle next to the river") == [{"action": "move", "type": "castle", "count": 1, "relation": "near", "target": "river"}]
+
+
+@pytest.mark.parametrize("text", ["Remove the tree between the houses", "Remove the trees across the river", "Paint the trees between the houses red"])
+def test_filters_that_cannot_be_tested_are_explained_not_guessed(text):
+    result = parser.parse(text)
+    assert not any(a["action"] in {"remove", "recolor"} for a in result["actions"])
+    assert result["warnings"]
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("Paint the trees red near the lake.", {"action": "recolor", "type": "tree", "count": "all", "color": "red", "filter_relation": "near", "filter_target": "lake"}),
+    ("Make the houses bigger behind the castle", {"action": "resize", "type": "house", "count": "all", "scale": 1.25, "filter_relation": "above", "filter_target": "castle"}),
+])
+def test_a_place_filter_may_follow_the_new_value(text, expected):
+    assert actions(text) == [expected]
+
+
+def test_a_counted_creation_with_a_place_is_still_a_creation():
+    assert [a["action"] for a in actions("Make two trees red near the lake")] == ["add"]

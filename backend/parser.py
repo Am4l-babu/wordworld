@@ -14,7 +14,7 @@ from .phrases import (
     continued_descriptions, coordinated_descriptions, leading_relation,
     post_each_colors, postnoun_attributes, quantity, relation_in,
 )
-from .edits import read_edit, recolorable
+from .edits import FILTER_RELATIONS, read_edit, recolorable
 from .references import ReferenceContext, Referent, UnresolvedReference
 
 try:
@@ -91,6 +91,26 @@ def clauses(text: str):
 
 # Cross-request references hold at most this many objects (the scene capacity).
 SCENE_LIMIT = 120
+
+
+def partition_semicolons(text: str) -> str:
+    """In "Plant ten trees: three pink; the rest green." the semicolon separates groups like a comma.
+
+    One code point maps to one code point, so highlight offsets stay exact. A semicolon followed by a
+    new instruction ("...: red and white; remove them") keeps its meaning.
+    """
+    out = []
+    for sentence in re.finditer(r"[^.!?]+[.!?]*|[.!?]+", text):
+        part = sentence.group()
+        colon = part.find(":")
+        if colon >= 0 and ";" in part[colon:]:
+            pieces = part[colon + 1:].split(";")
+            rebuilt = pieces[0]
+            for piece in pieces[1:]:
+                rebuilt += (";" if OPERATION_RE.search(piece) else ",") + piece
+            part = part[:colon + 1] + rebuilt
+        out.append(part)
+    return "".join(out)
 
 
 def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, Any]:
@@ -201,7 +221,15 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
                     warnings.append(str(exc))
                     continue
                 mark_reference_span(offset + span_start, offset + span_end, groups)
-                subjects += [(g.type, g.count, [g.action_index], None) for g in groups]
+                subset = target.get("subset")
+                if subset is not None:
+                    # "make two of them red": a part of one group; a mixed collection needs an explicit type.
+                    if len(groups) != 1 or not 0 < subset <= groups[0].count or target.get("exact") and groups[0].count != subset:
+                        warnings.append(f"'{text[offset + span_start:offset + span_end]}' needs one group with at least {subset or 1} object(s); name the objects instead.")
+                        continue
+                    subjects.append((groups[0].type, subset, [groups[0].action_index], None, None))
+                    continue
+                subjects += [(g.type, g.count, [g.action_index], None, None) for g in groups]
                 continue
             mark(offset + span_start, offset + span_end, "object")
             if "number_span" in target:
@@ -211,9 +239,13 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
             if target["count"] is None:
                 warnings.append(f"Skipped {target['type']}: specify an unambiguous whole-number quantity.")
                 continue
-            subjects.append((target["type"], target["count"], None, target["filter"]))
+            location = target.get("location")
+            if location:
+                mark(offset + location["relation_span"][0], offset + location["relation_span"][1], "spatial_relation")
+                mark(offset + location["target_span"][0], offset + location["target_span"][1], "landmark")
+            subjects.append((target["type"], target["count"], None, target["filter"], location))
         first = True
-        for kind, count, sources, color_filter in subjects:
+        for kind, count, sources, color_filter, location in subjects:
             if edit["kind"] == "recolor" and not recolorable(kind):
                 warnings.append(f"{kind.capitalize()}s have no color to change; houses, trees and flowers can be repainted.")
                 continue
@@ -230,6 +262,8 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
                 action.update(direction=edit["direction"], distance=edit["distance"])
             if color_filter:
                 action["filter_color"] = color_filter
+            if location:
+                action.update(filter_relation=location["relation"], filter_target=location["target"])
             binding = {}
             if sources:
                 binding["edit_from"] = sources
@@ -245,7 +279,8 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
     inherited_intent, inherited_negated = "add", False
     last_edit = None
     # One code point maps to one code point: original UI spans stay exact.
-    for offset, clause, continuation in clauses(text.translate(MATCH_TRANSLATION)):
+    matched_text = partition_semicolons(text.translate(MATCH_TRANSLATION))
+    for offset, clause, continuation in clauses(matched_text):
         introduced_in_clause = False
         if not continuation:
             inherited_intent, inherited_negated = "add", False
@@ -547,8 +582,9 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
                 warnings.append(f"Skipped negated or zero-count {kind} instruction.")
             elif relation and (not targets or relation == "between" and len(targets) != 2):
                 warnings.append("A spatial instruction needs named landmarks; use 'between two houses' or 'between the house and the lake'.")
-            elif intent == "remove" and relation:
-                warnings.append("Spatially filtered removal is not supported; specify a type and quantity to remove.")
+            elif intent == "remove" and relation and (relation not in FILTER_RELATIONS or len(targets) != 1 or target_groups):
+                warnings.append("Removal can be filtered by one named landmark: near, left of, right of, behind, in front of or inside it. "
+                                "For example 'remove the trees near the lake'.")
             elif intent == 'remove' and (variants is not None or continued['descriptions']):
                 warnings.append('Coordinated removal descriptions are not supported; specify an object type and quantity.')
             elif intent == "remove":
@@ -557,8 +593,14 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
                 singular = (entity.group().lower() in SINGULAR_NOUNS
                             and not re.search(r'\b(?:all|every|each)\b', prefix, re.I))
                 amount = min(count, MAX_PER_COMMAND) if number or attributes['has_quantity'] else 1 if singular else 'all'
-                actions.append({"action": "remove", "type": kind, "count": amount})
-                references.consume(kind, amount)
+                action = {"action": "remove", "type": kind, "count": amount}
+                if relation:
+                    # "Remove the trees near the lake": which trees depends on the scene, so the
+                    # scene matches the place; references to earlier groups are left untouched.
+                    action.update(filter_relation=relation, filter_target=targets[0])
+                else:
+                    references.consume(kind, amount)
+                actions.append(action)
             else:
                 final_color = post_colors[-1][0] if post_colors else color.group().lower() if color else None
                 descriptions = variants if variants is not None else [{'count': count, 'color': final_color, 'negated': bool(NEGATION_RE.search(prefix))}]
@@ -601,6 +643,14 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
     for ellipsis in re.finditer(r'\bones\b', text, re.I):
         if not any(h['role'] == 'object' and h['start'] == ellipsis.start() for h in highlights):
             warnings.append('Could not resolve an inherited noun outside an adjacent creation group; use an explicit object noun.')
+    # A color the person typed must never vanish silently: if actions were created but a color word
+    # was not consumed by any of them and nothing else explained why, say so.
+    if actions and not warnings:
+        covered = [(h["start"], h["end"]) for h in highlights if h["role"] in {"color", "protected"}]
+        for color in COLOR_RE.finditer(text):
+            if not any(start <= color.start() and color.end() <= end for start, end in covered) \
+                    and not NEGATION_RE.search(text[max(0, color.start() - 24):color.start()]):
+                warnings.append(f"The color '{color.group().lower()}' was not used: colors apply to the objects being created, and landmarks are matched by type only.")
     if len(actions) > 20:
         actions = actions[:20]
         warnings.append("Limited this command to 20 actions.")

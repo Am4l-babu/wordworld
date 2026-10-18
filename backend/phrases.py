@@ -174,7 +174,7 @@ def postnoun_attributes(suffix: str, kind: str):
 
 def post_each_colors(suffix: str, kind: str):
     """Read an adjacent of-each-color list without scanning through another noun."""
-    marker = re.match(r'\s+of\s+each\s+colou?r\b\s*[:,]?\s*', suffix, re.I)
+    marker = re.match(r'\s+(?:of\s+each\s+colou?r\b\s*[:,]?|in\s+each\s+of)\s*', suffix, re.I)
     if not marker:
         return None
     word = r'(?:' + '|'.join(COLORS) + r')\b'
@@ -215,12 +215,13 @@ def distributive_description(fragment: str, kind: str):
 # Fractions of a declared total: halves, thirds, quarters/fourths, fifths, tenths and
 # percentages, optionally "the remaining ...". Counts must still come out whole.
 FRACTION_UNITS = {"half": 2, "halves": 2, "third": 3, "thirds": 3, "quarter": 4, "quarters": 4, "fourth": 4, "fourths": 4,
-                  "fifth": 5, "fifths": 5, "tenth": 10, "tenths": 10}
+                  "fifth": 5, "fifths": 5, "sixth": 6, "sixths": 6, "seventh": 7, "sevenths": 7, "eighth": 8, "eighths": 8,
+                  "ninth": 9, "ninths": 9, "tenth": 10, "tenths": 10}
 FRACTION_RE = re.compile(
     r"(?:(?:not|no|never|without)\s+)?(?:(?:the\s+)?remaining\s+)?(?:"
     r"(?P<half>(?:a\s+)?half\b(?!\s+(?:a\s+)?dozen))"
     r"|(?P<percent>\d+(?:\.\d+)?)\s*(?:%|percent\b|per\s+cent\b)"
-    r"|(?:(?P<numerator>" + NUMERAL + r"|a|an)[ -]+)?(?P<unit>thirds?|quarters?|fourths?|fifths?|tenths?)\b"
+    r"|(?:(?P<numerator>" + NUMERAL + r"|a|an)[ -]+)?(?P<unit>thirds?|quarters?|fourths?|fifths?|sixths?|sevenths?|eighths?|ninths?|tenths?)\b"
     r")(?:\s+of\s+them\b)?", re.I)
 
 

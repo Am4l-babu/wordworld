@@ -35,7 +35,7 @@ def test_rules_work_without_spacy(monkeypatch):
     assert all(token["head"] is None and token["dep"] == "" for token in result["tokens"])
 
 
-@pytest.mark.parametrize("text", ["Don't delete houses", "Add 0 trees", "Add it", "Put a bridge between the house", "Remove trees near the lake"])
+@pytest.mark.parametrize("text", ["Don't delete houses", "Add 0 trees", "Add it", "Put a bridge between the house", "Remove the tree between the houses"])
 def test_unsupported_or_negated_commands_explain_why(text):
     result = parser.parse(text)
     assert result["actions"] == []

@@ -48,6 +48,8 @@ Build houses, one blue and one green; put a rock between them
 Add two flowers whose petals are purple and three yellow
 Remove one tree and add two pink flowers
 Paint the houses blue and make them bigger
+Paint the trees near the lake red
+Remove the flowers next to the house
 Build a castle
 Move it next to the lake
 Stop the rain
@@ -56,7 +58,7 @@ Clear the world
 
 **Objects:** houses, trees, lakes, rivers, roads, bridges, flowers, mountains, towers, castles and rocks. **Colors:** red, blue, green, yellow, pink, purple, orange and white. Aliases such as cottage, creek and pond work too.
 
-Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Quarter groups use exact whole-object arithmetic; `of each color: red and white` expands the stated count for both colors. Mapped part clauses also support `will have been painted`. Unclear or conflicting counts produce a notice. Size words inside a creation phrase describe groups; `make the houses bigger`, `paint the red house blue` and `move the castle behind the lake` edit objects that already exist.
+Colon and comma partitions replace the default group. An explicit total must agree with the counted groups. A final `the rest`, `the remainder` or `the remaining ones` group can infer its count from that total. `three each of pink and white` creates three of each color. `turn off the rain` clears weather; common passive adverbs such as `recently` work in roof-color clauses. Quarter groups use exact whole-object arithmetic; `of each color: red and white` expands the stated count for both colors. Mapped part clauses also support `will have been painted`. Unclear or conflicting counts produce a notice. Size words inside a creation phrase describe groups; `make the houses bigger`, `paint the red house blue` and `move the castle behind the lake` edit objects that already exist. A place narrows which ones: `paint the trees near the lake red` and `remove the flowers next to the house` act only on objects in that place, matched in the scene with the same geometry placement uses (near, left/right of, behind, in front of, inside; `between`/`across` are refused with a notice).
 
 </details>
 
@@ -97,9 +99,9 @@ Pronouns resolve within one request, with bindings to actual new objects. Across
 
 Current verification and ten diagnostic scores are recorded in the [latest evaluation report](evaluation/reports/quarter_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**627 Python tests · 27 scene tests · 68 desktop/mobile browser checks · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
+**704 Python tests (3 known grammar gaps tracked as expected failures) · 35 scene tests · 70 desktop/mobile browser checks · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
 
-Round eleven froze 50 new commands covering edits, cross-request references and fractions before the parser saw them: **44/50 first run, 40/40 core**, then 50/50 after fixes with no regressions elsewhere ([report](evaluation/reports/edits_fixes_report.md)).
+Round eleven froze 50 new commands covering edits, cross-request references and fractions before the parser saw them: **44/50 first run, 40/40 core**, then 50/50 after fixes with no regressions elsewhere ([report](evaluation/reports/edits_fixes_report.md)). Round twelve froze another 50 for place filters (`paint the trees near the lake red`, `remove the flowers next to the house`), fractions and wording gaps: **41/50 first run, 39/40 core** (the one core miss is a labelling error: the gold asked for 18 flowers against the documented 16-per-action cap), 46/50 after fixes. Its first run exposed two *silent* misparses, so a notice now appears whenever a typed color is used by no action ([report](evaluation/reports/filters_fixes_report.md)).
 
 | Saved sets 1 → 9, retested | New sample 10, first run |
 |---|---|
@@ -107,7 +109,7 @@ Round eleven froze 50 new commands covering edits, cross-request references and 
 
 The latest fixes address quarters, “of each color,” mixed-type shared locations and future perfect part-color clauses. Fractions require an explicit total that gives whole objects. Shared comma tails apply to all sources in one creation clause and resolve before new objects enter reference state. Broader gaps include thirds, percentages, alternate each wording and cross-clause collections; the report shows every failure.
 
-**Why rules?** A [dependency-parse baseline](evaluation/reports/extractor_comparison_report.md) reads the same actions from spaCy's arcs alone. Frozen before its first run, it matches **23%** of 600 labelled commands exactly, against the rules' **93%** retest and **80%** first-run scores: arcs find verbs, objects and prepositions, but not how a total splits into colored groups, what a pronoun means, or that a kept object is protected. The analysis panel shows both readings of every sentence.
+**Why rules?** A [dependency-parse baseline](evaluation/reports/extractor_comparison_report.md) reads the same actions from spaCy's arcs alone. Frozen before its first run, it matches **22%** of 650 labelled commands exactly, against the rules' **94%** retest and **81%** first-run scores: arcs find verbs, objects and prepositions, but not how a total splits into colored groups, what a pronoun means, or that a kept object is protected. The analysis panel shows both readings of every sentence.
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 

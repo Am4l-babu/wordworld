@@ -29,7 +29,7 @@ def labelled_sets():
     yield "development", "Development regressions (tests/commands.json)", None, [
         {"id": f"D{i + 1:02d}", "text": c["text"], "expected": c["actions"]} for i, c in enumerate(json.loads((ROOT / "tests/commands.json").read_text(encoding="utf-8")))]
     for name, path, first_run in [("heldout", "tests/heldout_commands.json", "evaluation/results/heldout_results.json")] + [
-            (f"fresh_v{n}", f"tests/fresh_commands_v{n}.json", f"evaluation/results/fresh_results_v{n}.json") for n in range(2, 12)]:
+            (f"fresh_v{n}", f"tests/fresh_commands_v{n}.json", f"evaluation/results/fresh_results_v{n}.json") for n in range(2, 13)]:
         data = json.loads((ROOT / path).read_text(encoding="utf-8"))
         cases = [{"id": c["id"], "text": c["text"], "expected": c["expected_actions"], "context": c.get("context")} for c in data["cases"]]
         recorded = json.loads((ROOT / first_run).read_text(encoding="utf-8"))["metrics"]["exact_match"]

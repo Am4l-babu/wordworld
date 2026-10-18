@@ -173,3 +173,22 @@ test('a two-finger pinch zooms the island',async({page})=>{
  await expect(page.locator('.zoom-controls')).not.toContainText('100%');
  await expect(count(page)).toContainText('22 total');
 });
+
+test('a place filter edits and removes only the objects in that place',async({page})=>{
+ const trees=scene(page).getByRole('button',{name:'Select tree',exact:true});
+ await expect(trees).toHaveCount(9);
+ await editor(page).fill('Paint the trees near the lake red');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ const red=trees.filter({has:page.locator('circle[fill="#ed786f"]')});
+ await expect(red).not.toHaveCount(0);
+ expect(await red.count()).toBeLessThan(9);
+ await expect(page.locator('.actions-chips').first()).toContainText('near lake');
+ const painted=await red.count();
+ await editor(page).fill('Remove the trees near the lake');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(trees).toHaveCount(9-painted);
+ await expect(red).toHaveCount(0);
+ await editor(page).fill('Remove the rocks near the mountain');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('There is no mountain to measure from');
+});

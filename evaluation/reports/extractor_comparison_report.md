@@ -4,9 +4,9 @@ WordWorld drives the world with hand-written grounding rules (`backend/parser.py
 
 ## Method and caveats
 
-- **Commands:** 600 labelled commands: the 50-command development set, the held-out set and fresh sets v2–v10.
+- **Commands:** 650 labelled commands: the 50-command development set, the held-out set and fresh sets v2–v10.
 - **Scoring:** identical field definitions to `tests/evaluate_heldout.py`. Exact match compares every field of the ordered action list.
-- **The rules have seen these sets.** After each set's first run, the rule parser was improved using its failures, so rule retest scores are optimistic. Their recorded **first-run** exact match on the 11 frozen sets was **442/550 (80%)**.
+- **The rules have seen these sets.** After each set's first run, the rule parser was improved using its failures, so rule retest scores are optimistic. Their recorded **first-run** exact match on the 12 frozen sets was **483/600 (80%)**.
 - **The baseline has not.** It was written against separate example sentences and frozen (SHA-256 `a3fa82150bd5…`) before its first run here; it is not tuned on these results.
 - Fresh set v11 tests edits and cross-request references. Its context cases give the rules what the previous command touched; the baseline cannot use that context, which is part of what is being compared.
 - Both are implementation-aware, hand-authored diagnostics, not independent accuracy estimates.
@@ -15,11 +15,11 @@ WordWorld drives the world with hand-written grounding rules (`backend/parser.py
 
 | Metric | Rules (retest) | Dependency baseline |
 |---|---|---|
-| exact match | 557/600 (93%) | 138/600 (23%) |
-| intent | 559/600 (93%) | 260/600 (43%) |
-| entity count color | 560/600 (93%) | 194/600 (32%) |
-| spatial | 147/153 (96%) | 41/153 (27%) |
-| identical action lists | 27% of commands | |
+| exact match | 608/650 (94%) | 146/650 (22%) |
+| intent | 611/650 (94%) | 293/650 (45%) |
+| entity count color | 611/650 (94%) | 227/650 (35%) |
+| spatial | 154/160 (96%) | 46/160 (29%) |
+| identical action lists | 26% of commands | |
 
 ## By set
 
@@ -32,11 +32,12 @@ WordWorld drives the world with hand-written grounding rules (`backend/parser.py
 | fresh_v4 | 46/50 (92%) | 40/50 | 2/50 (4%) | 0/13 (0%) |
 | fresh_v5 | 47/50 (94%) | 41/50 | 3/50 (6%) | 1/8 (12%) |
 | fresh_v6 | 46/50 (92%) | 41/50 | 1/50 (2%) | 0/9 (0%) |
-| fresh_v7 | 45/50 (90%) | 40/50 | 8/50 (16%) | 0/7 (0%) |
-| fresh_v8 | 44/50 (88%) | 40/50 | 3/50 (6%) | 1/4 (25%) |
-| fresh_v9 | 44/50 (88%) | 40/50 | 3/50 (6%) | 1/13 (8%) |
-| fresh_v10 | 42/50 (84%) | 40/50 | 4/50 (8%) | 2/11 (18%) |
+| fresh_v7 | 46/50 (92%) | 40/50 | 8/50 (16%) | 0/7 (0%) |
+| fresh_v8 | 45/50 (90%) | 40/50 | 3/50 (6%) | 1/4 (25%) |
+| fresh_v9 | 45/50 (90%) | 40/50 | 3/50 (6%) | 1/13 (8%) |
+| fresh_v10 | 44/50 (88%) | 40/50 | 4/50 (8%) | 2/11 (18%) |
 | fresh_v11 | 50/50 (100%) | 44/50 | 15/50 (30%) | 5/11 (45%) |
+| fresh_v12 | 46/50 (92%) | 41/50 | 8/50 (16%) | 5/7 (71%) |
 
 ## Reading the results
 
@@ -59,7 +60,7 @@ Examples where only the baseline is right show phrasings the rules still miss; e
   - rules `[{"action": "setting", "key": "time", "value": "day"}]`
   - baseline `[{"action": "setting", "key": "time", "value": "day"}, {"action": "setting", "key": "weather", "value": "clear"}]`
 
-### Only the rules are exactly right (first 25): 421
+### Only the rules are exactly right (first 25): 464
 
 - **D17** “Build a house and a castle”
   - expected `[{"action": "add", "type": "house", "count": 1, "color": null}, {"action": "add", "type": "castle", "count": 1, "color": null}]`

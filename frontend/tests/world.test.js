@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {applyActions,makeItem,cleanScene,focusGroups,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
+import {applyActions,makeItem,cleanScene,focusGroups,inPlace,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
 import {fallbackParser} from '../src/previewParser.js';
 
 test('reference removal preserves preexisting objects of the same type',()=>{
@@ -159,4 +159,42 @@ test('a move with no room reports that the object stayed put without claiming it
  assert.deepEqual([r.items[1].x,r.items[1].y],[500,450]);
  assert.deepEqual(r.descriptions,[]);
  assert.match(r.notices[0],/stayed put/);
+});
+
+test('edits and removals filtered by place touch only objects in that place',()=>{
+ const lake=makeItem('lake',700,300),nearTree=makeItem('tree',640,330),farTree=makeItem('tree',200,300);
+ let r=apply([lake,nearTree,farTree],[{action:'recolor',type:'tree',count:'all',color:'red',filter_relation:'near',filter_target:'lake'}]);
+ assert.deepEqual(r.items.map(o=>o.color),[undefined,'red',undefined]);
+ assert.deepEqual(r.descriptions,['Painted 1 tree red']);
+ r=apply([lake,nearTree,farTree],[{action:'remove',type:'tree',count:'all',filter_relation:'near',filter_target:'lake'}]);
+ assert.deepEqual(r.items.map(o=>o.id),[lake.id,farTree.id]);
+ assert.deepEqual(r.descriptions,['Removed 1 tree near the lake']);
+ r=apply([lake,nearTree,farTree],[{action:'resize',type:'tree',count:'all',scale:1.25,filter_relation:'left',filter_target:'lake'}]);
+ assert.deepEqual(r.items.map(o=>o.scale),[1,1.25,1.25]);
+});
+test('a place filter without its landmark explains itself and changes nothing',()=>{
+ const tree=makeItem('tree',300,300);
+ let r=apply([tree],[{action:'remove',type:'tree',count:'all',filter_relation:'near',filter_target:'lake'}]);
+ assert.equal(r.items.length,1);
+ assert.deepEqual(r.notices,['There is no lake to measure from, so nothing was removed.']);
+ r=apply([tree],[{action:'recolor',type:'tree',count:'all',color:'red',filter_relation:'near',filter_target:'lake'}]);
+ assert.equal(r.items[0].color,undefined);
+ assert.match(r.notices[0],/no lake to measure from/);
+ const lake=makeItem('lake',700,300);
+ r=apply([tree,lake],[{action:'remove',type:'tree',count:'all',filter_relation:'near',filter_target:'lake'}]);
+ assert.deepEqual(r.notices,['There are no trees near the lake to remove.']);
+});
+for(const relation of ['left','right','above','below','near'])test(`objects placed ${relation} of a house are found by a ${relation} filter and not by its opposite`,()=>{
+ const house=makeItem('house',500,350);
+ const placed=apply([house],[{action:'add',type:'tree',count:6,relation,target:'house'}]).items.slice(1);
+ assert.equal(placed.length,6);
+ for(const tree of placed)assert.ok(inPlace(tree,[house],relation),`${relation}: ${tree.x},${tree.y}`);
+ const opposite={left:'right',right:'left',above:'below',below:'above'}[relation];
+ if(opposite)for(const tree of placed)assert.ok(!inPlace(tree,[house],opposite));
+});
+test('"inside" needs the object centre within the landmark and a lake is not inside itself',()=>{
+ const lake=makeItem('lake',500,300);
+ assert.ok(inPlace(makeItem('rock',520,305),[lake],'inside'));
+ assert.ok(!inPlace(makeItem('rock',700,300),[lake],'inside'));
+ assert.ok(!inPlace(lake,[lake],'near'));
 });

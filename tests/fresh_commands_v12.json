@@ -1,0 +1,929 @@
+{
+  "name": "WordWorld twelfth fresh 50-command evaluation — 2026-10-18",
+  "method": "50 newly hand-authored commands and expected actions frozen before first prediction. The place-filter grammar for edits and removals was already implemented, so these commands test it on unseen sentences, not on the sentences used to build it. The author wrote the grammar and saw prior errors; not independent.",
+  "scope": "40 preassigned core cases (place filters on recolor/resize/remove/move, filter vs destination, coordination, creation wording that must not become a filter, negation and refusals, thirds/tenths/percentages, one context reference) and 10 broader probes (filter wordings, alternate \"each\" wordings, group multiplication, sixths, partial references).",
+  "gold_policy": "Exact ordered action dictionaries. Place filters add filter_relation/filter_target; scale factors follow the documented edit semantics. Probe gold represents intended natural English, including forms outside the grammar.",
+  "parser_sha256_before": "b042fe077232b68d0cbd0501f961d900bc8c8112e65a6b455bfac856750c484b",
+  "pipeline_sha256_before": "2882f6808e1f347d61606f306a6d24fbf465badbebbf08a3bd8891b8accda382",
+  "source_files_sha256": {
+    "backend/dependency_baseline.py": "a3fa82150bd5cfac2fd41b0f84d7f25ab733867942376e6d0082c428e9eb529c",
+    "backend/edits.py": "48988e92d3b527dd4e0444ede6cb32078e30c9dae95cff5271fad6f0436c9605",
+    "backend/lexicon.py": "ccb802b09103705e3d309e1ef93d79153f94a328d43a4e822bc7004c950a9efa",
+    "backend/main.py": "ea79c104ba3e48bfe374fa8e5b0e25704f72b3a4af7f3953807992393f18df65",
+    "backend/parser.py": "b042fe077232b68d0cbd0501f961d900bc8c8112e65a6b455bfac856750c484b",
+    "backend/phrases.py": "6e8d27b7bf7e6a41147950ac0b2faacd1a7f0def2d3f8f90f19f8d75358840b7",
+    "backend/references.py": "49248372c17ee1688d358bbbba0c0748272423d847fab6e35ca6844baa84c710"
+  },
+  "uniqueness": "No normalized exact overlaps with all twelve earlier datasets, Python test literals, browser/scene test and UI example literals, README/archive lines or decoded command links at freeze time.",
+  "development_inputs_sha256": {
+    "tests/commands.json": "2b4c4eb37c64ea7996fc018f5bf9f67e8dbb86fa0b8512a8bdd04dca5200978b",
+    "tests/heldout_commands.json": "d372d2d85208319439929068902779ba4ea9144722caea783a8c792bcbd7a224",
+    "tests/fresh_commands_v2.json": "050f1f92dba55b89883ebd05c4dc074b287c230a65f33f3d12a7a321ee17042b",
+    "tests/fresh_commands_v3.json": "bc902a965baba135a0b81dc0774230921ed49a82bb510305a771da0e1a684927",
+    "tests/fresh_commands_v4.json": "83f280f866430ebcabf50de1ac3741a62da42d74757f20fb97db2c675c62a0cd",
+    "tests/fresh_commands_v5.json": "e20bbe0ba47f12431c33708b4aa653ce8689a2b9027aca7294747dc0c0f9bc8e",
+    "tests/fresh_commands_v6.json": "b4c823eafa84322f3c164fcaa0080bf5ed4f94f61d374c8dcd2145c74fed3703",
+    "tests/fresh_commands_v7.json": "b1c66ed63c5747d59c87b9baaf37f923307cf9d1d42868e7bfeb1ef3fef4b85e",
+    "tests/fresh_commands_v8.json": "44e7288480226cbe1597aa5d925fd41b518b43bec82b260104ffe266c4be1dc5",
+    "tests/fresh_commands_v9.json": "393d87061735968e5d33452530c341e1ff8ffbe9aa88418932d6f4440b44d475",
+    "tests/fresh_commands_v10.json": "9ef33daf26d8e90aaf06df666a76d04d6b2fdcf777e4b805e741ba57b019c79a",
+    "tests/fresh_commands_v11.json": "6c736a5d351bb343a51333d2b56da17607705df9204f16f887bcbae6701e4380",
+    "tests/test_accuracy_fixes.py": "832b44b1cf8a305fb1522d365bc227c0415a309ad69c415031615728bbb23fd9",
+    "tests/test_api.py": "c38b758a9e62a60ce4c52df89cf4b14fe8cf01dc558562cc4b6257dfbc33958f",
+    "tests/test_colon_fixes.py": "2dbced6f482ebc8433b288f70ab8474d2c3fa9820819ee7335f56eb1e2833379",
+    "tests/test_distributive_fixes.py": "1559b95d9cd695ae5e3bcda9a9b9ce51c8ff9df40c91405d95ed8fd3860db493",
+    "tests/test_edits.py": "e49052507ee1deb4c5bc5a44321773253041ead6ab4fe7b0d6c72eabf31992c6",
+    "tests/test_edit_fixes.py": "7587c2af4328575c8743dc50dfa24afec816da3acb55031bb816c20c67b989c9",
+    "tests/test_ellipsis_fixes.py": "ccc344840d2aa1f427ee49350d0225e5f1c7532982f572ef44ecde67a068bc4a",
+    "tests/test_evaluation_empty_metrics.py": "b4a0b54681fb297a1ed5b86794f2af85ba7a6bd28361598e856e7e4ee8cf9959",
+    "tests/test_parser.py": "2b0e97f268bd131c5fbf7cfeaac08c84c541e4c79eb6b343aef2291387acd82e",
+    "tests/test_partition_fixes.py": "84ff629afb806763135cef14371fc5cdce5a3525b6dddd9a6194d8fbae71f16e",
+    "tests/test_postnoun_fixes.py": "bcb665be4f8a7c7af223b3a4a7fc9be28ef173bb43678f7f221f0c519fc97cf6",
+    "tests/test_quarter_fixes.py": "779c7cc0636fa34fef61e3eaff5866091f5b91c78451684c0965876f64f12f17",
+    "tests/test_reference_fixes.py": "72e12f3e748bed6135f4dc5ca188921e427e01409521b385d098ca20c9d60bad",
+    "tests/test_regressions.py": "a57e213e611c1d44457b8f3fbf39d6b3c6b95ade2ecad6378788ab9bf6bbf6a9",
+    "tests/test_shared_fixes.py": "4e411f53c3c6cff4f93360a255e0737bef6c2aa7ca4de2e298d84cd947516a6e",
+    "frontend/tests/browser/mobile.spec.js": "33dac8a49d39a4490143fe008e826252618e1a7d0790bfccf6007fabe166a9b7",
+    "frontend/tests/browser/smoke.spec.js": "b233e49f6f69fe801fb1a2786fc9e3ad826b1cd19d098874d33b6c506610bfd9",
+    "frontend/tests/browser/ux.spec.js": "83495f643da94e57e4ca7434b4d3dcd3a604efb0eb53f3f9d2f00d1f8e60f6e1",
+    "frontend/tests/world.test.js": "fe21e86b6a7cec0111e6f724dc8043a3425aac45295b2c50e9a84dd1359578ad",
+    "frontend/scripts/capture-readme.mjs": "a60b5d13acb33c15ca9b119d396fdc720a02674d53254a3464668ab0fa139822",
+    "frontend/src/world.js": "ffc99fcf92f621277a73ceef539da051b5b37f6b7e8104217be6c1bf2a2b898f",
+    "frontend/src/App.jsx": "3e9efb3728fb42b2540edde09b9af6880f0cbeb11312464436537971eac66dd0",
+    "frontend/src/components/HelpDialog.jsx": "5323bbce8d45cc344631d6a2e43c933d9ad386aecc4d3d411004db4df959d73c",
+    "README.md": "8a48dbe859ff7c03d5358add20811de6710614543ba6a5ca6bb889b4fd9eb7dd",
+    "docs/DEVELOPMENT.md": "bdd9e45d8e72602d1b83ea1680c75ea02aa0d5748c7850260756aaa5d2593ea7"
+  },
+  "cases": [
+    {
+      "id": "S01",
+      "text": "Paint the flowers near the road white.",
+      "category": "filter_recolor",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "white",
+          "filter_relation": "near",
+          "filter_target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S02",
+      "text": "Make the trees behind the castle taller.",
+      "category": "filter_resize",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "tree",
+          "count": "all",
+          "scale": 1.25,
+          "filter_relation": "above",
+          "filter_target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S03",
+      "text": "Shrink the rocks to the right of the river.",
+      "category": "filter_resize",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "rock",
+          "count": "all",
+          "scale": 0.8,
+          "filter_relation": "right",
+          "filter_target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S04",
+      "text": "Dye the houses in front of the lake orange.",
+      "category": "filter_recolor",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": "all",
+          "color": "orange",
+          "filter_relation": "below",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S05",
+      "text": "Colour the red flowers beside the lake pink.",
+      "category": "filter_with_color_filter",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "pink",
+          "filter_color": "red",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S06",
+      "text": "Paint the trees inside the lake green.",
+      "category": "filter_inside",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": "all",
+          "color": "green",
+          "filter_relation": "inside",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S07",
+      "text": "Make the houses near the lake red.",
+      "category": "filter_make_recolor",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": "all",
+          "color": "red",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S08",
+      "text": "Make the flowers by the road yellow.",
+      "category": "filter_by",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "yellow",
+          "filter_relation": "near",
+          "filter_target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S09",
+      "text": "Paint the trees close to the lake blue.",
+      "category": "filter_close_to",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": "all",
+          "color": "blue",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S10",
+      "text": "Make the castle near the lake smaller.",
+      "category": "filter_singular",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "castle",
+          "count": 1,
+          "scale": 0.8,
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S11",
+      "text": "Make the towers near the castle smaller.",
+      "category": "filter_resize",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "tower",
+          "count": "all",
+          "scale": 0.8,
+          "filter_relation": "near",
+          "filter_target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S12",
+      "text": "Enlarge the towers behind the houses a lot.",
+      "category": "filter_amount",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "tower",
+          "count": "all",
+          "scale": 1.5,
+          "filter_relation": "above",
+          "filter_target": "house"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S13",
+      "text": "Remove the flowers next to the house.",
+      "category": "filter_remove",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": "all",
+          "filter_relation": "near",
+          "filter_target": "house"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S14",
+      "text": "Delete one tree behind the castle.",
+      "category": "filter_remove_count",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 1,
+          "filter_relation": "above",
+          "filter_target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S15",
+      "text": "Erase the rocks left of the lake.",
+      "category": "filter_remove",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "rock",
+          "count": "all",
+          "filter_relation": "left",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S16",
+      "text": "Get rid of three trees near the river.",
+      "category": "filter_remove_count",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": 3,
+          "filter_relation": "near",
+          "filter_target": "river"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S17",
+      "text": "Destroy all the houses in front of the mountain.",
+      "category": "filter_remove_all",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "house",
+          "count": "all",
+          "filter_relation": "below",
+          "filter_target": "mountain"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S18",
+      "text": "Remove every flower beside the road.",
+      "category": "filter_remove_every",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "flower",
+          "count": "all",
+          "filter_relation": "near",
+          "filter_target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S19",
+      "text": "Move the flowers near the lake to the left of the castle.",
+      "category": "filter_move",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "flower",
+          "count": "all",
+          "relation": "left",
+          "target": "castle",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S20",
+      "text": "Move the trees right of the house behind the lake.",
+      "category": "filter_move",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "tree",
+          "count": "all",
+          "relation": "above",
+          "target": "lake",
+          "filter_relation": "right",
+          "filter_target": "house"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S21",
+      "text": "Shift the rocks near the road next to the tower.",
+      "category": "filter_move",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "rock",
+          "count": "all",
+          "relation": "near",
+          "target": "tower",
+          "filter_relation": "near",
+          "filter_target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S22",
+      "text": "Move the flowers near the lake.",
+      "category": "move_destination_not_filter",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "move",
+          "type": "flower",
+          "count": "all",
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S23",
+      "text": "Make the houses near the river bigger and paint the trees near the lake purple.",
+      "category": "filter_coordinated",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "resize",
+          "type": "house",
+          "count": "all",
+          "scale": 1.25,
+          "filter_relation": "near",
+          "filter_target": "river"
+        },
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": "all",
+          "color": "purple",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S24",
+      "text": "Paint the flowers near the lake red, the flowers near the road white.",
+      "category": "filter_comma_continuation",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "red",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        },
+        {
+          "action": "recolor",
+          "type": "flower",
+          "count": "all",
+          "color": "white",
+          "filter_relation": "near",
+          "filter_target": "road"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S25",
+      "text": "Make it night and remove the trees near the lake.",
+      "category": "setting_then_filter",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "setting",
+          "key": "time",
+          "value": "night"
+        },
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": "all",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S26",
+      "text": "Remove the trees near the lake and add two flowers near the lake.",
+      "category": "filter_remove_then_add",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": "all",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S27",
+      "text": "Remove the rocks near the lake, then plant a tree.",
+      "category": "filter_remove_then_add",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "rock",
+          "count": "all",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 1,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S28",
+      "text": "Plant two trees near the lake.",
+      "category": "creation_not_filter",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": null,
+          "relation": "near",
+          "target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S29",
+      "text": "Put three flowers behind the castle.",
+      "category": "creation_not_filter",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 3,
+          "color": null,
+          "relation": "above",
+          "target": "castle"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S30",
+      "text": "Delete two cottages.",
+      "category": "unfiltered_remove",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "house",
+          "count": 2
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S31",
+      "text": "Don't remove the trees near the lake.",
+      "category": "filter_negated",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "S32",
+      "text": "Remove the trees between the houses.",
+      "category": "filter_unsupported_between",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "S33",
+      "text": "Paint the trees between the lake and the castle red.",
+      "category": "filter_unsupported_between",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "S34",
+      "text": "Remove the trees near it.",
+      "category": "filter_pronoun_landmark",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "S35",
+      "text": "Resize the mountains near the river.",
+      "category": "filter_missing_value",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "S36",
+      "text": "Paint the trees near the lake.",
+      "category": "filter_missing_color",
+      "scope": "core",
+      "expected_actions": [],
+      "label_note": ""
+    },
+    {
+      "id": "S37",
+      "text": "Plant twenty trees: 15% pink, 35% white and the rest green.",
+      "category": "percent_remainder",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 7,
+          "color": "white"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 10,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S38",
+      "text": "Build nine houses: a third red, a third blue and a third green.",
+      "category": "thirds_triple",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "blue"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S39",
+      "text": "Create twenty flowers: one tenth pink and nine tenths white.",
+      "category": "tenths",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 18,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S40",
+      "text": "Paint them red.",
+      "category": "context_recolor",
+      "scope": "core",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": 3,
+          "color": "red"
+        }
+      ],
+      "label_note": "",
+      "context": [
+        {
+          "type": "tree",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "S41",
+      "text": "Paint the trees red near the lake.",
+      "category": "filter_after_value",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "recolor",
+          "type": "tree",
+          "count": "all",
+          "color": "red",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S42",
+      "text": "Remove the trees that are near the lake.",
+      "category": "filter_relative_clause",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": "all",
+          "filter_relation": "near",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S43",
+      "text": "Remove the trees on the left of the lake.",
+      "category": "filter_on_the_left",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "remove",
+          "type": "tree",
+          "count": "all",
+          "filter_relation": "left",
+          "filter_target": "lake"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S44",
+      "text": "Plant trees in each of pink and white, two per color.",
+      "category": "each_in_each_of",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 2,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S45",
+      "text": "Place a pair of flowers in each of red and yellow.",
+      "category": "each_pair_in_each_of",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 2,
+          "color": "yellow"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S46",
+      "text": "Add flowers in pink and white, four of each.",
+      "category": "each_trailing_count",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 4,
+          "color": "white"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S47",
+      "text": "Plant ten trees: three pink; the rest green.",
+      "category": "semicolon_remainder",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 3,
+          "color": "pink"
+        },
+        {
+          "action": "add",
+          "type": "tree",
+          "count": 7,
+          "color": "green"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S48",
+      "text": "Draw two clusters of three flowers.",
+      "category": "group_multiplication",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "flower",
+          "count": 6,
+          "color": null
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S49",
+      "text": "Build three houses, then make two of them red.",
+      "category": "create_then_partial_reference",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 3,
+          "color": null
+        },
+        {
+          "action": "recolor",
+          "type": "house",
+          "count": 2,
+          "color": "red"
+        }
+      ],
+      "label_note": ""
+    },
+    {
+      "id": "S50",
+      "text": "Build twelve houses: a sixth red and the rest blue.",
+      "category": "sixths",
+      "scope": "capability_probe",
+      "expected_actions": [
+        {
+          "action": "add",
+          "type": "house",
+          "count": 2,
+          "color": "red"
+        },
+        {
+          "action": "add",
+          "type": "house",
+          "count": 10,
+          "color": "blue"
+        }
+      ],
+      "label_note": ""
+    }
+  ]
+}

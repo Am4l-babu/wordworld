@@ -82,10 +82,9 @@ def test_fronted_relation_applies_to_each_coordinated_subject():
     assert [a["target"] for a in shared] == ["lake", "lake"]
 
 
-def test_fronted_removal_does_not_delete_unfiltered_type():
+def test_fronted_removal_is_filtered_by_its_place_never_unfiltered():
     result = parse("Near the lake, remove trees.")
-    assert result["actions"] == []
-    assert result["warnings"]
+    assert result["actions"] == [{"action": "remove", "type": "tree", "count": "all", "filter_relation": "near", "filter_target": "lake"}]
 
 
 @pytest.mark.parametrize("text", [

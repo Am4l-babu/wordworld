@@ -34,8 +34,8 @@ Tests: `python -m pytest -q tests && python -m tests.evaluate && python -m tests
 
 ## Highest-priority next tasks
 
-Done: Playwright desktop/mobile suite, inline dependency-arc explanation, two-target `between` extraction, language edits, cross-request references, CI, rules-vs-dependency comparison, thirds/fifths/percentages, pinch-to-zoom, frozen round-eleven set (`tests/fresh_commands_v11.json`).
+Done: Playwright desktop/mobile suite, inline dependency-arc explanation, two-target `between` extraction, language edits, cross-request references, CI, rules-vs-dependency comparison, thirds/fifths/percentages, pinch-to-zoom, place filters for edits/removals, frozen round-eleven and round-twelve sets (`tests/fresh_commands_v11.json`, `_v12.json`).
 
-1. Remaining grammar gaps: alternate "each" wording and cross-clause collections (see `evaluation/reports/quarter_fixes_report.md`).
-2. Spatially filtered edits and removals ("paint the trees near the lake red") need a filter field in the action schema and the scene.
-3. Freeze a round-twelve set before tuning on any new grammar; keep first-run and retest numbers separate.
+1. Remaining grammar gaps, tracked as strict xfails in `tests/test_filter_fixes.py`: a count after a color list ("in each of pink and white, two per color"), trailing each-counts ("four of each"), group multiplication ("two clusters of three").
+2. Place filters cover near/left/right/behind/in front of/inside one named landmark; `between`/`across` filters and pronoun landmarks ("the trees near it") are refused with a notice and need scene support.
+3. Freeze a round-thirteen set before tuning on any new grammar; keep first-run and retest numbers separate. Never edit a frozen label, even a wrong one (round twelve's S39): disclose it in the report.
