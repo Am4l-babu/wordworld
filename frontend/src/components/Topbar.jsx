@@ -5,6 +5,7 @@ import WorldMenu from './WorldMenu';
 export default function Topbar({theme, onToggleTheme, onHelp, onShare, onExport, onImport, onTestLog}) {
   const next = theme === 'dark' ? 'light' : 'dark';
   return <header className="topbar">
+    <h1 className="visually-hidden">WordWorld: turn sentences into a little world</h1>
     <div className="brand">
       <div className="brand-icon"><Layers3 size={24} fill="rgba(255,255,255,.15)"/></div>
       <div className="brand-name">word<span>world</span><i>.</i></div>

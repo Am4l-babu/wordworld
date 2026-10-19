@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from . import edits, lexicon, parser, phrases
-from .lexicon import ALIASES, COLORS, NUMBER_VALUES
+from .lexicon import ALIASES, COLORS, NEGATION_RE, NUMBER_VALUES
 
 # Words the grammar understands, as single tokens. Phrases ("in front of") are matched word by word.
 COMMANDS = [
@@ -58,6 +58,10 @@ KEEP = {
     "tall", "short", "wide", "cozy", "lovely", "pretty", "nice", "huge", "giant", "slightly", "more", "less",
     "percent", "such", "like", "most", "many", "never", "only", "were", "does", "done", "went", "gone", "must",
 }
+# A negation word that is misspelled is a safety problem, not a cosmetic one: "nefer remove them" removes what the person forbade.
+NEGATION_WORDS = {"not", "never", "without", "cannot"} & set(re.findall(r"[a-z]{3,}", NEGATION_RE.pattern))  # whole words only, not contraction fragments
+# Notices that report a deliberate, correct skip ("Skipped a negated instruction") are not signs of confusion.
+DELIBERATE_NOTICES = ("Skipped a negated", "Skipped negated", "Preserved referenced objects")
 WORD = re.compile(r"[A-Za-z]+")
 MIN_LENGTH = 3
 MAX_CHANGES = 4
@@ -119,20 +123,28 @@ def understood(result: dict[str, Any]) -> int:
     return sum(h["end"] - h["start"] for h in result["highlights"])
 
 
-def progress(new: dict[str, Any], old: dict[str, Any]) -> bool:
-    """Is `new` a step toward understanding the sentence? Fewer notices, or more of it highlighted.
+def confusion(result: dict[str, Any]) -> int:
+    """Notices that signal the parser did not understand something; deliberate skips do not count."""
+    return sum(1 for w in result["warnings"] if not w.startswith(DELIBERATE_NOTICES))
 
-    Intermediate steps need not produce actions: with two typos, neither fix alone may be enough.
+
+def progress(new: dict[str, Any], old: dict[str, Any], word: str = "") -> bool:
+    """Is `new` a step toward understanding the sentence? Fewer confusing notices, or more of it highlighted.
+
+    Intermediate steps need not produce actions: with two typos, neither fix alone may be enough. Restoring a
+    negation word counts whenever it changes what will be done, because the typo made the command do the opposite.
     """
-    if len(new["warnings"]) != len(old["warnings"]):
-        return len(new["warnings"]) < len(old["warnings"])
+    if word.lower() in NEGATION_WORDS and new["actions"] != old["actions"]:
+        return True
+    if confusion(new) != confusion(old):
+        return confusion(new) < confusion(old)
     return understood(new) > understood(old)
 
 
 def standing(result: dict[str, Any], edits: int, rank: int) -> tuple[int, int, int, int]:
     """Order competing corrections of the same word: fewest notices, then the closest word (fewest edits, so a
     longer plural is not preferred just because it highlights more text), then most understood, then most canonical."""
-    return (-len(result["warnings"]), -edits, understood(result), -rank)
+    return (-confusion(result), -edits, understood(result), -rank)
 
 
 def suggest(text: str, parse: Callable[..., dict[str, Any]], context: list[dict[str, Any]] | None = None,
@@ -164,7 +176,7 @@ def suggest(text: str, parse: Callable[..., dict[str, Any]], context: list[dict[
             except ValueError:
                 continue
             rank = standing(result, distance(match.group().lower(), replacement.lower()), RANK.get(replacement.lower(), 0))
-            if progress(result, current) and (best is None or rank > best[0]):
+            if progress(result, current, replacement) and (best is None or rank > best[0]):
                 best = (rank, replacement, attempt, result)
         if best:
             _, replacement, current_text, current = best
@@ -172,6 +184,6 @@ def suggest(text: str, parse: Callable[..., dict[str, Any]], context: list[dict[
     # The final sentence must produce actions, and must not merely re-state what the original already did.
     if not changes or not current["actions"]:
         return []
-    if original["actions"] and current["actions"] == original["actions"] and len(current["warnings"]) >= len(original["warnings"]):
+    if original["actions"] and current["actions"] == original["actions"] and confusion(current) >= confusion(original):
         return []
     return [{"text": current_text, "changes": changes, "actions": len(current["actions"]), "replaces": bool(original["actions"])}]

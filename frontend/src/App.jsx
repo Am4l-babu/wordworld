@@ -61,6 +61,8 @@ function App() {
   const [future, setFuture] = useState([]);
   const [analysisOpen, setAnalysisOpen] = useState(true), [apiState, setApiState] = useState('checking');
   const [dialog, setDialog] = useState(null), [toast, setToast] = useState(null);
+  // A cold serverless start can take seconds; after a few, say so instead of looking frozen.
+  const [slow, setSlow] = useState(false);
   // Everything typed and what the parser did, kept only in this browser until it is downloaded (see testlog.js).
   const [testLog, setTestLog] = useState(getTestLog);
   const inputRef = useRef(null), toastTimer = useRef(null), fileRef = useRef(null);
@@ -125,6 +127,7 @@ function App() {
     const context = focusGroups(live.current.items, focus);
     busyRef.current = true;
     setBusy(true);
+    const slowTimer = setTimeout(() => setSlow(true), 4000);
     setPrompt('');
     recall.current = null;
     setRecent(r => [...r.filter(x => x !== cmd), cmd].slice(-20));
@@ -162,6 +165,8 @@ function App() {
       const logId = record(cmd, {...result, message: text}, context);
       setMessages(v => [...v, {text, kind: 'system', actionCount: 0, suggestion: result.suggestions?.[0], logId}]);
     }
+    clearTimeout(slowTimer);
+    setSlow(false);
     busyRef.current = false;
     setBusy(false);
   }
@@ -316,13 +321,13 @@ function App() {
       onShare={() => setDialog('share')} onExport={exportJSON} onImport={() => fileRef.current?.click()} onTestLog={() => setDialog('testlog')}/>
     <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={importJSON}/>
     <div className="workspace">
-      <aside className="left-panel">
+      <aside className="left-panel" aria-label="Describe and review">
         <section className="intro-section">
           <div className="eyebrow"><Sparkles size={14}/> WELCOME TO YOUR CANVAS</div>
-          <h1>Dream it.<br/><span>Build it.</span></h1>
+          <p className="headline">Dream it.<br/><span>Build it.</span></p>
           <p>Turn simple sentences into a little world that's entirely yours.</p>
         </section>
-        <Journal messages={messages} busy={busy} onReset={reset} onReuse={reuse} onUndo={undo} canUndo={history.length > 0}
+        <Journal messages={messages} busy={busy} slow={slow} onReset={reset} onReuse={reuse} onUndo={undo} canUndo={history.length > 0}
           entries={Object.fromEntries(testLog.map(e => [e.id, e]))} onFlag={(id, note) => setTestLog(l => flagEntry(l, id, note))} onUnflag={id => setTestLog(l => unflagEntry(l, id))}
           onAccept={id => setTestLog(l => acceptSuggestion(l, id))}/>
         {!isCompact && composer}

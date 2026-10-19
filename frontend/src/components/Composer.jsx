@@ -13,7 +13,7 @@ export default function Composer({inputRef, value, onChange, onKeyDown, onSubmit
     <div className="composer-footer">
       <span id="composer-hint">{isCompact ? 'Tap Create to update your island' : <>↵ create · ⇧↵ new line{canRecall && ' · ↑ previous'}</>}</span>
       {value.length > 1200 && <span className="char-count">{value.length}/1400</span>}
-      <button onClick={onSubmit} disabled={!value.trim() || busy} aria-label="Generate objects" title="Generate objects">
+      <button onClick={onSubmit} disabled={!value.trim() || busy} aria-label="Create (generate objects)" title="Generate objects">
         <WandSparkles size={17} className={busy ? 'spin' : ''}/>
         <span className="create-label">{busy ? 'Creating…' : 'Create'}</span>
       </button>

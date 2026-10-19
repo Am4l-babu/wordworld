@@ -89,7 +89,7 @@ export default function Explorer({items, selected, apiState, onRetryApi, onSelec
   const [tab, setTab] = useState('objects');
   const full = items.length >= MAX_ITEMS;
   const chosen = items.find(o => o.id === selected);
-  return <aside className="right-panel">
+  return <aside className="right-panel" aria-label="World explorer">
     <div className="right-header">
       <div className="right-heading"><Layers3 size={19}/><h3>World explorer</h3></div>
       <p>All the little things in your world.</p>

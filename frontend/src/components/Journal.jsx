@@ -27,7 +27,7 @@ function FlagControl({entry, onFlag, onUnflag}) {
   </form>;
 }
 
-export function Journal({messages, busy, onReset, onReuse, onUndo, canUndo, entries = {}, onFlag, onUnflag, onAccept}) {
+export function Journal({messages, busy, slow = false, onReset, onReuse, onUndo, canUndo, entries = {}, onFlag, onUnflag, onAccept}) {
   const log = useRef(null);
   useEffect(() => {
     if (log.current) log.current.scrollTop = log.current.scrollHeight;
@@ -58,7 +58,7 @@ export function Journal({messages, busy, onReset, onReuse, onUndo, canUndo, entr
           </button>}
         </div>
       </div>)}
-      {busy && <div className="thinking"><span/><span/><span/> Thinking in pictures...</div>}
+      {busy && <div className="thinking"><span/><span/><span/> {slow ? 'Still thinking. The language engine may be waking up…' : 'Thinking in pictures...'}</div>}
     </div>
   </>;
 }
