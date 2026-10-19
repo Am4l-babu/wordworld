@@ -192,3 +192,52 @@ test('a place filter edits and removes only the objects in that place',async({pa
  await page.getByRole('button',{name:'Generate objects'}).click();
  await expect(page.getByLabel('Creation journal')).toContainText('There is no mountain to measure from');
 });
+
+test('server errors with an explanation are shown, not mistaken for an offline API',async({page})=>{
+ await page.route('**/api/parse',route=>route.fulfill({status:500,contentType:'application/json',body:JSON.stringify({detail:'The language engine hit an unexpected problem with that command. Try rephrasing it.'})}));
+ await editor(page).fill('Add a tree');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('unexpected problem with that command');
+ await expect(page.getByText('spaCy NLP connected')).toBeVisible();
+ await expect(count(page)).toContainText('22 total');
+ await page.unroute('**/api/parse');
+ await page.route('**/api/parse',route=>route.fulfill({status:422,contentType:'application/json',body:JSON.stringify({detail:[{loc:['body','text'],msg:'String should have at most 1400 characters',type:'string_too_long'}]})}));
+ await editor(page).fill('Add another tree');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('String should have at most 1400 characters');
+ await expect(count(page)).toContainText('22 total');
+});
+
+test('a typo that blocks every action offers a corrected sentence that is only applied on request',async({page})=>{
+ await editor(page).fill('Plant a tre next to the lak');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ const hint=page.getByRole('button',{name:/Did you mean/});
+ await expect(hint).toContainText('Plant a tree next to the lake');
+ await expect(count(page)).toContainText('22 total');
+ await hint.click();
+ await expect(editor(page)).toHaveValue('Plant a tree next to the lake');
+ await expect(count(page)).toContainText('22 total');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(count(page)).toContainText('23 total');
+ await editor(page).fill('Hello there friend');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('No scene changes were applied');
+ await expect(page.getByRole('button',{name:/Did you mean/})).toHaveCount(1);
+});
+
+test('a typo that only costs part of a command warns and offers an explicit undo, never a double build',async({page})=>{
+ await editor(page).fill('Build one bule house');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(count(page)).toContainText('23 total');
+ await expect(page.getByText('Part of that wasn’t understood')).toBeVisible();
+ const hint=page.getByRole('button',{name:/Did you mean/});
+ await expect(hint).toContainText('Build one blue house');
+ await hint.click();
+ await expect(editor(page)).toHaveValue('Build one blue house');
+ await expect(count(page)).toContainText('23 total');
+ await page.getByRole('button',{name:'Undo that step'}).click();
+ await expect(count(page)).toContainText('22 total');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(count(page)).toContainText('23 total');
+ await expect(scene(page).getByRole('button',{name:'Select house',exact:true}).locator('path[fill="#74a6ea"]')).toHaveCount(1);
+});

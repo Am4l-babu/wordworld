@@ -13,6 +13,7 @@ from .lexicon import (
 
 
 def number_value(raw: str) -> int | None:
+    raw = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "", raw)
     if re.fullmatch(r"[+-]?\d+(?:\.\d+)?", raw):
         return int(raw) if '.' not in raw and int(raw) >= 0 else None
     value, total = 0, 0

@@ -30,7 +30,7 @@ COUNT_WORDS = {**NUMBER_VALUES, "a": 1, "an": 1, "couple": 2, "few": 3, "several
 UNITS = "one|two|three|four|five|six|seven|eight|nine"
 BASE_NUMBER = rf"(?:(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ](?:{UNITS}))?|{'|'.join(list(NUMBER_VALUES)[:20])})"
 CARDINAL = rf"(?:(?:{BASE_NUMBER})\s+(?:hundred|thousand)(?:\s+(?:and\s+)?{BASE_NUMBER})?|hundred|thousand|{BASE_NUMBER})"
-NUMERAL = rf"(?:[+-]?\d+(?:\.\d+)?|{CARDINAL})"
+NUMERAL = rf"(?:[+-]?\d{{1,3}}(?:,\d{{3}})+(?!\d)|[+-]?\d+(?:\.\d+)?|{CARDINAL})"
 NUMBER_RE = re.compile(
     rf"(?<!\w)(?:(?P<half>half\s+(?:a\s+)?dozen)|(?:(?P<multiplier>{NUMERAL}|a|an)\s+)?(?P<group>dozens?|pairs?|couples?)|(?P<number>{NUMERAL})|(?P<approx>few|several)|(?P<article>a|an))\b", re.I
 )
@@ -76,7 +76,7 @@ WEATHER_SWITCH_RE = re.compile(r'\b(?:turn|switch)\s+(?:(?:the\s+)?(?P<before>ra
 WEATHER_STOP_PATTERN = r'(?:stop|end)\s+(?:the\s+)?(?:rain|snow|storm|shower|raining|snowing)'
 WEATHER_STOP_RE = re.compile(r'\b' + WEATHER_STOP_PATTERN + r'\b', re.I)
 CLAUSE_BREAK_RE = re.compile(
-    rf"[;!?,]+|(?<!\d)\.|\.(?!\d)|\b(?:and then|then)\b|\b(?:and|but)\s+(?=(?:(?:do not|don't|never)\s+)?(?:{ADD_PATTERN}|{REMOVE_PATTERN}|{RESET_PATTERN}|{PRESERVE_PATTERN}|{WEATHER_SWITCH_PATTERN}|{WEATHER_STOP_PATTERN}|{EDIT_BREAK_PATTERN})\b)", re.I
+    rf"[;!?]+|(?<!\d),|,(?!\d{{3}}(?!\d))|(?<!\d)\.|\.(?!\d)|\b(?:and then|then)\b|\b(?:and|but)\s+(?=(?:(?:do not|don't|never)\s+)?(?:{ADD_PATTERN}|{REMOVE_PATTERN}|{RESET_PATTERN}|{PRESERVE_PATTERN}|{WEATHER_SWITCH_PATTERN}|{WEATHER_STOP_PATTERN}|{EDIT_BREAK_PATTERN})\b)", re.I
 )
 NEGATION_RE = re.compile(r"\b(?:no|not|don't|do not|never|without|can't|cannot|shouldn't|mustn't|won't|wouldn't|couldn't)\b", re.I)
 MATCH_TRANSLATION = str.maketrans({'\u2018': "'", '\u2019': "'", '\u02bc': "'", '\u2212': '-', '\u2010': '-', '\u2011': '-', '\u2013': '-'})

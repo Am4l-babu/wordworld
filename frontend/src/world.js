@@ -38,6 +38,7 @@ export const initialItems = () => [
   makeItem('rock',831,433),
 ];
 export const INITIAL_SETTINGS={time:'day',weather:'clear'};
+const SETTING_VALUES={time:['day','night'],weather:['clear','rain','snow']};
 export const snapshot = (items,settings)=>({items:items.map(x=>({...x})),settings:{...settings}});
 
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
@@ -49,7 +50,7 @@ export function cleanScene(obj){
  if(!obj||typeof obj!=='object'||!Array.isArray(obj.items))return null;
  const ids=new Map();
  const entries=obj.items.filter(it=>it&&TYPES.includes(it.type)&&Number.isFinite(it.x)&&Number.isFinite(it.y)).slice(0,MAX_ITEMS).map(it=>{
-  const item=makeItem(it.type,clamp(it.x,0,1000),clamp(it.y,0,645),PALETTE[it.color]?it.color:undefined,Number.isFinite(it.scale)?clamp(it.scale,.3,2):1);
+  const spot=clampToCanvas(it),item=makeItem(it.type,spot.x,spot.y,PALETTE[it.color]?it.color:undefined,Number.isFinite(it.scale)?clamp(it.scale,.3,2):1);
   if(Number.isFinite(it.seed))item.seed=it.seed;
   if(typeof it.id==='string')ids.set(it.id,item.id);
   return {item,grounding:it.grounding};
@@ -58,6 +59,13 @@ export function cleanScene(obj){
  const s=obj.settings&&typeof obj.settings==='object'?obj.settings:{};
  return {items:entries.map(e=>e.item),settings:{time:s.time==='night'?'night':'day',weather:['rain','snow'].includes(s.weather)?s.weather:'clear'}};
 }
+// Drop placement guides whose landmarks are gone (after a removal, reset or delete).
+export function pruneGuides(items){
+ const ids=new Set(items.map(o=>o.id));
+ return items.map(o=>o.grounding&&!o.grounding.anchorIds.every(id=>ids.has(id))?{...o,grounding:undefined}:o);
+}
+// Objects stay inside the same bounds dragging uses.
+const clampToCanvas=({x,y})=>({x:clamp(x,77,925),y:clamp(y,110,525)});
 // Resolve once per action, so adding trees near trees cannot change its own anchor.
 function resolveAnchors(items,act,allowedIds){
  const types=act.relation==='between'?act.targets||[act.target,act.target]:act.target?[act.target]:[];
@@ -82,7 +90,7 @@ function position(items,type,index,count,relation,anchors,scale=1){
   return {x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};
  }
  const anchor=anchors[0];
- if(anchor&&(relation==='inside'||relation==='across')) return {x:anchor.x+index*12,y:anchor.y};
+ if(anchor&&(relation==='inside'||relation==='across')) return clampToCanvas({x:anchor.x+(index%2?1:-1)*Math.ceil(index/2)*12,y:anchor.y});
  const candidates=[];
  if(anchor){
   const base={left:Math.PI,right:0,above:-Math.PI/2,below:Math.PI/2}[relation];
@@ -197,7 +205,7 @@ export function applyActions(items,settings,actions,bindings=[],context=[]){
    }
    touched.push(...chosen.map(o=>o.id));
   }
-  else if(act.action==='setting') {if(['time','weather'].includes(act.key)){nextSettings[act.key]=act.value;descriptions.push(`Changed ${act.key} to ${act.value}`)}}
+  else if(act.action==='setting') {if(SETTING_VALUES[act.key]?.includes(act.value)){nextSettings[act.key]=act.value;descriptions.push(`Changed ${act.key} to ${act.value}`)}}
   else if(act.action==='remove'){
    const referenceIds=binding?.remove_from?boundIds(binding.remove_from):null;
    const {matching,noAnchor}=candidates(nextItems,act,referenceIds);
@@ -229,6 +237,7 @@ export function applyActions(items,settings,actions,bindings=[],context=[]){
    descriptions.push(`Added ${n} ${act.type}${n===1?'':'s'}${allGrounded?` ${RELATION_LABEL[act.relation]||act.relation||'near'} ${act.targets?act.targets.join(' and '):act.target}`:''}`);
   }
  }
+ nextItems=pruneGuides(nextItems);
  const remaining=new Set(nextItems.map(o=>o.id));
  return {items:nextItems,settings:nextSettings,descriptions,missing:[...new Set(missing)],notices:[...new Set(notices)],touched:[...new Set(touched)].filter(id=>remaining.has(id))};
 }

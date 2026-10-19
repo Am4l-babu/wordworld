@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {applyActions,makeItem,cleanScene,focusGroups,inPlace,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
+import {applyActions,makeItem,cleanScene,focusGroups,inPlace,pruneGuides,INITIAL_SETTINGS,MAX_ITEMS} from '../src/world.js';
 import {fallbackParser} from '../src/previewParser.js';
 
 test('reference removal preserves preexisting objects of the same type',()=>{
@@ -98,7 +98,7 @@ test('imported scenes keep only drawable objects with fresh ids and remapped gui
  assert.equal(scene.items[1].color,undefined);
  assert.deepEqual(scene.items[1].grounding,{relation:'near',anchorIds:[scene.items[0].id]});
  assert.equal(scene.items[2].grounding,undefined);
- assert.deepEqual([scene.items[2].x,scene.items[2].y],[1000,0]);
+ assert.deepEqual([scene.items[2].x,scene.items[2].y],[925,110]);
  assert.notEqual(scene.items[0].id,'a');
  assert.deepEqual(scene.settings,{time:'night',weather:'clear'});
 });
@@ -197,4 +197,30 @@ test('"inside" needs the object centre within the landmark and a lake is not ins
  assert.ok(inPlace(makeItem('rock',520,305),[lake],'inside'));
  assert.ok(!inPlace(makeItem('rock',700,300),[lake],'inside'));
  assert.ok(!inPlace(lake,[lake],'near'));
+});
+
+test('settings accept only values the scene can draw',()=>{
+ let r=apply([],[{action:'setting',key:'time',value:'clear'},{action:'setting',key:'weather',value:'night'},{action:'setting',key:'bogus',value:'day'}]);
+ assert.deepEqual(r.settings,INITIAL_SETTINGS);
+ assert.deepEqual(r.descriptions,[]);
+ r=apply([],[{action:'setting',key:'time',value:'night'},{action:'setting',key:'weather',value:'snow'}]);
+ assert.deepEqual(r.settings,{time:'night',weather:'snow'});
+});
+test('removing a landmark drops the placement guides that pointed at it',()=>{
+ const lake=makeItem('lake',650,300);
+ const placed=apply([lake],[{action:'add',type:'tree',count:2,relation:'near',target:'lake'}]).items;
+ assert.ok(placed.slice(1).every(o=>o.grounding));
+ const after=apply(placed,[{action:'remove',type:'lake',count:'all'}]);
+ assert.equal(after.items.length,2);
+ assert.ok(after.items.every(o=>o.grounding===undefined));
+ assert.deepEqual(pruneGuides(placed).map(o=>Boolean(o.grounding)),[false,true,true]);
+});
+test('objects placed inside or across a landmark at the island edge stay on the canvas',()=>{
+ const lake=makeItem('lake',900,300);
+ for(const relation of ['inside','across']){
+  const items=apply([lake],[{action:'add',type:'rock',count:16,relation,target:'lake'}]).items.slice(1);
+  assert.equal(items.length,16);
+  for(const o of items)assert.ok(o.x>=77&&o.x<=925&&o.y>=110&&o.y<=525,`${relation} ${o.x},${o.y}`);
+  assert.ok(new Set(items.map(o=>Math.round(o.x))).size>4);
+ }
 });

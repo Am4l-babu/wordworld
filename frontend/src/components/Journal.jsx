@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {Sparkles, WandSparkles, RotateCcw, Check, CornerDownLeft, ChevronRight} from 'lucide-react';
+import {Sparkles, WandSparkles, RotateCcw, Check, CornerDownLeft, ChevronRight, Lightbulb, Undo2} from 'lucide-react';
 import {EXAMPLES} from '../world';
 
 const EXAMPLE_ICONS = ['🏡', '🌲', '🏰', '🌉', '🌙', '🌷', '🎨', '↔️'];
@@ -10,7 +10,7 @@ function Avatar({kind}) {
   return <div className="user-avatar">YOU</div>;
 }
 
-export function Journal({messages, busy, onReset, onReuse}) {
+export function Journal({messages, busy, onReset, onReuse, onUndo, canUndo}) {
   const log = useRef(null);
   useEffect(() => {
     if (log.current) log.current.scrollTop = log.current.scrollHeight;
@@ -26,6 +26,15 @@ export function Journal({messages, busy, onReset, onReuse}) {
         <div className="chat-bubble">
           {m.text}
           {m.kind === 'system' && m.actionCount > 0 && <span className="applied"><Check size={12}/> Applied to world</span>}
+          {m.suggestion && <div className="suggestion">
+            {m.suggestion.replaces && <p className="suggestion-note">Part of that wasn’t understood, so the result may be incomplete.</p>}
+            <button className="did-you-mean" onClick={() => onReuse(m.suggestion.text)} title="Put the corrected sentence in the editor; nothing changes until you press Create">
+              <Lightbulb size={13}/> Did you mean <b>{m.suggestion.text}</b>?
+            </button>
+            {m.suggestion.replaces && i === messages.length - 1 && canUndo && <button className="did-you-mean secondary" onClick={onUndo} title="Undo that step first, so the corrected sentence does not build things twice">
+              <Undo2 size={13}/> Undo that step
+            </button>}
+          </div>}
           {m.kind === 'user' && <button className="reuse" onClick={() => onReuse(m.text)} aria-label={`Edit again: ${m.text}`} title="Put this command back in the editor">
             <CornerDownLeft size={12}/> Edit again
           </button>}

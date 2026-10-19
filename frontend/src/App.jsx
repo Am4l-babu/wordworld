@@ -10,7 +10,7 @@ import Explorer from './components/Explorer';
 import HelpDialog from './components/HelpDialog';
 import ShareDialog from './components/ShareDialog';
 import {fallbackParser} from './previewParser';
-import {MAX_ITEMS, initialItems, INITIAL_SETTINGS, snapshot, makeItem, applyActions, cleanScene, focusGroups, describeFocus} from './world';
+import {MAX_ITEMS, initialItems, INITIAL_SETTINGS, snapshot, makeItem, applyActions, cleanScene, focusGroups, describeFocus, pruneGuides} from './world';
 import {KEYS, writeJSON, getSaved, getRecent, getSharedCommand} from './storage';
 import {readSharedWorld, clearSharedWorldParam, shareUrl} from './share';
 import {DEFAULT_VIEW, clampView, zoomAt, isVisible} from './view';
@@ -25,6 +25,13 @@ const article = word => /^[aeiou]/.test(word) ? 'an' : 'a';
 function boot() {
   const saved = getSaved(), shared = readSharedWorld();
   return shared ? {scene: shared, previous: saved} : {scene: saved, previous: null};
+}
+
+// FastAPI sends a string for errors we raise and a list of {msg} objects for request validation.
+function apiErrorMessage(detail) {
+  if (typeof detail === 'string') return detail;
+  const first = Array.isArray(detail) ? detail[0]?.msg : null;
+  return first ? `The API could not read that command (${first}). Please shorten or rephrase it.` : 'The API rejected this instruction. Please shorten or rephrase it.';
 }
 
 function useCompactLayout() {
@@ -121,7 +128,7 @@ function App() {
       const response = await fetch('/api/parse', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text: cmd, context: context.map(g => ({type: g.type, count: g.ids.length}))}), signal: AbortSignal.timeout?.(10000)});
       const data = await response.json();
       result = response.ok ? data : {text: cmd, actions: [], tokens: [], highlights: [], warnings: [], model: apiState,
-        message: typeof data.detail === 'string' ? data.detail : 'The API rejected this instruction. Please shorten or rephrase it.'};
+        message: apiErrorMessage(data.detail)};
       if (response.ok) setApiState(result.model);
     } catch {
       result = fallbackParser(cmd);
@@ -141,9 +148,9 @@ function App() {
         ...(output.missing.length ? [`Couldn't find ${output.missing.join(', ')}; used available space instead.`] : [])];
       setParsed({...result, warnings: notices});
       const actionText = output.descriptions.join(' · ') + (notices.length ? `. ${notices.join(' ')}` : '');
-      setMessages(v => [...v, {text: actionText, kind: 'system', actionCount: result.actions.length}]);
+      setMessages(v => [...v, {text: actionText, kind: 'system', actionCount: result.actions.length, suggestion: result.suggestions?.[0]}]);
     } else {
-      setMessages(v => [...v, {text: [result.message || 'Try a different world-building command.', ...(result.warnings || [])].join(' '), kind: 'system', actionCount: 0}]);
+      setMessages(v => [...v, {text: [result.message || 'Try a different world-building command.', ...(result.warnings || [])].join(' '), kind: 'system', actionCount: 0, suggestion: result.suggestions?.[0]}]);
     }
     busyRef.current = false;
     setBusy(false);
@@ -187,7 +194,7 @@ function App() {
   function deleteSelected() {
     if (!selected) return;
     remember();
-    setItems(v => v.filter(it => it.id !== selected));
+    setItems(v => pruneGuides(v.filter(it => it.id !== selected)));
     setSelected(null);
     notify('Object removed', true);
   }
@@ -303,7 +310,7 @@ function App() {
           <h1>Dream it.<br/><span>Build it.</span></h1>
           <p>Turn simple sentences into a little world that's entirely yours.</p>
         </section>
-        <Journal messages={messages} busy={busy} onReset={reset} onReuse={reuse}/>
+        <Journal messages={messages} busy={busy} onReset={reset} onReuse={reuse} onUndo={undo} canUndo={history.length > 0}/>
         {!isCompact && composer}
         <Inspiration onPick={reuse}/>
       </aside>
