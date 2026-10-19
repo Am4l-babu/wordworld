@@ -192,3 +192,92 @@ test('a place filter edits and removes only the objects in that place',async({pa
  await page.getByRole('button',{name:'Generate objects'}).click();
  await expect(page.getByLabel('Creation journal')).toContainText('There is no mountain to measure from');
 });
+
+test('server errors with an explanation are shown, not mistaken for an offline API',async({page})=>{
+ await page.route('**/api/parse',route=>route.fulfill({status:500,contentType:'application/json',body:JSON.stringify({detail:'The language engine hit an unexpected problem with that command. Try rephrasing it.'})}));
+ await editor(page).fill('Add a tree');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('unexpected problem with that command');
+ await expect(page.getByText('spaCy NLP connected')).toBeVisible();
+ await expect(count(page)).toContainText('22 total');
+ await page.unroute('**/api/parse');
+ await page.route('**/api/parse',route=>route.fulfill({status:422,contentType:'application/json',body:JSON.stringify({detail:[{loc:['body','text'],msg:'String should have at most 1400 characters',type:'string_too_long'}]})}));
+ await editor(page).fill('Add another tree');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('String should have at most 1400 characters');
+ await expect(count(page)).toContainText('22 total');
+});
+
+test('a typo that blocks every action offers a corrected sentence that is only applied on request',async({page})=>{
+ await editor(page).fill('Plant a tre next to the lak');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ const hint=page.getByRole('button',{name:/Did you mean/});
+ await expect(hint).toContainText('Plant a tree next to the lake');
+ await expect(count(page)).toContainText('22 total');
+ await hint.click();
+ await expect(editor(page)).toHaveValue('Plant a tree next to the lake');
+ await expect(count(page)).toContainText('22 total');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(count(page)).toContainText('23 total');
+ await editor(page).fill('Hello there friend');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('No scene changes were applied');
+ await expect(page.getByRole('button',{name:/Did you mean/})).toHaveCount(1);
+});
+
+test('a typo that only costs part of a command warns and offers an explicit undo, never a double build',async({page})=>{
+ await editor(page).fill('Build one bule house');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(count(page)).toContainText('23 total');
+ await expect(page.getByText('Part of that wasn’t understood')).toBeVisible();
+ const hint=page.getByRole('button',{name:/Did you mean/});
+ await expect(hint).toContainText('Build one blue house');
+ await hint.click();
+ await expect(editor(page)).toHaveValue('Build one blue house');
+ await expect(count(page)).toContainText('23 total');
+ await page.getByRole('button',{name:'Undo that step'}).click();
+ await expect(count(page)).toContainText('22 total');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(count(page)).toContainText('23 total');
+ await expect(scene(page).getByRole('button',{name:'Select house',exact:true}).locator('path[fill="#74a6ea"]')).toHaveCount(1);
+});
+
+test('the test log records commands locally, takes a note, exports a file and sends nothing anywhere',async({page})=>{
+ const requests=[];page.on('request',r=>requests.push(new URL(r.url()).pathname));
+ await editor(page).fill('Add a tree');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(count(page)).toContainText('23 total');
+ await editor(page).fill('Paint the tres blue');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await page.getByRole('button',{name:/Did you mean/}).click();
+ await page.getByRole('button',{name:'Not what I meant'}).last().click();
+ await page.getByLabel('What did you expect?').fill('I wanted the trees blue');
+ // The journal scrolls, so the form must bring its own Save button into view rather than hide it below the fold.
+ await expect(page.getByRole('button',{name:'Save',exact:true})).toBeInViewport();
+ await page.getByRole('button',{name:'Save',exact:true}).click();
+ await expect(page.getByText('Saved to your test log: “I wanted the trees blue”')).toBeVisible();
+ await page.getByRole('button',{name:'Share or save world'}).click();
+ await page.getByRole('menuitem',{name:/Test log/}).click();
+ const stats=page.locator('.testlog-stats');
+ await expect(stats).toContainText('Commands2');
+ await expect(stats).toContainText('Changed the world1');
+ await expect(stats).toContainText('Marked “not what I meant”1');
+ await expect(stats).toContainText('“Did you mean” shown / used1 / 1');
+ const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Download my test log'}).click()]);
+ expect(download.suggestedFilename()).toMatch(/^wordworld-testlog-\d{4}-\d{2}-\d{2}\.json$/);
+ const payload=JSON.parse(await (await import('node:fs/promises')).readFile(await download.path(),'utf-8'));
+ expect(payload).toMatchObject({schema:1,app:'wordworld-testlog',summary:{commands:2,applied:1,nothing:1,flagged:1,suggestionsShown:1,suggestionsAccepted:1}});
+ expect(payload.entries.map(e=>e.text)).toEqual(['Add a tree','Paint the tres blue']);
+ expect(payload.entries[1]).toMatchObject({outcome:'nothing',suggestion:'Paint the trees blue',suggestionAccepted:true,flagged:true,note:'I wanted the trees blue'});
+ expect(JSON.stringify(payload)).not.toMatch(/"items"|"tokens"|"x":/);
+ // The only traffic is the normal language-engine calls; the log never leaves the browser.
+ expect(requests.filter(p=>p.startsWith('/api/')&&!['/api/health','/api/parse','/api/extractors'].includes(p))).toEqual([]);
+ expect(requests.some(p=>/testlog|feedback|log/i.test(p)&&p.startsWith('/api/'))).toBe(false);
+ await page.reload();
+ await page.getByRole('button',{name:'Share or save world'}).click();
+ await page.getByRole('menuitem',{name:/Test log/}).click();
+ await expect(page.locator('.testlog-stats')).toContainText('Commands2');
+ await page.getByRole('button',{name:'Clear it'}).click();
+ await expect(page.locator('.testlog-stats')).toContainText('Commands0');
+ await expect(page.getByRole('button',{name:'Download my test log'})).toBeDisabled();
+});

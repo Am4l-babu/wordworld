@@ -9,9 +9,12 @@ import KnowledgePanel from './components/KnowledgePanel';
 import Explorer from './components/Explorer';
 import HelpDialog from './components/HelpDialog';
 import ShareDialog from './components/ShareDialog';
+import TestLogDialog from './components/TestLogDialog';
 import {fallbackParser} from './previewParser';
-import {MAX_ITEMS, initialItems, INITIAL_SETTINGS, snapshot, makeItem, applyActions, cleanScene, focusGroups, describeFocus} from './world';
-import {KEYS, writeJSON, getSaved, getRecent, getSharedCommand} from './storage';
+import {MAX_ITEMS, initialItems, INITIAL_SETTINGS, snapshot, makeItem, applyActions, cleanScene, focusGroups, describeFocus, pruneGuides} from './world';
+import {KEYS, writeJSON, getSaved, getRecent, getSharedCommand, getTestLog} from './storage';
+import {newEntry, addEntry, flagEntry, unflagEntry, acceptSuggestion, exportPayload, exportFilename} from './testlog';
+import {downloadJSON} from './download';
 import {readSharedWorld, clearSharedWorldParam, shareUrl} from './share';
 import {DEFAULT_VIEW, clampView, zoomAt, isVisible} from './view';
 import {useTheme} from './theme';
@@ -25,6 +28,13 @@ const article = word => /^[aeiou]/.test(word) ? 'an' : 'a';
 function boot() {
   const saved = getSaved(), shared = readSharedWorld();
   return shared ? {scene: shared, previous: saved} : {scene: saved, previous: null};
+}
+
+// FastAPI sends a string for errors we raise and a list of {msg} objects for request validation.
+function apiErrorMessage(detail) {
+  if (typeof detail === 'string') return detail;
+  const first = Array.isArray(detail) ? detail[0]?.msg : null;
+  return first ? `The API could not read that command (${first}). Please shorten or rephrase it.` : 'The API rejected this instruction. Please shorten or rephrase it.';
 }
 
 function useCompactLayout() {
@@ -51,6 +61,8 @@ function App() {
   const [future, setFuture] = useState([]);
   const [analysisOpen, setAnalysisOpen] = useState(true), [apiState, setApiState] = useState('checking');
   const [dialog, setDialog] = useState(null), [toast, setToast] = useState(null);
+  // Everything typed and what the parser did, kept only in this browser until it is downloaded (see testlog.js).
+  const [testLog, setTestLog] = useState(getTestLog);
   const inputRef = useRef(null), toastTimer = useRef(null), fileRef = useRef(null);
   // Handlers that run after an await must read the latest scene, not the one captured at call time.
   const live = useRef({items, settings});
@@ -59,6 +71,7 @@ function App() {
 
   useEffect(() => writeJSON(KEYS.scene, {items, settings}), [items, settings]);
   useEffect(() => writeJSON(KEYS.recent, recent), [recent]);
+  useEffect(() => writeJSON(KEYS.testlog, testLog), [testLog]);
   useEffect(checkHealth, []);
   useEffect(() => {
     if (!start.previous) return;
@@ -120,8 +133,8 @@ function App() {
     try {
       const response = await fetch('/api/parse', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text: cmd, context: context.map(g => ({type: g.type, count: g.ids.length}))}), signal: AbortSignal.timeout?.(10000)});
       const data = await response.json();
-      result = response.ok ? data : {text: cmd, actions: [], tokens: [], highlights: [], warnings: [], model: apiState,
-        message: typeof data.detail === 'string' ? data.detail : 'The API rejected this instruction. Please shorten or rephrase it.'};
+      result = response.ok ? data : {text: cmd, actions: [], tokens: [], highlights: [], warnings: [], model: apiState, rejected: true,
+        message: apiErrorMessage(data.detail)};
       if (response.ok) setApiState(result.model);
     } catch {
       result = fallbackParser(cmd);
@@ -141,12 +154,25 @@ function App() {
         ...(output.missing.length ? [`Couldn't find ${output.missing.join(', ')}; used available space instead.`] : [])];
       setParsed({...result, warnings: notices});
       const actionText = output.descriptions.join(' · ') + (notices.length ? `. ${notices.join(' ')}` : '');
-      setMessages(v => [...v, {text: actionText, kind: 'system', actionCount: result.actions.length}]);
+      // Log first: a state updater may run twice, and must stay free of side effects.
+      const logId = record(cmd, {...result, message: actionText}, context);
+      setMessages(v => [...v, {text: actionText, kind: 'system', actionCount: result.actions.length, suggestion: result.suggestions?.[0], logId}]);
     } else {
-      setMessages(v => [...v, {text: [result.message || 'Try a different world-building command.', ...(result.warnings || [])].join(' '), kind: 'system', actionCount: 0}]);
+      const text = [result.message || 'Try a different world-building command.', ...(result.warnings || [])].join(' ');
+      const logId = record(cmd, {...result, message: text}, context);
+      setMessages(v => [...v, {text, kind: 'system', actionCount: 0, suggestion: result.suggestions?.[0], logId}]);
     }
     busyRef.current = false;
     setBusy(false);
+  }
+  function record(text, result, context) {
+    const entry = newEntry({text, result, context: context.map(g => ({type: g.type, count: g.ids.length})), device: isCompact ? 'phone' : 'desktop'});
+    setTestLog(log => addEntry(log, entry));
+    return entry.id;
+  }
+  function downloadTestLog() {
+    downloadJSON(exportFilename(), exportPayload(testLog));
+    notify('Test log downloaded');
   }
   function reuse(text) {
     setPrompt(text);
@@ -187,7 +213,7 @@ function App() {
   function deleteSelected() {
     if (!selected) return;
     remember();
-    setItems(v => v.filter(it => it.id !== selected));
+    setItems(v => pruneGuides(v.filter(it => it.id !== selected)));
     setSelected(null);
     notify('Object removed', true);
   }
@@ -245,14 +271,7 @@ function App() {
 
   // Files and links
   function exportJSON() {
-    const blob = new Blob([JSON.stringify({name: 'My WordWorld', items, settings, exportedAt: new Date().toISOString()}, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob), a = document.createElement('a');
-    a.href = url;
-    a.download = `wordworld-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.append(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadJSON(`wordworld-${new Date().toISOString().slice(0, 10)}.json`, {name: 'My WordWorld', items, settings, exportedAt: new Date().toISOString()});
     notify('Scene exported as JSON');
   }
   async function importJSON(e) {
@@ -294,7 +313,7 @@ function App() {
 
   return <div className="app-shell">
     <Topbar theme={theme} onToggleTheme={toggleTheme} onHelp={() => setDialog('help')}
-      onShare={() => setDialog('share')} onExport={exportJSON} onImport={() => fileRef.current?.click()}/>
+      onShare={() => setDialog('share')} onExport={exportJSON} onImport={() => fileRef.current?.click()} onTestLog={() => setDialog('testlog')}/>
     <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={importJSON}/>
     <div className="workspace">
       <aside className="left-panel">
@@ -303,7 +322,9 @@ function App() {
           <h1>Dream it.<br/><span>Build it.</span></h1>
           <p>Turn simple sentences into a little world that's entirely yours.</p>
         </section>
-        <Journal messages={messages} busy={busy} onReset={reset} onReuse={reuse}/>
+        <Journal messages={messages} busy={busy} onReset={reset} onReuse={reuse} onUndo={undo} canUndo={history.length > 0}
+          entries={Object.fromEntries(testLog.map(e => [e.id, e]))} onFlag={(id, note) => setTestLog(l => flagEntry(l, id, note))} onUnflag={id => setTestLog(l => unflagEntry(l, id))}
+          onAccept={id => setTestLog(l => acceptSuggestion(l, id))}/>
         {!isCompact && composer}
         <Inspiration onPick={reuse}/>
       </aside>
@@ -327,6 +348,7 @@ function App() {
       </div>}
     </div>
     {dialog === 'help' && <HelpDialog onClose={() => setDialog(null)}/>}
+    {dialog === 'testlog' && <TestLogDialog entries={testLog} onDownload={downloadTestLog} onClear={() => { setTestLog([]); notify('Test log cleared'); }} onClose={() => setDialog(null)}/>}
     {dialog === 'share' && <ShareDialog url={shareUrl(items, settings)} count={items.length} onClose={() => setDialog(null)}/>}
   </div>;
 }

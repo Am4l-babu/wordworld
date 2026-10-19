@@ -91,6 +91,8 @@ def clauses(text: str):
 
 # Cross-request references hold at most this many objects (the scene capacity).
 SCENE_LIMIT = 120
+# Parsing cost grows steeply with list separators and a command applies at most 20 actions, so very long lists are refused.
+MAX_SEPARATORS = 40
 
 
 def partition_semicolons(text: str) -> str:
@@ -125,6 +127,9 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
         raise ValueError("Please keep commands under 1,400 characters.")
     if not text.strip():
         raise ValueError("Enter a world-building instruction.")
+    if len(re.findall(r"[,;]", text)) > MAX_SEPARATORS:
+        raise ValueError(f"That command has too many list parts ({MAX_SEPARATORS} commas and semicolons at most). "
+                         "A command applies up to 20 actions; split it into a few shorter commands.")
     actions: list[dict[str, Any]] = []
     highlights: list[dict[str, Any]] = []
     warnings: list[str] = []
@@ -238,6 +243,9 @@ def parse(text: str, context: list[dict[str, Any]] | None = None) -> dict[str, A
                 mark(offset + target["filter_span"][0], offset + target["filter_span"][1], "color")
             if target["count"] is None:
                 warnings.append(f"Skipped {target['type']}: specify an unambiguous whole-number quantity.")
+                continue
+            if target["count"] == 0:
+                warnings.append(f"Skipped a zero-count {target['type']} edit; nothing was changed.")
                 continue
             location = target.get("location")
             if location:

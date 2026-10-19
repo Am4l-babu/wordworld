@@ -1,0 +1,5 @@
+# Put the test logs people send you here (one .json file each).
+# These files contain exactly what testers typed: get their consent and keep them out of git.
+*.json
+*.csv
+!.gitignore
