@@ -1,16 +1,17 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Share2, ChevronDown, Link2, Download, Upload} from 'lucide-react';
+import {Share2, ChevronDown, Link2, Download, Upload, ClipboardList} from 'lucide-react';
 
 const ITEMS = [
   ['share', Link2, 'Copy share link', 'Anyone with the link sees this island'],
   ['export', Download, 'Download JSON', 'Save a file you can import later'],
   ['import', Upload, 'Import JSON', 'Open a saved WordWorld file'],
+  ['testlog', ClipboardList, 'Test log', 'Helping test? Review and download what you typed'],
 ];
 
-export default function WorldMenu({onShare, onExport, onImport}) {
+export default function WorldMenu({onShare, onExport, onImport, onTestLog}) {
   const [open, setOpen] = useState(false);
   const root = useRef(null), trigger = useRef(null);
-  const actions = {share: onShare, export: onExport, import: onImport};
+  const actions = {share: onShare, export: onExport, import: onImport, testlog: onTestLog};
   useEffect(() => {
     if (!open) return;
     root.current?.querySelector('[role=menuitem]')?.focus();

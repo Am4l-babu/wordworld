@@ -394,3 +394,12 @@
 @media(max-width:735px), (max-width:950px) and (max-height:500px){.did-you-mean{min-height:44px;align-items:center}}
 .suggestion{display:flex;flex-direction:column;gap:6px;margin-top:2px}.suggestion-note{margin:9px 0 0;font-size:10.5px;line-height:1.5;color:var(--fg-orange-35,#a0671f)}
 .did-you-mean.secondary{margin-top:0;background:transparent}
+/* Test log: "Not what I meant" and the dialog */
+.flag-button{display:inline-flex;align-items:center;gap:5px;margin-top:8px;border:0;background:none;padding:2px 0;color:var(--fg-gray-60);font-size:10px;font-weight:700}.flag-button:hover,.flag-button:focus-visible{color:var(--fg-violet-49)}
+.flagged{margin:8px 0 0;font-size:10.5px;line-height:1.5;color:var(--fg-green-46);display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.flag-form{display:flex;flex-direction:column;gap:6px;margin-top:9px}.flag-form label{font-size:10.5px;font-weight:700;color:var(--fg-violet-49)}.flag-form input{border:1.5px solid var(--line-violet-94);background:var(--bg-gray-100);color:var(--fg-blue-22);border-radius:8px;padding:8px 10px;font:inherit;font-size:12px;min-width:0}
+.flag-form div{display:flex;gap:6px}.flag-form button{border:1px solid var(--line-violet-94);background:var(--bg-violet-97);color:var(--fg-violet-49);border-radius:8px;padding:6px 11px;font-size:11px;font-weight:700}.flag-form button[type=submit]{background:var(--fg-violet-49);border-color:var(--fg-violet-49);color:#fff}
+.testlog-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}.testlog-stats div{background:var(--bg-violet-97);border-radius:10px;padding:10px 12px}.testlog-stats dt{font-size:10.5px;color:var(--fg-gray-60)}.testlog-stats dd{margin:3px 0 0;font-size:20px;font-weight:800;font-family:'Fredoka',sans-serif;color:var(--fg-blue-22)}
+.testlog-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}.testlog-actions .help-cta{margin-top:0}.testlog-clear{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line-violet-94);background:transparent;color:var(--fg-gray-60);border-radius:10px;padding:12px 14px;font-weight:700;font-size:12px}
+@media(max-width:735px), (max-width:950px) and (max-height:500px){.flag-button{min-height:36px}.flag-form input{min-height:44px;font-size:16px}.flag-form button{min-height:44px}.testlog-clear{min-height:44px}.testlog-stats{grid-template-columns:1fr}}
+.did-you-mean>span{min-width:0}

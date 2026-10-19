@@ -1,6 +1,7 @@
 import {initialItems, INITIAL_SETTINGS, cleanScene} from './world';
+import {sanitizeLog} from './testlog';
 
-export const KEYS = {scene: 'wordworld-scene-v1', recent: 'wordworld-recent-commands-v1'};
+export const KEYS = {scene: 'wordworld-scene-v1', recent: 'wordworld-recent-commands-v1', testlog: 'wordworld-testlog-v1'};
 
 // Storage can be full, blocked or private; the app must keep working without it.
 export function readJSON(key) {
@@ -17,6 +18,10 @@ export function getSaved() {
 export function getRecent() {
   const list = readJSON(KEYS.recent);
   return Array.isArray(list) ? list.filter(x => typeof x === 'string').slice(-20) : [];
+}
+
+export function getTestLog() {
+  return sanitizeLog(readJSON(KEYS.testlog));
 }
 
 export function getSharedCommand() {

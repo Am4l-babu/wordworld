@@ -8,6 +8,7 @@ WordWorld is a student-friendly **NLP course project**. Keep the demo visual, re
 - `backend/lexicon.py`, `backend/phrases.py`: vocabulary/regex constants and noun-phrase readers used by the parser
 - `backend/edits.py`: recolor/resize/move edits of existing objects; `parse(text, context)` resolves 'it'/'them' against the client's last-touched objects
 - `backend/suggest.py`: typo suggestions ("Did you mean...?"); vocabulary is read from the grammar's own regexes, a correction must make the parse measurably better, `tests/evaluate_typos.py` measures it on seeded synthetic typos (seed 3 is the untouched headline seed; do not tune on it)
+- `frontend/src/testlog.js`, `components/TestLogDialog.jsx`: the local, never-sent user-test log; `tests/analyze_usertests.py` analyses downloaded logs (put them in git-ignored `evaluation/usertests/`; see `docs/USER_TESTING.md`)
 - `backend/dependency_baseline.py`: comparison-only extractor from spaCy dependencies; frozen (hash in `tests/compare_extractors.py`) — version it rather than tuning it on the labelled sets
 - `backend/main.py`: FastAPI `/api/parse` and `/api/health`
 - `frontend/src/Scene.jsx`: custom SVG sprites and interactive scene canvas
