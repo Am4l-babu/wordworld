@@ -48,7 +48,7 @@ every notice the parser raised. A word's grammatical role and its grounding role
 
 **Typo suggestions.** For each unfamiliar word, the nearest vocabulary words (edit distance, counting an adjacent swap as one edit) are tried in turn; a correction is kept only if
 re-parsing is *measurably better* (fewer notices, or more of the sentence understood), and the final sentence must produce actions. The vocabulary is read from the grammar's
-own regular expressions, so a word the parser understands can never be mistaken for a typo. The correction is shown, never applied.
+own regular expressions, so a word the parser understands can never be mistaken for a typo. The correction is shown, never applied. Two details matter for safety. Notices that report a *deliberate* skip ("Skipped a negated instruction") are not counted as confusion, and a misspelled **negation word** is restored whenever that changes what will be done, because a typo like `nefer remove them` otherwise makes the command do the opposite of what was said.
 
 ## 3. How the evaluation works, and why its numbers must be read carefully
 
@@ -159,7 +159,7 @@ findings are guarded by committed tests, including a seeded property test of the
 
 ### 4.6 Accessibility and operations
 
-- **Accessibility.** axe-core (WCAG 2.0 to 2.2 A and AA, plus best practices) over nine states, two themes and two device sizes found **792 failing elements**: low-contrast muted text in the light theme, accessible names that did not contain their visible text, two unnamed sidebars, and no page heading on phones. After fixing the 35 text colors that actually failed (the dark theme needed none), the suite reports **0 violations** and runs in CI. The first, blunter fix (darkening every muted color) was rejected because it flattened the visual hierarchy; the shipped fix changes only the colors axe measured as failing.
+- **Accessibility.** axe-core (WCAG 2.0 to 2.2 A and AA, plus best practices) over nine states, two themes and two device sizes measured **866 failing checks** in its first run (eight states; the permanent test covers nine). **792** were color-contrast failures, counted once per page state, which are **94 distinct elements** using 52 foreground/background pairs: 744 in the light theme and 48 in the dark. The other **74** came from three structural rules: 32 buttons whose accessible name omitted their visible text, 32 pages with two identically unnamed sidebars, and 10 phone-sized pages with no heading. The fix changed **35 color tokens** (33 light, 2 dark), removed `opacity` from text whose blended color could not be a token, and corrected the markup; the suite now reports **0 violations** and runs in CI. The first, blunter fix (darkening every muted color) was rejected because it flattened the visual hierarchy; the shipped fix changes only the colors axe measured as failing.
 - **Latency.** On the deployed site the first request after idle took **6.4 s** (a cold start loading spaCy); later requests took **340 to 410 ms**. The interface now says the language engine may be waking up after 4 seconds.
 - **Abuse protection.** `POST /api/parse` has a best-effort per-client rate limit (300 per minute by default). On serverless hosting each instance counts separately, so this protects against one client hammering one instance, not against a determined flood; hard limits belong in the host's firewall rules.
 
