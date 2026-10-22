@@ -4,7 +4,7 @@ The grounding rules need exact vocabulary, so one misspelled word turns a comman
 
 ## Method
 
-Every labelled command (650 across the development, held-out and twelve fresh sets) that the rules already get exactly right is corrupted with **one** synthetic typo in a vocabulary word of at least four letters: a deletion, a duplicated letter, an adjacent swap, or a substitution with a QWERTY neighbour. The first letter is kept, as in most real typing errors. Commands with no gold actions are skipped.
+Every labelled command (650 across the development, held-out and eleven fresh sets) that the rules already get exactly right is corrupted with **one** synthetic typo in a vocabulary word of at least four letters: a deletion, a duplicated letter, an adjacent swap, or a substitution with a QWERTY neighbour. The first letter is kept, as in most real typing errors. Commands with no gold actions are skipped.
 
 - **harmless**: the corrupted command still parses to the gold actions
 - **recovered**: it did not, but the first suggestion parses to the gold actions
@@ -12,29 +12,30 @@ Every labelled command (650 across the development, held-out and twelve fresh se
 - **missed**: nothing was offered
 - **silent error**: the corrupted command parses to *different* actions and no suggestion is made, so the person gets a wrong world without a hint
 
-**Seeds.** The suggester was developed against seed 1. Seed 2 was viewed once while writing the first draft of this report; that exposed a real tie-break bias (a longer plural won because it highlights more text), which was fixed on principle, so seed 2 no longer counts as untouched. The headline numbers use **seed 3**, whose results nobody inspected before this report was generated.
+**Seeds.** The suggester was developed against seed 1. Seed 2 was viewed while drafting the first version of this report; that exposed a real tie-break bias (a longer plural won because it highlights more text), fixed on principle. Seed 3 was then used as the untouched seed, and its two failures were both **typos in negation words** (`nefer remove them` removed what the person had forbidden), because the score treated the correct “Skipped a negated instruction” notice as a sign of confusion. Deliberate-skip notices no longer count against a correction, and restoring a negation word counts as progress whenever it changes what will be done. Seeds 2 and 3 are therefore reported as *reviewed*. The headline numbers use **seed 4**, whose results nobody inspected before this report was generated.
 
 | Seed | Corrupted | Harmless | Recovered | Wrong fix | Missed | Recovery of the rest | Wrong-fix rate | Silent errors |
 |---|---|---|---|---|---|---|---|---|
 | 1 (tuning) | 529 | 40 | 485 | 1 | 3 | 99% | 0.2% | 3 |
-| 2 (reviewed) | 528 | 36 | 488 | 1 | 3 | 99% | 0.2% | 2 |
-| **3 (untouched)** | 530 | 50 | 478 | 0 | 2 | 100% | 0.0% | 2 |
+| 2 (reviewed) | 528 | 36 | 490 | 1 | 1 | 100% | 0.2% | 1 |
+| 3 (reviewed) | 530 | 50 | 480 | 0 | 0 | 100% | 0.0% | 0 |
+| **4 (untouched)** | 524 | 38 | 485 | 0 | 1 | 100% | 0.0% | 1 |
 
 ## False alarms
 
 - **Already-correct commands:** the suggester was run on all 541 labelled commands the rules parse exactly right: **0 suggestions**.
-- **Typos the rules already tolerated** (seed 3): 0 suggestions that would change the actions; 8 that keep exactly the same actions and only tidy the spelling (and drop a notice).
+- **Typos the rules already tolerated** (seed 4): 0 suggestions that would change the actions; 12 that keep exactly the same actions and only tidy the spelling (and drop a notice).
 
-## By typo kind (seed 3)
+## By typo kind (seed 4)
 
 | Kind | Harmless | Recovered | Wrong fix | Missed |
 |---|---|---|---|---|
-| deletion | 13 | 119 | 0 | 1 |
-| duplication | 16 | 120 | 0 | 0 |
-| substitution | 13 | 125 | 0 | 1 |
-| swap | 8 | 114 | 0 | 0 |
+| deletion | 12 | 114 | 0 | 1 |
+| duplication | 8 | 125 | 0 | 0 |
+| substitution | 8 | 133 | 0 | 0 |
+| swap | 10 | 113 | 0 | 0 |
 
-## What still goes wrong (seed 3)
+## What still goes wrong (seed 4)
 
 ### Wrong fixes
 
@@ -42,13 +43,11 @@ Every labelled command (650 across the development, held-out and twelve fresh se
 
 ### Missed
 
-- “Add two rocks; nefer remove them.” (substitution: nefer for never)
-- “Place trees: not two whte and four green.” (deletion: whte for white)
+- “Build one hunded and three blue cottages.” (deletion: hunded for hundred)
 
 ### Silent errors (the typo changed the meaning, and nothing was suggested)
 
-- “Add two rocks; nefer remove them.” (substitution: nefer for never)
-- “Place trees: not two whte and four green.” (deletion: whte for white)
+- “Build one hunded and three blue cottages.” (deletion: hunded for hundred)
 
 ## Limits
 

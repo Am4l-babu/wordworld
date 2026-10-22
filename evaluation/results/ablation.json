@@ -1,0 +1,695 @@
+{
+  "configurations": {
+    "full": {
+      "label": "Full rules",
+      "correct": 608,
+      "total": 650,
+      "ci95": [
+        0.9138,
+        0.9518
+      ],
+      "by_set": {
+        "development": [
+          50,
+          50
+        ],
+        "heldout": [
+          50,
+          50
+        ],
+        "fresh_v2": [
+          48,
+          50
+        ],
+        "fresh_v3": [
+          45,
+          50
+        ],
+        "fresh_v4": [
+          46,
+          50
+        ],
+        "fresh_v5": [
+          47,
+          50
+        ],
+        "fresh_v6": [
+          46,
+          50
+        ],
+        "fresh_v7": [
+          46,
+          50
+        ],
+        "fresh_v8": [
+          45,
+          50
+        ],
+        "fresh_v9": [
+          45,
+          50
+        ],
+        "fresh_v10": [
+          44,
+          50
+        ],
+        "fresh_v11": [
+          50,
+          50
+        ],
+        "fresh_v12": [
+          46,
+          50
+        ]
+      },
+      "by_family": {
+        "development set (uncategorised)": [
+          50,
+          50
+        ],
+        "paraphrase and lexical variation": [
+          7,
+          11
+        ],
+        "spatial relations": [
+          67,
+          68
+        ],
+        "coordination and multi-action sentences": [
+          28,
+          28
+        ],
+        "weather and time": [
+          28,
+          30
+        ],
+        "negation, protection, removal": [
+          41,
+          42
+        ],
+        "quantities": [
+          30,
+          30
+        ],
+        "references and pronouns": [
+          80,
+          86
+        ],
+        "colors and attributes": [
+          67,
+          68
+        ],
+        "clause structure": [
+          7,
+          16
+        ],
+        "edits and place filters": [
+          74,
+          74
+        ],
+        "counted partitions and fractions": [
+          129,
+          147
+        ]
+      }
+    },
+    "no_context": {
+      "label": "\u2212 cross-request context",
+      "correct": 601,
+      "total": 650,
+      "ci95": [
+        0.9017,
+        0.9425
+      ],
+      "by_set": {
+        "development": [
+          50,
+          50
+        ],
+        "heldout": [
+          50,
+          50
+        ],
+        "fresh_v2": [
+          48,
+          50
+        ],
+        "fresh_v3": [
+          45,
+          50
+        ],
+        "fresh_v4": [
+          46,
+          50
+        ],
+        "fresh_v5": [
+          47,
+          50
+        ],
+        "fresh_v6": [
+          46,
+          50
+        ],
+        "fresh_v7": [
+          46,
+          50
+        ],
+        "fresh_v8": [
+          45,
+          50
+        ],
+        "fresh_v9": [
+          45,
+          50
+        ],
+        "fresh_v10": [
+          44,
+          50
+        ],
+        "fresh_v11": [
+          44,
+          50
+        ],
+        "fresh_v12": [
+          45,
+          50
+        ]
+      },
+      "by_family": {
+        "development set (uncategorised)": [
+          50,
+          50
+        ],
+        "paraphrase and lexical variation": [
+          7,
+          11
+        ],
+        "spatial relations": [
+          67,
+          68
+        ],
+        "coordination and multi-action sentences": [
+          28,
+          28
+        ],
+        "weather and time": [
+          28,
+          30
+        ],
+        "negation, protection, removal": [
+          41,
+          42
+        ],
+        "quantities": [
+          30,
+          30
+        ],
+        "references and pronouns": [
+          73,
+          86
+        ],
+        "colors and attributes": [
+          67,
+          68
+        ],
+        "clause structure": [
+          7,
+          16
+        ],
+        "edits and place filters": [
+          74,
+          74
+        ],
+        "counted partitions and fractions": [
+          129,
+          147
+        ]
+      }
+    },
+    "no_filters": {
+      "label": "\u2212 place filters",
+      "correct": 579,
+      "total": 650,
+      "ci95": [
+        0.8645,
+        0.9125
+      ],
+      "by_set": {
+        "development": [
+          50,
+          50
+        ],
+        "heldout": [
+          50,
+          50
+        ],
+        "fresh_v2": [
+          48,
+          50
+        ],
+        "fresh_v3": [
+          45,
+          50
+        ],
+        "fresh_v4": [
+          46,
+          50
+        ],
+        "fresh_v5": [
+          47,
+          50
+        ],
+        "fresh_v6": [
+          46,
+          50
+        ],
+        "fresh_v7": [
+          46,
+          50
+        ],
+        "fresh_v8": [
+          45,
+          50
+        ],
+        "fresh_v9": [
+          45,
+          50
+        ],
+        "fresh_v10": [
+          44,
+          50
+        ],
+        "fresh_v11": [
+          50,
+          50
+        ],
+        "fresh_v12": [
+          17,
+          50
+        ]
+      },
+      "by_family": {
+        "development set (uncategorised)": [
+          50,
+          50
+        ],
+        "paraphrase and lexical variation": [
+          7,
+          11
+        ],
+        "spatial relations": [
+          67,
+          68
+        ],
+        "coordination and multi-action sentences": [
+          28,
+          28
+        ],
+        "weather and time": [
+          28,
+          30
+        ],
+        "negation, protection, removal": [
+          41,
+          42
+        ],
+        "quantities": [
+          30,
+          30
+        ],
+        "references and pronouns": [
+          80,
+          86
+        ],
+        "colors and attributes": [
+          67,
+          68
+        ],
+        "clause structure": [
+          7,
+          16
+        ],
+        "edits and place filters": [
+          45,
+          74
+        ],
+        "counted partitions and fractions": [
+          129,
+          147
+        ]
+      }
+    },
+    "no_edits": {
+      "label": "\u2212 edit grammar",
+      "correct": 549,
+      "total": 650,
+      "ci95": [
+        0.8147,
+        0.8704
+      ],
+      "by_set": {
+        "development": [
+          50,
+          50
+        ],
+        "heldout": [
+          50,
+          50
+        ],
+        "fresh_v2": [
+          48,
+          50
+        ],
+        "fresh_v3": [
+          45,
+          50
+        ],
+        "fresh_v4": [
+          46,
+          50
+        ],
+        "fresh_v5": [
+          47,
+          50
+        ],
+        "fresh_v6": [
+          46,
+          50
+        ],
+        "fresh_v7": [
+          46,
+          50
+        ],
+        "fresh_v8": [
+          45,
+          50
+        ],
+        "fresh_v9": [
+          45,
+          50
+        ],
+        "fresh_v10": [
+          44,
+          50
+        ],
+        "fresh_v11": [
+          12,
+          50
+        ],
+        "fresh_v12": [
+          25,
+          50
+        ]
+      },
+      "by_family": {
+        "development set (uncategorised)": [
+          50,
+          50
+        ],
+        "paraphrase and lexical variation": [
+          7,
+          11
+        ],
+        "spatial relations": [
+          67,
+          68
+        ],
+        "coordination and multi-action sentences": [
+          28,
+          28
+        ],
+        "weather and time": [
+          28,
+          30
+        ],
+        "negation, protection, removal": [
+          41,
+          42
+        ],
+        "quantities": [
+          30,
+          30
+        ],
+        "references and pronouns": [
+          72,
+          86
+        ],
+        "colors and attributes": [
+          67,
+          68
+        ],
+        "clause structure": [
+          7,
+          16
+        ],
+        "edits and place filters": [
+          23,
+          74
+        ],
+        "counted partitions and fractions": [
+          129,
+          147
+        ]
+      }
+    },
+    "no_spacy": {
+      "label": "\u2212 spaCy (tokenizer only)",
+      "correct": 608,
+      "total": 650,
+      "ci95": [
+        0.9138,
+        0.9518
+      ],
+      "by_set": {
+        "development": [
+          50,
+          50
+        ],
+        "heldout": [
+          50,
+          50
+        ],
+        "fresh_v2": [
+          48,
+          50
+        ],
+        "fresh_v3": [
+          45,
+          50
+        ],
+        "fresh_v4": [
+          46,
+          50
+        ],
+        "fresh_v5": [
+          47,
+          50
+        ],
+        "fresh_v6": [
+          46,
+          50
+        ],
+        "fresh_v7": [
+          46,
+          50
+        ],
+        "fresh_v8": [
+          45,
+          50
+        ],
+        "fresh_v9": [
+          45,
+          50
+        ],
+        "fresh_v10": [
+          44,
+          50
+        ],
+        "fresh_v11": [
+          50,
+          50
+        ],
+        "fresh_v12": [
+          46,
+          50
+        ]
+      },
+      "by_family": {
+        "development set (uncategorised)": [
+          50,
+          50
+        ],
+        "paraphrase and lexical variation": [
+          7,
+          11
+        ],
+        "spatial relations": [
+          67,
+          68
+        ],
+        "coordination and multi-action sentences": [
+          28,
+          28
+        ],
+        "weather and time": [
+          28,
+          30
+        ],
+        "negation, protection, removal": [
+          41,
+          42
+        ],
+        "quantities": [
+          30,
+          30
+        ],
+        "references and pronouns": [
+          80,
+          86
+        ],
+        "colors and attributes": [
+          67,
+          68
+        ],
+        "clause structure": [
+          7,
+          16
+        ],
+        "edits and place filters": [
+          74,
+          74
+        ],
+        "counted partitions and fractions": [
+          129,
+          147
+        ]
+      }
+    },
+    "baseline": {
+      "label": "Dependency baseline",
+      "correct": 146,
+      "total": 650,
+      "ci95": [
+        0.1942,
+        0.2583
+      ],
+      "by_set": {
+        "development": [
+          39,
+          50
+        ],
+        "heldout": [
+          27,
+          50
+        ],
+        "fresh_v2": [
+          25,
+          50
+        ],
+        "fresh_v3": [
+          8,
+          50
+        ],
+        "fresh_v4": [
+          2,
+          50
+        ],
+        "fresh_v5": [
+          3,
+          50
+        ],
+        "fresh_v6": [
+          1,
+          50
+        ],
+        "fresh_v7": [
+          8,
+          50
+        ],
+        "fresh_v8": [
+          3,
+          50
+        ],
+        "fresh_v9": [
+          3,
+          50
+        ],
+        "fresh_v10": [
+          4,
+          50
+        ],
+        "fresh_v11": [
+          15,
+          50
+        ],
+        "fresh_v12": [
+          8,
+          50
+        ]
+      },
+      "by_family": {
+        "development set (uncategorised)": [
+          39,
+          50
+        ],
+        "paraphrase and lexical variation": [
+          3,
+          11
+        ],
+        "spatial relations": [
+          14,
+          68
+        ],
+        "coordination and multi-action sentences": [
+          4,
+          28
+        ],
+        "weather and time": [
+          11,
+          30
+        ],
+        "negation, protection, removal": [
+          24,
+          42
+        ],
+        "quantities": [
+          11,
+          30
+        ],
+        "references and pronouns": [
+          5,
+          86
+        ],
+        "colors and attributes": [
+          0,
+          68
+        ],
+        "clause structure": [
+          0,
+          16
+        ],
+        "edits and place filters": [
+          22,
+          74
+        ],
+        "counted partitions and fractions": [
+          13,
+          147
+        ]
+      }
+    }
+  },
+  "typos": {
+    "corrupted": 524,
+    "rules_alone": 38,
+    "rules_alone_ci95": [
+      0.0533,
+      0.098
+    ],
+    "with_suggestion": 523,
+    "with_suggestion_ci95": [
+      0.9893,
+      0.9997
+    ]
+  }
+}

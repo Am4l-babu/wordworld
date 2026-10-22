@@ -78,7 +78,7 @@ test('theme toggle switches to dark and survives a reload',async({page})=>{
 });
 
 test('a share link opens a copy of the island and undo restores your own',async({page})=>{
- await page.getByRole('button',{name:'Share or save world'}).click();
+ await page.getByRole('button',{name:'Share & save world'}).click();
  await page.getByRole('menuitem',{name:/Copy share link/}).click();
  const link=await page.getByLabel('Share link').inputValue();
  expect(link).toContain('?world=');
@@ -256,7 +256,7 @@ test('the test log records commands locally, takes a note, exports a file and se
  await expect(page.getByRole('button',{name:'Save',exact:true})).toBeInViewport();
  await page.getByRole('button',{name:'Save',exact:true}).click();
  await expect(page.getByText('Saved to your test log: “I wanted the trees blue”')).toBeVisible();
- await page.getByRole('button',{name:'Share or save world'}).click();
+ await page.getByRole('button',{name:'Share & save world'}).click();
  await page.getByRole('menuitem',{name:/Test log/}).click();
  const stats=page.locator('.testlog-stats');
  await expect(stats).toContainText('Commands2');
@@ -274,10 +274,29 @@ test('the test log records commands locally, takes a note, exports a file and se
  expect(requests.filter(p=>p.startsWith('/api/')&&!['/api/health','/api/parse','/api/extractors'].includes(p))).toEqual([]);
  expect(requests.some(p=>/testlog|feedback|log/i.test(p)&&p.startsWith('/api/'))).toBe(false);
  await page.reload();
- await page.getByRole('button',{name:'Share or save world'}).click();
+ await page.getByRole('button',{name:'Share & save world'}).click();
  await page.getByRole('menuitem',{name:/Test log/}).click();
  await expect(page.locator('.testlog-stats')).toContainText('Commands2');
  await page.getByRole('button',{name:'Clear it'}).click();
  await expect(page.locator('.testlog-stats')).toContainText('Commands0');
  await expect(page.getByRole('button',{name:'Download my test log'})).toBeDisabled();
+});
+
+test('being rate limited is explained, not mistaken for an offline API',async({page})=>{
+ await page.route('**/api/parse',route=>route.fulfill({status:429,contentType:'application/json',headers:{'Retry-After':'12'},body:JSON.stringify({detail:'Too many requests. Please wait 12 seconds and try again.'})}));
+ await editor(page).fill('Add a tree');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.getByLabel('Creation journal')).toContainText('Too many requests. Please wait 12 seconds');
+ await expect(page.getByText('spaCy NLP connected')).toBeVisible();
+ await expect(count(page)).toContainText('22 total');
+});
+
+test('a slow response says the language engine may be waking up',async({page})=>{
+ await page.route('**/api/parse',async route=>{await new Promise(r=>setTimeout(r,4600));await route.continue()});
+ await editor(page).fill('Add a tree');
+ await page.getByRole('button',{name:'Generate objects'}).click();
+ await expect(page.locator('.thinking')).toContainText('Thinking in pictures');
+ await expect(page.locator('.thinking')).toContainText('may be waking up',{timeout:8000});
+ await expect(count(page)).toContainText('23 total',{timeout:10000});
+ await expect(page.locator('.thinking')).toHaveCount(0);
 });

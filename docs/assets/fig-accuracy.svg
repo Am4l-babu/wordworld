@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" width="940" height="400" role="img" aria-labelledby="t d" font-family="DM Sans, Segoe UI, Arial, sans-serif">
+<title id="t">Exact match per labelled set</title><desc id="d">heldout: first run 35/50, retest 50/50, baseline 27/50; v2: first run 40/50, retest 48/50, baseline 25/50; v3: first run 41/50, retest 45/50, baseline 8/50; v4: first run 40/50, retest 46/50, baseline 2/50; v5: first run 41/50, retest 47/50, baseline 3/50; v6: first run 41/50, retest 46/50, baseline 1/50; v7: first run 40/50, retest 46/50, baseline 8/50; v8: first run 40/50, retest 45/50, baseline 3/50; v9: first run 40/50, retest 45/50, baseline 3/50; v10: first run 40/50, retest 44/50, baseline 4/50; v11: first run 44/50, retest 50/50, baseline 15/50; v12: first run 41/50, retest 46/50, baseline 8/50</desc>
+<rect width="940" height="400" fill="#ffffff"/>
+<text x="56" y="28" font-size="15" fill="#2d3244" text-anchor="start" font-weight="700">Exact match per labelled set: first run vs retest vs dependency baseline</text>
+<text x="56" y="46" font-size="11" fill="#6b6f86" text-anchor="start" font-weight="400">50 commands per set. First run = scored before any tuning on that set; retest = current parser.</text>
+<line x1="56" y1="314.0" x2="916" y2="314.0" stroke="#e4e2ee"/>
+<text x="48" y="318.0" font-size="10" fill="#6b6f86" text-anchor="end" font-weight="400">0%</text>
+<line x1="56" y1="264.0" x2="916" y2="264.0" stroke="#e4e2ee"/>
+<text x="48" y="268.0" font-size="10" fill="#6b6f86" text-anchor="end" font-weight="400">20%</text>
+<line x1="56" y1="214.0" x2="916" y2="214.0" stroke="#e4e2ee"/>
+<text x="48" y="218.0" font-size="10" fill="#6b6f86" text-anchor="end" font-weight="400">40%</text>
+<line x1="56" y1="164.0" x2="916" y2="164.0" stroke="#e4e2ee"/>
+<text x="48" y="168.0" font-size="10" fill="#6b6f86" text-anchor="end" font-weight="400">60%</text>
+<line x1="56" y1="113.99999999999999" x2="916" y2="113.99999999999999" stroke="#e4e2ee"/>
+<text x="48" y="117.99999999999999" font-size="10" fill="#6b6f86" text-anchor="end" font-weight="400">80%</text>
+<line x1="56" y1="64.0" x2="916" y2="64.0" stroke="#e4e2ee"/>
+<text x="48" y="68.0" font-size="10" fill="#6b6f86" text-anchor="end" font-weight="400">100%</text>
+<rect x="64.6" y="139.0" width="15.9" height="175.0" fill="#7657cb"/>
+<rect x="82.5" y="64.0" width="15.9" height="250.0" fill="#5aa777"/>
+<rect x="100.4" y="179.0" width="15.9" height="135.0" fill="#a9a7b8"/>
+<text x="91.83333333333334" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">heldout</text>
+<rect x="136.3" y="114.0" width="15.9" height="200.0" fill="#7657cb"/>
+<rect x="154.2" y="74.0" width="15.9" height="240.0" fill="#5aa777"/>
+<rect x="172.1" y="189.0" width="15.9" height="125.0" fill="#a9a7b8"/>
+<text x="163.5" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v2</text>
+<rect x="207.9" y="109.0" width="15.9" height="205.0" fill="#7657cb"/>
+<rect x="225.8" y="89.0" width="15.9" height="225.0" fill="#5aa777"/>
+<rect x="243.8" y="274.0" width="15.9" height="40.0" fill="#a9a7b8"/>
+<text x="235.16666666666669" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v3</text>
+<rect x="279.6" y="114.0" width="15.9" height="200.0" fill="#7657cb"/>
+<rect x="297.5" y="84.0" width="15.9" height="230.0" fill="#5aa777"/>
+<rect x="315.4" y="304.0" width="15.9" height="10.0" fill="#a9a7b8"/>
+<text x="306.8333333333333" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v4</text>
+<rect x="351.3" y="109.0" width="15.9" height="205.0" fill="#7657cb"/>
+<rect x="369.2" y="79.0" width="15.9" height="235.0" fill="#5aa777"/>
+<rect x="387.1" y="299.0" width="15.9" height="15.0" fill="#a9a7b8"/>
+<text x="378.5" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v5</text>
+<rect x="422.9" y="109.0" width="15.9" height="205.0" fill="#7657cb"/>
+<rect x="440.9" y="84.0" width="15.9" height="230.0" fill="#5aa777"/>
+<rect x="458.8" y="309.0" width="15.9" height="5.0" fill="#a9a7b8"/>
+<text x="450.1666666666667" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v6</text>
+<rect x="494.6" y="114.0" width="15.9" height="200.0" fill="#7657cb"/>
+<rect x="512.5" y="84.0" width="15.9" height="230.0" fill="#5aa777"/>
+<rect x="530.4" y="274.0" width="15.9" height="40.0" fill="#a9a7b8"/>
+<text x="521.8333333333334" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v7</text>
+<rect x="566.3" y="114.0" width="15.9" height="200.0" fill="#7657cb"/>
+<rect x="584.2" y="89.0" width="15.9" height="225.0" fill="#5aa777"/>
+<rect x="602.1" y="299.0" width="15.9" height="15.0" fill="#a9a7b8"/>
+<text x="593.5000000000001" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v8</text>
+<rect x="637.9" y="114.0" width="15.9" height="200.0" fill="#7657cb"/>
+<rect x="655.9" y="89.0" width="15.9" height="225.0" fill="#5aa777"/>
+<rect x="673.8" y="299.0" width="15.9" height="15.0" fill="#a9a7b8"/>
+<text x="665.1666666666667" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v9</text>
+<rect x="709.6" y="114.0" width="15.9" height="200.0" fill="#7657cb"/>
+<rect x="727.5" y="94.0" width="15.9" height="220.0" fill="#5aa777"/>
+<rect x="745.4" y="294.0" width="15.9" height="20.0" fill="#a9a7b8"/>
+<text x="736.8333333333334" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v10</text>
+<rect x="781.3" y="94.0" width="15.9" height="220.0" fill="#7657cb"/>
+<rect x="799.2" y="64.0" width="15.9" height="250.0" fill="#5aa777"/>
+<rect x="817.1" y="239.0" width="15.9" height="75.0" fill="#a9a7b8"/>
+<text x="808.5000000000001" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v11</text>
+<rect x="852.9" y="109.0" width="15.9" height="205.0" fill="#7657cb"/>
+<rect x="870.9" y="84.0" width="15.9" height="230.0" fill="#5aa777"/>
+<rect x="888.8" y="274.0" width="15.9" height="40.0" fill="#a9a7b8"/>
+<text x="880.1666666666667" y="332" font-size="11" fill="#6b6f86" text-anchor="middle" font-weight="400">v12</text>
+<rect x="56" y="348" width="14" height="14" fill="#7657cb"/>
+<text x="76" y="360" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">Rules, first run (frozen)</text>
+<rect x="346" y="348" width="14" height="14" fill="#5aa777"/>
+<text x="366" y="360" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">Rules, retest after fixes</text>
+<rect x="636" y="348" width="14" height="14" fill="#a9a7b8"/>
+<text x="656" y="360" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">Dependency baseline (frozen before use)</text>
+<text x="56" y="386" font-size="10.5" fill="#6b6f86" text-anchor="start" font-weight="400">heldout, v2 … v12 are successive frozen sets; the retest numbers are optimistic because the rules were improved on each set after its first run.</text>
+</svg>

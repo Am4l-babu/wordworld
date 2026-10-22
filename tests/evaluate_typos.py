@@ -28,7 +28,7 @@ from backend import parser
 from backend.suggest import VOCABULARY_SET, suggest
 
 ROOT = Path(__file__).resolve().parents[1]
-TUNING_SEED, REVIEWED_SEED, REPORT_SEED = 1, 2, 3
+TUNING_SEED, REVIEWED_SEEDS, REPORT_SEED = 1, (2, 3), 4
 KINDS = ("deletion", "duplication", "swap", "substitution")
 NEIGHBOURS = {
     "q": "wa", "w": "qes", "e": "wrd", "r": "etf", "t": "ryg", "y": "tuh", "u": "yij", "i": "uok", "o": "ipl", "p": "ol",
@@ -152,7 +152,7 @@ def write_report(path: Path, seeds, rows, clean):
         "itself: the app shows it and the person decides. The vocabulary is read from the grammar's own regex patterns, so a word the parser understands "
         "(`show`, `whose`, `remaining`) can never be mistaken for a typo.", "",
         "## Method", "",
-        "Every labelled command (650 across the development, held-out and twelve fresh sets) that the rules already get exactly right is "
+        "Every labelled command (650 across the development, held-out and eleven fresh sets) that the rules already get exactly right is "
         "corrupted with **one** synthetic typo in a vocabulary word of at least four letters: a deletion, a duplicated letter, an adjacent swap, "
         "or a substitution with a QWERTY neighbour. The first letter is kept, as in most real typing errors. Commands with no gold actions are skipped.", "",
         "- **harmless**: the corrupted command still parses to the gold actions",
@@ -160,11 +160,14 @@ def write_report(path: Path, seeds, rows, clean):
         "- **wrong fix**: a suggestion was offered but parses to something else",
         "- **missed**: nothing was offered",
         "- **silent error**: the corrupted command parses to *different* actions and no suggestion is made, so the person gets a wrong world without a hint", "",
-        f"**Seeds.** The suggester was developed against seed {TUNING_SEED}. Seed {REVIEWED_SEED} was viewed once while writing the first draft of this report; "
-        f"that exposed a real tie-break bias (a longer plural won because it highlights more text), which was fixed on principle, so seed {REVIEWED_SEED} no longer counts as untouched. "
+        f"**Seeds.** The suggester was developed against seed {TUNING_SEED}. Seed {REVIEWED_SEEDS[0]} was viewed while drafting the first version of this report; "
+        "that exposed a real tie-break bias (a longer plural won because it highlights more text), fixed on principle. "
+        f"Seed {REVIEWED_SEEDS[1]} was then used as the untouched seed, and its two failures were both **typos in negation words** (`nefer remove them` removed what the "
+        "person had forbidden), because the score treated the correct “Skipped a negated instruction” notice as a sign of confusion. Deliberate-skip notices no longer count against a correction, "
+        f"and restoring a negation word counts as progress whenever it changes what will be done. Seeds {REVIEWED_SEEDS[0]} and {REVIEWED_SEEDS[1]} are therefore reported as *reviewed*. "
         f"The headline numbers use **seed {REPORT_SEED}**, whose results nobody inspected before this report was generated.", "",
         "| Seed | Corrupted | Harmless | Recovered | Wrong fix | Missed | Recovery of the rest | Wrong-fix rate | Silent errors |", "|---|---|---|---|---|---|---|---|---|",
-        row(f"{TUNING_SEED} (tuning)", seeds[TUNING_SEED]), row(f"{REVIEWED_SEED} (reviewed)", seeds[REVIEWED_SEED]), row(f"**{REPORT_SEED} (untouched)**", final), "",
+        row(f"{TUNING_SEED} (tuning)", seeds[TUNING_SEED]), *[row(f"{seed} (reviewed)", seeds[seed]) for seed in REVIEWED_SEEDS], row(f"**{REPORT_SEED} (untouched)**", final), "",
         "## False alarms", "",
         f"- **Already-correct commands:** the suggester was run on all {clean['checked']} labelled commands the rules parse exactly right: **{clean['false_alarms']} suggestions**.",
         f"- **Typos the rules already tolerated** (seed {REPORT_SEED}): {final['harmless_false_alarms']} suggestions that would change the actions; "
@@ -195,12 +198,12 @@ def main():
     args.add_argument("--json", type=Path)
     args.add_argument("--report", type=Path)
     options = args.parse_args()
-    runs = {seed: run(seed) for seed in (TUNING_SEED, REVIEWED_SEED, REPORT_SEED)}
+    runs = {seed: run(seed) for seed in (TUNING_SEED, *REVIEWED_SEEDS, REPORT_SEED)}
     seeds = {seed: summarise(rows) for seed, rows in runs.items()}
     clean = clean_false_alarms()
     for seed, s in seeds.items():
         o = s["outcomes"]
-        label = {TUNING_SEED: "tuning", REVIEWED_SEED: "reviewed", REPORT_SEED: "untouched"}[seed]
+        label = "tuning" if seed == TUNING_SEED else "untouched" if seed == REPORT_SEED else "reviewed"
         print(f"seed {seed} ({label:9}) corrupted={s['corrupted']} harmless={o.get('harmless', 0)} recovered={o.get('recovered', 0)} wrong={o.get('wrong fix', 0)} "
               f"missed={o.get('missed', 0)} | recovery of rest {s['recovery_rate']:.0%} wrong-fix {s['wrong_fix_rate']:.1%} silent errors {s['silent_errors']} "
               f"| harmless: meaning-changing {s['harmless_false_alarms']}, tidying-only {s['harmless_tidying']}")

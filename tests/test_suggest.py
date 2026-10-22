@@ -85,3 +85,23 @@ def test_the_api_returns_suggestions_for_typos_and_none_for_good_commands():
     assert fine["actions"] and fine["suggestions"] == []
     nothing = request("POST", "/api/parse", json={"text": "Hello there friend"}).json()
     assert nothing["actions"] == [] and nothing["suggestions"] == []
+
+
+@pytest.mark.parametrize("typo,fixed", [
+    ("Add two rocks; nefer remove them.", "Add two rocks; never remove them."),
+    ("Place trees: not two whte and four green.", "Place trees: not two white and four green."),
+    ("Build a house withuot a tree.", "Build a house without a tree."),
+])
+def test_a_misspelled_negation_is_restored_because_the_typo_makes_the_command_do_the_opposite(typo, fixed):
+    # The uncorrected sentence performs what the person forbade; the corrected one correctly skips it with a
+    # deliberate notice, which must not be mistaken for confusion.
+    assert any(a["action"] == "remove" for a in parser.parse("Add two rocks; nefer remove them.")["actions"])
+    [suggestion] = suggest(typo, parser.parse)
+    assert suggestion["text"] == fixed
+
+
+def test_deliberate_skip_notices_are_not_confusion():
+    from backend.suggest import confusion
+    skipped = parser.parse("Add two rocks; never remove them.")
+    assert skipped["warnings"] and confusion(skipped) == 0
+    assert confusion(parser.parse("Hello there friend")) == 1

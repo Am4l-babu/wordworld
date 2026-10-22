@@ -13,12 +13,28 @@ from . import parser
 from .dependency_baseline import extract_text
 from .lexicon import ALIASES
 from .parser import parse, NLP_STATUS, SCENE_LIMIT
+from .ratelimit import LOOPBACK, client_key, from_environment, trust_proxy_headers
 from .suggest import suggest
 
 app = FastAPI(title="WordWorld NLP API", version="1.0.0", description="Interpret free-form natural language as structured world-building actions.")
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_credentials=False, allow_methods=["GET", "POST"], allow_headers=["*"])
 
 ObjectType = Literal[tuple(ALIASES)]
+
+limiter = from_environment()
+
+
+@app.middleware("http")
+async def rate_limit(request: Request, call_next):
+    # Only the parse endpoint costs real work. Local development and tests (loopback) are never limited.
+    if request.method == "POST" and request.url.path == "/api/parse" and limiter.enabled:
+        key = client_key(request.headers.get("x-forwarded-for"), request.client.host if request.client else None, trust_proxy_headers())
+        if key not in LOOPBACK:
+            allowed, retry_after = limiter.check(key)
+            if not allowed:
+                return JSONResponse(status_code=429, headers={"Retry-After": str(retry_after)},
+                                    content={"detail": f"Too many requests. Please wait {retry_after} seconds and try again."})
+    return await call_next(request)
 
 
 @app.exception_handler(RequestValidationError)

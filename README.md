@@ -99,7 +99,7 @@ Pronouns resolve within one request, with bindings to actual new objects. Across
 
 Current verification and ten diagnostic scores are recorded in the [latest evaluation report](evaluation/reports/quarter_fixes_report.md). All historical gold labels and first-run predictions are preserved. Saved-set retests and a newly frozen 50-command sample are reported separately.
 
-**775 Python tests (3 known grammar gaps tracked as expected failures) · 39 scene tests · 76 desktop/mobile browser checks · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
+**806 Python tests (3 known grammar gaps tracked as expected failures) · 46 scene tests · 120 desktop/mobile browser checks (38 of them accessibility checks) · production build passed · [CI](.github/workflows/ci.yml) runs all of them.**
 
 Round eleven froze 50 new commands covering edits, cross-request references and fractions before the parser saw them: **44/50 first run, 40/40 core**, then 50/50 after fixes with no regressions elsewhere ([report](evaluation/reports/edits_fixes_report.md)). Round twelve froze another 50 for place filters (`paint the trees near the lake red`, `remove the flowers next to the house`), fractions and wording gaps: **41/50 first run, 39/40 core** (the one core miss is a labelling error: the gold asked for 18 flowers against the documented 16-per-action cap), 46/50 after fixes. Its first run exposed two *silent* misparses, so a notice now appears whenever a typed color is used by no action ([report](evaluation/reports/filters_fixes_report.md)).
 
@@ -109,11 +109,21 @@ Round eleven froze 50 new commands covering edits, cross-request references and 
 
 The latest fixes address quarters, “of each color,” mixed-type shared locations and future perfect part-color clauses. Fractions require an explicit total that gives whole objects. Shared comma tails apply to all sources in one creation clause and resolve before new objects enter reference state. Broader gaps include thirds, percentages, alternate each wording and cross-clause collections; the report shows every failure.
 
+| Typo suggestion and “Not what I meant” | The Test log |
+|---|---|
+| ![A reply with “Did you mean Paint the trees blue?” and a saved note](docs/assets/ui-typo-suggestion.png) | ![The Test log dialog](docs/assets/ui-test-log.png) |
+
 **Real users.** **Share & save → Test log** keeps a private, on-device list of the sentences someone typed and what the engine did, plus replies they mark “Not what I meant” with a note; nothing is sent anywhere until they download the file. `python -m tests.analyze_usertests` turns those files into findings (vocabulary gaps, wrong-but-silent results) and a CSV of commands to label for the next frozen set. See the [user-testing guide](docs/USER_TESTING.md).
 
-**Typos.** A misspelled word used to turn a command into nothing, or into a partial result that quietly ignored it (`one bule house` built a colorless house). When a word is one or two edits from the vocabulary (adjacent swaps count as one edit), the API tries the nearest words and offers a corrected sentence **only if re-parsing is measurably better**; the app shows “Did you mean…?” and never applies it. On synthetic typos injected into all 650 labelled commands (a seed nobody had inspected): **478 of 480 affected commands recovered, 0 wrong fixes, 0 suggestions that change the meaning of a command that already worked, and 0 false suggestions on 541 already-correct commands** ([report](evaluation/reports/typo_robustness_report.md)). Synthetic noise is not human typing; the report lists the limits.
+**Typos.** A misspelled word used to turn a command into nothing, or into a partial result that quietly ignored it (`one bule house` built a colorless house). When a word is one or two edits from the vocabulary (adjacent swaps count as one edit), the API tries the nearest words and offers a corrected sentence **only if re-parsing is measurably better**; the app shows “Did you mean…?” and never applies it. On synthetic typos injected into all 650 labelled commands (a seed nobody had inspected; two earlier seeds were reviewed and are disclosed as such): **485 of 486 affected commands recovered, 0 wrong fixes, 0 suggestions that change the meaning of a command that already worked, and 0 false suggestions on 541 already-correct commands** ([report](evaluation/reports/typo_robustness_report.md)). Synthetic noise is not human typing; the report lists the limits.
+
+**Accessibility.** axe-core (WCAG 2.0 to 2.2 A and AA plus best practices) runs in CI over nine app states in both themes on desktop and phone: **0 violations**. The first measurement found **866 failing checks**: 792 contrast failures (counted per page state; **94 distinct elements**, mostly muted light-theme text below 4.5:1) plus accessible names that did not contain their visible text, two unnamed sidebars and no page heading on phones. They were fixed by adjusting the **35 color tokens** axe measured as failing (33 light, 2 dark), removing `opacity` from text, and correcting the markup, not by changing the whole palette.
 
 **Why rules?** A [dependency-parse baseline](evaluation/reports/extractor_comparison_report.md) reads the same actions from spaCy's arcs alone. Frozen before its first run, it matches **22%** of 650 labelled commands exactly, against the rules' **94%** retest and **81%** first-run scores: arcs find verbs, objects and prepositions, but not how a total splits into colored groups, what a pronoun means, or that a kept object is protected. The analysis panel shows both readings of every sentence.
+
+The full method, an ablation (what each component contributes, with confidence intervals), error analysis and threats to validity are in the [project write-up](docs/REPORT.md). The headline caveat: on sentences the grammar was built for, first-run exact match is **97.9%**; on deliberately out-of-grammar phrasings it is **7.8%**.
+
+![Ablation](docs/assets/fig-ablation.svg)
 
 These are **implementation-aware, hand-authored diagnostic samples**, not independent human-labeled or random real-user accuracy estimates. The fresh set is frozen before its first prediction; no parser or gold tuning follows that run. Exact match compares every field of the ordered action dictionaries.
 

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 370" width="1080" height="370" role="img" aria-labelledby="t d" font-family="DM Sans, Segoe UI, Arial, sans-serif">
+<title id="t">Ablation of the grounding pipeline</title><desc id="d">Full rules: 608/650 (93.5%); − cross-request context: 601/650 (92.5%); − place filters: 579/650 (89.1%); − edit grammar: 549/650 (84.5%); − spaCy (tokenizer only): 608/650 (93.5%); Dependency baseline: 146/650 (22.5%)</desc>
+<rect width="1080" height="370" fill="#ffffff"/>
+<text x="40" y="28" font-size="15" fill="#2d3244" text-anchor="start" font-weight="700">Ablation: removing one component at a time (650 labelled commands)</text>
+<text x="40" y="46" font-size="11" fill="#6b6f86" text-anchor="start" font-weight="400">Bars are exact match; whiskers are 95% Wilson intervals.</text>
+<line x1="250.0" y1="64" x2="250.0" y2="286" stroke="#e4e2ee"/>
+<text x="250.0" y="302" font-size="10" fill="#6b6f86" text-anchor="middle" font-weight="400">0%</text>
+<line x1="374.0" y1="64" x2="374.0" y2="286" stroke="#e4e2ee"/>
+<text x="374.0" y="302" font-size="10" fill="#6b6f86" text-anchor="middle" font-weight="400">20%</text>
+<line x1="498.0" y1="64" x2="498.0" y2="286" stroke="#e4e2ee"/>
+<text x="498.0" y="302" font-size="10" fill="#6b6f86" text-anchor="middle" font-weight="400">40%</text>
+<line x1="622.0" y1="64" x2="622.0" y2="286" stroke="#e4e2ee"/>
+<text x="622.0" y="302" font-size="10" fill="#6b6f86" text-anchor="middle" font-weight="400">60%</text>
+<line x1="746.0" y1="64" x2="746.0" y2="286" stroke="#e4e2ee"/>
+<text x="746.0" y="302" font-size="10" fill="#6b6f86" text-anchor="middle" font-weight="400">80%</text>
+<line x1="870.0" y1="64" x2="870.0" y2="286" stroke="#e4e2ee"/>
+<text x="870.0" y="302" font-size="10" fill="#6b6f86" text-anchor="middle" font-weight="400">100%</text>
+<text x="238" y="89" font-size="12" fill="#2d3244" text-anchor="end" font-weight="400">Full rules</text>
+<rect x="250" y="76" width="579.9" height="20" fill="#7657cb"/>
+<line x1="816.6" y1="86" x2="840.1" y2="86" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="816.6" y1="81" x2="816.6" y2="91" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="840.1" y1="81" x2="840.1" y2="91" stroke="#2d3244" stroke-width="1.5"/>
+<text x="882" y="90" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">608/650  (93.5%)</text>
+<text x="238" y="125" font-size="12" fill="#2d3244" text-anchor="end" font-weight="400">− cross-request context</text>
+<rect x="250" y="112" width="573.3" height="20" fill="#d99a3d"/>
+<line x1="809.1" y1="122" x2="834.4" y2="122" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="809.1" y1="117" x2="809.1" y2="127" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="834.4" y1="117" x2="834.4" y2="127" stroke="#2d3244" stroke-width="1.5"/>
+<text x="882" y="126" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">601/650  (92.5%)</text>
+<text x="238" y="161" font-size="12" fill="#2d3244" text-anchor="end" font-weight="400">− place filters</text>
+<rect x="250" y="148" width="552.3" height="20" fill="#d99a3d"/>
+<line x1="786.0" y1="158" x2="815.8" y2="158" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="786.0" y1="153" x2="786.0" y2="163" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="815.8" y1="153" x2="815.8" y2="163" stroke="#2d3244" stroke-width="1.5"/>
+<text x="882" y="162" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">579/650  (89.1%)</text>
+<text x="238" y="197" font-size="12" fill="#2d3244" text-anchor="end" font-weight="400">− edit grammar</text>
+<rect x="250" y="184" width="523.7" height="20" fill="#d99a3d"/>
+<line x1="755.1" y1="194" x2="789.6" y2="194" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="755.1" y1="189" x2="755.1" y2="199" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="789.6" y1="189" x2="789.6" y2="199" stroke="#2d3244" stroke-width="1.5"/>
+<text x="882" y="198" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">549/650  (84.5%)</text>
+<text x="238" y="233" font-size="12" fill="#2d3244" text-anchor="end" font-weight="400">− spaCy (tokenizer only)</text>
+<rect x="250" y="220" width="579.9" height="20" fill="#5aa777"/>
+<line x1="816.6" y1="230" x2="840.1" y2="230" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="816.6" y1="225" x2="816.6" y2="235" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="840.1" y1="225" x2="840.1" y2="235" stroke="#2d3244" stroke-width="1.5"/>
+<text x="882" y="234" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">608/650  (93.5%)</text>
+<text x="238" y="269" font-size="12" fill="#2d3244" text-anchor="end" font-weight="400">Dependency baseline</text>
+<rect x="250" y="256" width="139.3" height="20" fill="#a9a7b8"/>
+<line x1="370.4" y1="266" x2="410.1" y2="266" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="370.4" y1="261" x2="370.4" y2="271" stroke="#2d3244" stroke-width="1.5"/>
+<line x1="410.1" y1="261" x2="410.1" y2="271" stroke="#2d3244" stroke-width="1.5"/>
+<text x="882" y="270" font-size="12" fill="#2d3244" text-anchor="start" font-weight="400">146/650  (22.5%)</text>
+<text x="40" y="352" font-size="10.5" fill="#6b6f86" text-anchor="start" font-weight="400">Removing spaCy changes 0 of 650 outputs: the rules use it only for token annotations, never to choose actions.</text>
+</svg>

@@ -36,10 +36,10 @@ export default function WorldMenu({onShare, onExport, onImport, onTestLog}) {
     else if (e.key === 'Tab') setOpen(false);
   }
   return <div className="world-menu" ref={root} onKeyDown={onKeyDown}>
-    <button ref={trigger} className="export-button" aria-haspopup="menu" aria-expanded={open} aria-label="Share or save world" onClick={() => setOpen(o => !o)}>
+    <button ref={trigger} className="export-button" aria-haspopup="menu" aria-expanded={open} aria-label="Share &amp; save world" onClick={() => setOpen(o => !o)}>
       <Share2 size={17}/> <span>Share &amp; save</span><ChevronDown size={15} className={'menu-caret' + (open ? ' turn' : '')}/>
     </button>
-    {open && <div className="menu-popover" role="menu" aria-label="Share or save world">
+    {open && <div className="menu-popover" role="menu" aria-label="Share and save">
       {ITEMS.map(([key, Icon, label, hint]) => <button key={key} role="menuitem" onClick={() => choose(key)}>
         <Icon size={17}/><span><b>{label}</b><small>{hint}</small></span>
       </button>)}
